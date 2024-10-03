@@ -14,6 +14,9 @@
   width: 15%;
   background-color: #007777;
   border-bottom: solid 1px;
+  display: flex;
+  justify-content: center;
+  align-items: center ;
 }
 
 .navbar_right {
@@ -104,4 +107,32 @@ img {
 h2{
   margin: 5px;
   color: white;
+}
+
+.perfil_div{
+  width: 250px;
+  height: 80%;
+  background-color: #1D70BA;
+  border-radius: 30px;
+  color: white;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  
+}
+
+.perfil_div_text{
+  display: flex;
+  flex-direction: column;
+  margin: 15px;
+}
+
+.perfil_div p{
+  margin: 0;
+}
+
+.perfil_div h1{
+  font-size: 20px;
+  margin: 0;
 }
