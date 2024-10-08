@@ -1,0 +1,103 @@
+.Container {
+  font-family: Arial, sans-serif;
+  max-width: 600px;
+  margin: 20px auto;
+}
+
+.InformationFunc {
+  background-color: #00a086;
+  color: white;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  font-size: 18px; 
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.InformationFunc p {
+  margin: 10px 0; 
+}
+
+.OutlayFunc {
+  background-color: #2196f3;
+  color: white;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  font-size: 18px; 
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.OutlayFunc h3 {
+  margin-bottom: 10px;
+  font-size: 20px;
+}
+
+.OutlayItem {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  align-items: start;
+}
+
+.ValueContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.OutlayDetails {
+  font-size: 16px; 
+}
+
+p {
+  font-weight: bold;
+}
+
+span {
+  font-weight: normal;
+}
+
+.ButtonContainer {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.ApproveButton, .ReviewButton, .DenyButton {
+  padding: 15px 30px; 
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  color: white;
+  font-size: 16px; 
+}
+
+
+.ApproveButton {
+  background-color: #00a086;
+}
+
+.ApproveButton:hover {
+  opacity: 0.8;
+}
+
+.ReviewButton {
+  background-color: #ffa000;
+}
+
+.ReviewButton:hover{
+  opacity: 0.8;
+}
+
+.DenyButton {
+  background-color: #be0909;
+}
+
+.DenyButton:hover {
+  opacity: 0.8;
+}
