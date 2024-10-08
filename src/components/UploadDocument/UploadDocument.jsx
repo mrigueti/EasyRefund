@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { Container, Row, Col, Form, Button, ListGroup } from 'react-bootstrap';
 import { XCircleFill } from 'react-bootstrap-icons';
 import styles from './UploadDocument.module.css'
-import notification from '../icons/notifications.png'
-import logout from '../icons/logout.png'
-import perfil from '../icons/perfil.png'
+import notification from '../../icons/notifications.png'
+import logout from '../../icons/logout.png'
+import perfil from '../../icons/perfil.png'
 
 export default function UploadDocument() {
   const [files, setFiles] = useState([]);

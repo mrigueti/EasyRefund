@@ -33,11 +33,11 @@ const Login = () => {
   };
 
   const handleRegisterPage = () => {
-    navigate("/Register")
+    navigate("/register")
   }
 
   const handleChangePassword = () => {
-    navigate("/ChangePassword")
+    navigate("/change-password")
   }
 
 

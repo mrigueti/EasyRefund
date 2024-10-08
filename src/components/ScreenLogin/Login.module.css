@@ -33,7 +33,7 @@
 
 .UserInput input,
 .UserPassword input {
-    width: 89%;
+    width: 100%;
     padding: 12px 12px 12px 40px;
     border: 1px solid #007777;
     border-radius: 10px;

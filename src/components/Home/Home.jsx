@@ -1,11 +1,8 @@
 import styles from './Home.module.css'
 import Button from 'react-bootstrap/Button';
-import lupa from '../icons/search.png'
-import notification from '../icons/notifications.png'
-import settings from '../icons/settings.png'
-import logout from '../icons/logout.png'
-import question from '../icons/question.png'
-import perfil from '../icons/perfil.png'
+import notification from '../../icons/notifications.png'
+import logout from '../../icons/logout.png'
+import perfil from '../../icons/perfil.png'
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Home = () => {

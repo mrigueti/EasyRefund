@@ -7,6 +7,7 @@ import logout from '../icons/logout.png'
 import question from '../icons/question.png'
 import perfil from '../icons/perfil.png'
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Manegement from '../components/Manegement/PageManegement.jsx'
 
 
 const Template = () => {
@@ -50,7 +51,7 @@ const Template = () => {
 
         </div>
         <div className={styles.content_right}>
-          {/* Insira o conteúdo aqui */}
+          <Manegement/>
 
         </div>
       </div>
