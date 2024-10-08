@@ -1,0 +1,23 @@
+.component {
+  background-color: #f8f8ff;
+  height: 100%;
+  width: 95%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.button_refund {
+  width: 500px;
+  height: 70px;
+  background-color: #f8f8ff;
+  color: black;
+  border: solid 1px #007777;
+  margin: 10px;
+}
+
+.button_refund:hover {
+  color: #f8f8ff;
+  background-color: #007777;
+}

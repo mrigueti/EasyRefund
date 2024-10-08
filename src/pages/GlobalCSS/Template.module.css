@@ -11,7 +11,7 @@
 
 .navbar_left {
   height: 100%;
-  width: 15%;
+  width: 5%;
   background-color: #007777;
   border-bottom: solid 1px;
   display: flex;
@@ -21,8 +21,8 @@
 
 .navbar_right {
   height: 100%;
-  width: 85%;
-  background-color: white;
+  width: 95%;
+  background-color: #f8f8ff;
   border-bottom: solid 1px;
   justify-content: space-between;
   align-items: center;
@@ -38,35 +38,11 @@
 .content_left {
   background-color: #007777;
   height: 100%;
-  width: 15%;
+  width: 5%;
   display: flex;
   flex-direction: column;
   justify-content: end;
-  align-items:flex-start;
-}
-
-.content_right {
-  background-color: white;
-  height: 100%;
-  width: 85%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
   align-items: center;
-}
-
-.button_refund {
-  width: 500px;
-  height: 70px;
-  background-color: white;
-  color: black;
-  border: solid 1px #007777;
-  margin: 10px;
-}
-
-.button_refund:hover {
-  color: white;
-  background-color: #007777;
 }
 
 img {
@@ -106,7 +82,7 @@ img {
 
 h2{
   margin: 5px;
-  color: white;
+  color: #f8f8ff;
 }
 
 .perfil_div{
@@ -114,12 +90,18 @@ h2{
   height: 80%;
   background-color: #1D70BA;
   border-radius: 30px;
-  color: white;
+  color: #f8f8ff;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  margin: 15px;
   
+}
+
+.perfil_div:hover{
+  opacity: 0.8;
+  cursor: pointer;
 }
 
 .perfil_div_text{

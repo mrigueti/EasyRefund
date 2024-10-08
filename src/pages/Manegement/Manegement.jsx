@@ -1,12 +1,11 @@
-import styles from './FlowRefund.module.css'
-import Button from 'react-bootstrap/Button';
+import styles from '../GlobalCSS/Template.module.css'
 import notification from '../../icons/notifications.png'
 import logout from '../../icons/logout.png'
 import perfil from '../../icons/perfil.png'
 import 'bootstrap/dist/css/bootstrap.min.css';
+import ManegementComponent from '../../components/Manegement/PageManegementComponent';
 
-
-const FlowRefund = () => {
+const Home = () => {
   return (
     <div className={styles.main}>
       <div className={styles.navbar_main}>
@@ -26,21 +25,20 @@ const FlowRefund = () => {
           </div>
         </div>
       </div>
+
       <div className={styles.content_main}>
         <div className={styles.content_left}>
-
           <div className={styles.options_div}>
             <img src={logout}></img>
           </div>
+        </div>
 
-        </div>
-        <div className={styles.content_right}>
-          <Button className={styles.button_refund} size="lg">Reembolso Dedutível</Button>
-          <Button className={styles.button_refund} size="lg">Reembolso Não Dedutível</Button>
-        </div>
+        {/* Insira o Component aqui: */}
+        <ManegementComponent />
+
       </div>
     </div>
   )
 }
 
-export default FlowRefund
+export default Home

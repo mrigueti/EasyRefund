@@ -1,11 +1,13 @@
-import styles from './Home.module.css'
+import styles from '../GlobalCSS/Template.module.css'
 import Button from 'react-bootstrap/Button';
 import notification from '../../icons/notifications.png'
 import logout from '../../icons/logout.png'
 import perfil from '../../icons/perfil.png'
 import 'bootstrap/dist/css/bootstrap.min.css';
+import FlowRefundComponent from '../../components/FlowRefund/FlowRefundComponent';
 
-const Home = () => {
+
+const FlowRefund = () => {
   return (
     <div className={styles.main}>
       <div className={styles.navbar_main}>
@@ -33,13 +35,11 @@ const Home = () => {
           </div>
 
         </div>
-        <div className={styles.content_right}>
-          <Button className={styles.button_refund} size="lg">Solicitar novo reembolso</Button>
-          <Button className={styles.button_refund} size="lg">Histórico de reembolso</Button>
-        </div>
+          {/* Insira o Component aqui: */}
+          <FlowRefundComponent/>
       </div>
     </div>
   )
 }
 
-export default Home
+export default FlowRefund

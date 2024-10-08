@@ -1,0 +1,132 @@
+.LoginPermission {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #f0f0f0 0%, #d9d9d9 100%);
+    font-family: Arial, sans-serif;
+}
+
+.LoginPermission h1 {
+    color: #333;
+    font-size: 28px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.LoginPermission form {
+    width: 500px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2); 
+    backdrop-filter: blur(10px);
+    border: 1px solid #007777;
+}
+
+.UserInput,
+.UserPassword {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.UserInput input,
+.UserPassword input {
+    width: 100%;
+    padding: 12px 12px 12px 40px;
+    border: 1px solid #007777;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.8); 
+    color: #333; 
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.UserInput input:focus,
+.UserPassword input:focus {
+    outline: none;
+    background-color: rgba(255, 255, 255, 1); 
+    box-shadow: 0 0 0 2px #007777; 
+}
+
+.UserInput input::placeholder,
+.UserPassword input::placeholder {
+    color: rgba(0, 0, 0, 0.5); 
+}
+
+.UserInput::before,
+.UserPassword::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.UserInput::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23007777'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z' /%3E%3C/svg%3E");
+}
+
+.UserPassword::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23007777'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z' /%3E%3C/svg%3E");
+}
+
+.BtnLogin button,
+.BtnCreateAccount button {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #007777;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.BtnForgotPassword button{
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.BtnLogin button {
+    background-color: #007777;
+    color: white;
+    margin-bottom: 10px;
+}
+
+.BtnLogin button:hover {
+    background-color: #005a5a;
+    box-shadow: 0 4px 8px rgba(0, 119, 119, 0.5);
+}
+
+.BtnCreateAccount button,
+.BtnForgotPassword button {
+    background-color: transparent;
+    color: #007777;
+    margin-bottom: 10px;
+}
+
+
+.BtnCreateAccount button:hover,
+.BtnForgotPassword button:hover {
+    background-color: rgba(0, 119, 119, 0.1);
+    color: #005a5a;
+}
+
+@media (max-width: 480px) {
+    .LoginPermission form {
+        width: 90%;
+        padding: 20px;
+    }
+}

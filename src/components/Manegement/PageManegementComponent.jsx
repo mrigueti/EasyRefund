@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Styles from "./Manegement.module.css";
+import Styles from "./ManegementComponent.module.css";
 import { useNavigate } from "react-router-dom";
 
 const PageManagement = () => {
@@ -54,11 +54,9 @@ const PageManagement = () => {
   });
 
   return (
-    <div>
+    <div className={Styles.component}>
       <header className={Styles.HeaderManagement}>
         <h6>Pesquisa</h6>
-        <h2>Bem vindo</h2>
-        <h6>Notificação</h6>
       </header>
       <div>
         <div>
@@ -114,7 +112,7 @@ const PageManagement = () => {
             </thead>
             <tbody>
               {FilteredUsers.map((user) => (
-                <tr key={user.id} onDoubleClick={() => Navigate("/permission")}>
+                <tr key={user.id} onDoubleClick={() => Navigate("/manegement/permission")}>
                   <td></td>
                   <td>{user.name}</td>
                   <td>{user.date}</td>
