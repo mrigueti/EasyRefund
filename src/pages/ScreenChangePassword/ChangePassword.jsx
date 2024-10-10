@@ -15,60 +15,57 @@ const ChangePassword = () => {
 
   const passwords = {
     current: "Abcd1#",
-    nPassword: "Abcd2#",
-    cPassword: "Abcd2#",
   };
 
   const handleConfirmPasswordChange = (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Previne o envio padrão do formulário
     setCurrentPasswordError("");
     setNewPasswordError("");
     setConfirmPasswordError("");
 
+    let hasError = false; // Para rastrear se houve algum erro
+
     // Validação dos campos
     if (!currentPassword) {
-      setCurrentPasswordError("Senha atual é obrigatória.");
-      return; // Adicionado return para parar a execução
+      setCurrentPasswordError("O campo senha atual não pode ser vazio.");
+      hasError = true; // Marca erro
     }
 
     if (!newPassword) {
-      setNewPasswordError("Nova senha é obrigatória.");
-      return;
+      setNewPasswordError("O campo nova senha não pode ser vazio.");
+      hasError = true; // Marca erro
     }
 
     if (!confirmNewPassword) {
-      setConfirmPasswordError("Confirmação de senha é obrigatória.");
-      return;
+      setConfirmPasswordError("O campo confirme sua senha não pode ser vazio.");
+      hasError = true; // Marca erro
     }
 
-    const passwordPattern = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+{}":;'\[\]|<>?,.`~\-\/]).{6,}$/;
+    // Se houve algum erro, não continua a validação
+    if (hasError) return;
 
+    // Verificação para nova senha
+    const passwordPattern = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+{}":;'\[\]|<>?,.`~\-\/]).{6,}$/;
     if (!passwordPattern.test(newPassword)) {
       setNewPasswordError("A nova senha deve ter pelo menos 6 caracteres, incluindo uma letra maiúscula, um número e um caractere especial.");
-      return;
+      return; // Sai da função se houver erro
     }
 
-    if (confirmNewPassword.length < 6) {
-      setConfirmPasswordError("A confirmação de senha deve ter pelo menos 6 caracteres.");
-      return;
-    }
-
-    if (currentPassword === newPassword) {
-      setNewPasswordError("A nova senha não pode ser igual à senha atual.");
-      return;
-    }
-
+    // Verificação para confirmação de senha
     if (newPassword !== confirmNewPassword) {
       setConfirmPasswordError("A confirmação de senha deve ser igual à nova senha.");
-      return;
+      return; // Sai da função se houver erro
     }
 
-    if (currentPassword === passwords.current) {
-      alert("Senha trocada com sucesso!");
-      navigate("/");
-    } else {
+    // Verificação para a senha atual
+    if (currentPassword !== passwords.current) {
       setCurrentPasswordError("Senha atual incorreta.");
+      return; // Sai da função se houver erro
     }
+
+    // Se todas as validações passarem
+    alert("Senha trocada com sucesso!");
+    navigate("/");
   };
 
   const handleLoginPage = (e) => {
@@ -123,7 +120,7 @@ const ChangePassword = () => {
         {confirmPasswordError && <div className={styles.ErrorMessage}>{confirmPasswordError}</div>}
 
         <div className={styles.BtnChangePassword}>
-          <button type="submit" onClick={handleConfirmPasswordChange}>
+          <button type="button" onClick={handleConfirmPasswordChange}>
             Confirmar troca de senha
           </button>
         </div>
