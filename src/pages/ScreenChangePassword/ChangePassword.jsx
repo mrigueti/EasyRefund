@@ -1,6 +1,7 @@
 import styles from "./ChangePassword.module.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import lock from '../../icons/cadeado.png'; // Importando o ícone de cadeado
 
 const ChangePassword = () => {
   const navigate = useNavigate();
@@ -8,6 +9,9 @@ const ChangePassword = () => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
+  const [currentPasswordError, setCurrentPasswordError] = useState("");
+  const [newPasswordError, setNewPasswordError] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
 
   const passwords = {
     current: "Abcd1#",
@@ -17,40 +21,59 @@ const ChangePassword = () => {
 
   const handleConfirmPasswordChange = (e) => {
     e.preventDefault();
+    setCurrentPasswordError("");
+    setNewPasswordError("");
+    setConfirmPasswordError("");
 
-    if (!currentPassword || !newPassword || !confirmNewPassword) {
-      alert("Por favor, preencha todos os campos.");
+    // Validação dos campos
+    if (!currentPassword) {
+      setCurrentPasswordError("Senha atual é obrigatória.");
+      return; // Adicionado return para parar a execução
+    }
+
+    if (!newPassword) {
+      setNewPasswordError("Nova senha é obrigatória.");
+      return;
+    }
+
+    if (!confirmNewPassword) {
+      setConfirmPasswordError("Confirmação de senha é obrigatória.");
       return;
     }
 
     const passwordPattern = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+{}":;'\[\]|<>?,.`~\-\/]).{6,}$/;
 
     if (!passwordPattern.test(newPassword)) {
-      alert("A nova senha deve ter pelo menos 6 caracteres, incluindo uma letra maiúscula, um número e um caractere especial.");
+      setNewPasswordError("A nova senha deve ter pelo menos 6 caracteres, incluindo uma letra maiúscula, um número e um caractere especial.");
       return;
     }
 
     if (confirmNewPassword.length < 6) {
-      alert("A confirmação de senha deve ter pelo menos 6 caracteres.");
+      setConfirmPasswordError("A confirmação de senha deve ter pelo menos 6 caracteres.");
       return;
     }
 
     if (currentPassword === newPassword) {
-      alert("A nova senha não pode ser igual à senha atual.");
+      setNewPasswordError("A nova senha não pode ser igual à senha atual.");
       return;
     }
 
-    if (currentPassword === passwords.current && newPassword === confirmNewPassword) {
+    if (newPassword !== confirmNewPassword) {
+      setConfirmPasswordError("A confirmação de senha deve ser igual à nova senha.");
+      return;
+    }
+
+    if (currentPassword === passwords.current) {
       alert("Senha trocada com sucesso!");
       navigate("/");
     } else {
-      alert("Senha atual incorreta ou as novas senhas não são iguais!");
+      setCurrentPasswordError("Senha atual incorreta.");
     }
   };
 
   const handleLoginPage = (e) => {
     e.preventDefault();
-    navigate("/")
+    navigate("/");
   }
 
   return (
@@ -58,6 +81,7 @@ const ChangePassword = () => {
       <form className={styles.ChangePasswordForm}>
         <h1>Troca de Senha</h1>
         <div className={styles.InputCurrentPassword}>
+          <img src={lock} alt="Ícone de cadeado" className={styles.Icon} />
           <input
             type="password"
             name="currentPassword"
@@ -68,7 +92,10 @@ const ChangePassword = () => {
             required
           />
         </div>
+        {currentPasswordError && <div className={styles.ErrorMessage}>{currentPasswordError}</div>}
+        
         <div className={styles.InputNewPassword}>
+          <img src={lock} alt="Ícone de cadeado" className={styles.Icon} />
           <input
             type="password"
             name="newPassword"
@@ -79,7 +106,10 @@ const ChangePassword = () => {
             required
           />
         </div>
+        {newPasswordError && <div className={styles.ErrorMessage}>{newPasswordError}</div>}
+        
         <div className={styles.InputConfirmNewPassword}>
+          <img src={lock} alt="Ícone de cadeado" className={styles.Icon} />
           <input
             type="password"
             name="confirmNewPassword"
@@ -90,6 +120,7 @@ const ChangePassword = () => {
             required
           />
         </div>
+        {confirmPasswordError && <div className={styles.ErrorMessage}>{confirmPasswordError}</div>}
 
         <div className={styles.BtnChangePassword}>
           <button type="submit" onClick={handleConfirmPasswordChange}>
