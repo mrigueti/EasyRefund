@@ -1,4 +1,3 @@
-/* PageManagement Styles */
 .HeaderManagement {
   display: flex;
   justify-content: space-between;
@@ -9,13 +8,14 @@
 
 .BtnContainer {
   display: flex;
-  justify-content: center;
+  justify-content: center; /* Mantém os botões centralizados */
   margin: 20px 0;
+  flex-wrap: wrap; /* Permite que os botões se movam para a próxima linha em telas pequenas */
 }
 
 .BtnFilter {
   background-color: #fff;
-  margin-left: 15px;
+  margin: 5px; /* Altera o espaçamento entre os botões */
   padding: 10px 15px;
   border: 1px solid #007777;
   border-radius: 5px;
@@ -41,11 +41,6 @@
   background-color: #ffffff;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  margin-top: 20px; /* Espaço entre o <hr> e a tabela */
-}
-
-.TableContainer:hover {
-  cursor: pointer;
 }
 
 .ManagementTable {
@@ -71,6 +66,7 @@
 
 .ManagementTable tbody tr:hover {
   background-color: #f1f5f9;
+  cursor: pointer;
 }
 
 .StatusBadge {
@@ -102,16 +98,16 @@
 .StatusRevisar {
   background-color: #FFDAB5;
   color: #805402;
+  border-radius: 2px;
 }
 
 .component {
   background-color: #f8f8ff;
   height: 100%;
-  width: 95%;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-start;
 }
 
 @media (max-width: 640px) {

@@ -56,11 +56,9 @@ const PageManagement = () => {
   return (
     <div className={Styles.component}>
       <header className={Styles.HeaderManagement}>
-        <h6>Pesquisa</h6>
       </header>
       <div>
         <div>
-          <hr />
           <div className={Styles.BtnContainer}>
             <button
               className={Styles.BtnFilter}
@@ -99,6 +97,7 @@ const PageManagement = () => {
             </button>
           </div>
         </div>
+        <hr/>
         <div className={Styles.TableContainer}>
           <table className={Styles.ManagementTable}>
             <thead>
