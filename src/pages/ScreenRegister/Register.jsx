@@ -40,7 +40,16 @@ const Register = () => {
     setRegistrationError(false); // Reseta o estado de erro de cadastro
 
     if (!cpfRegisterP) {
+      // Mensagem se CPF estiver vazio
       alertError("cpf", "O campo CPF não pode estar vazio!");
+    } else if (cpfRegisterP.length > 0 && cpfRegisterP.length < 11) {
+      // Mensagem se CPF tiver entre 1 e 10 números
+      alertError("cpf", "Insira todos os números do CPF");
+    } else if (cpfRegisterP.length === 11) {
+      // Verifica se o CPF tem 11 números
+      if (cpfRegisterP.length < 11) {
+        alertError("cpf", "Insira todos os números do CPF");
+      }
     }
 
     if (!nameRegisterP) {
@@ -49,10 +58,6 @@ const Register = () => {
 
     if (!emailRegisterP) {
       alertError("email", "O campo E-mail não pode estar vazio!");
-    }
-
-    if (cpfRegisterP.length < 11) {
-      alertError("cpf", "Insira todos os números do CPF");
     }
 
     if (!validatePassword(passwordRegisterP)) {

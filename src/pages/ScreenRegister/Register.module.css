@@ -77,8 +77,9 @@
 .errorAlert {
     color: red;
     border-radius: 8px;
-    font-size: small;
+    font-size: 16px;
     margin-top: 5px;
+   text-align: center;
 }
 
 .RegisterBtnRegister button,
