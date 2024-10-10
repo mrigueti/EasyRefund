@@ -5,8 +5,17 @@ import logout from '../../icons/logout.png'
 import perfil from '../../icons/perfil.png'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import PermissionComponent from '../../components/Permission/PermissionComponent.jsx';
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
+  const navigate = useNavigate()
+
+  const handleBtnLogout = () => {
+    if(window.confirm("Deseja realmente fechar o site?")) {
+      navigate("/")
+    }
+  }
+
   return (
     <div className={styles.main}>
       <div className={styles.navbar_main}>
@@ -30,7 +39,7 @@ const Home = () => {
       <div className={styles.content_main}>
         <div className={styles.content_left}>
           <div className={styles.options_div}>
-            <img src={logout}></img>
+            <img src={logout} onClick={handleBtnLogout}></img>
           </div>
         </div>
 

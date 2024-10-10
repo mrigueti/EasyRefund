@@ -6,8 +6,11 @@ import notification from '../../icons/notifications.png'
 import logout from '../../icons/logout.png'
 import perfil from '../../icons/perfil.png'
 import UploadDocumentComponent from '../../components/UploadDocument/UploadDocumentComponent'
+import { useNavigate } from 'react-router-dom';
 
 export default function UploadDocument() {
+  const navigate = useNavigate()
+
   const [files, setFiles] = useState([]);
 
   const handleFileChange = (event) => {
@@ -19,6 +22,12 @@ export default function UploadDocument() {
   const removeFile = (fileToRemove) => {
     setFiles(files.filter(file => file !== fileToRemove));
   };
+
+  const handleBtnLogout = () => {
+    if(window.confirm("Deseja realmente fechar o site?")) {
+      navigate("/")
+    }
+  }
 
   return (
     <div className={styles.main}>
@@ -43,7 +52,7 @@ export default function UploadDocument() {
         <div className={styles.content_left}>
 
           <div className={styles.options_div}>
-            <img src={logout}></img>
+            <img src={logout} onClick={handleBtnLogout}></img>
           </div>
 
         </div>
