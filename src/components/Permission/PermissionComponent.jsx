@@ -30,6 +30,12 @@ const Permission = () => {
 
   return (
     <div className={style.Container}>
+      <button
+        className={style.BackButton}
+        onClick={() => navigate("/manegement")}
+      >
+        &larr; Voltar
+      </button>
       <div className={style.InformationFunc}>
         <p>
           Nome: <span>{userFunc.nameFunc}</span>

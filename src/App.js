@@ -8,6 +8,7 @@ import Permission from "./pages/Permission/Permission.jsx";
 import Manegement from "./pages/Manegement/Manegement.jsx";
 import Home from "./pages/HomeEmployee/Home.jsx"
 import FlowRefund from "./pages/FlowRefund/FlowRefund.jsx"
+import InformationUser from './components/InformationUser/InformationUser.jsx';
 
 
 function App() {
@@ -28,6 +29,9 @@ function App() {
           {/* Fluxo do Liberador/Gestor */}
           <Route path='/manegement' element={< Manegement />} />
           <Route path='/manegement/permission' element={<Permission />} />
+
+          {/*Fluxo de informações do usuário*/}
+          <Route path='/informationUser' element={<InformationUser />} />
 
         </Routes>
       </BrowserRouter>

@@ -16,6 +16,10 @@ const Home = () => {
     }
   }
 
+  const handleBtnPerfilUser = () => {
+    navigate("/InformationUser")
+  }
+
 
   return (
     <div className={styles.main}>
@@ -26,7 +30,7 @@ const Home = () => {
         <div className={styles.navbar_right}>
           <div className={styles.perfil_div}>
             <img src={perfil}></img>
-            <div className={styles.perfil_div_text}>
+            <div className={styles.perfil_div_text} onClick={handleBtnPerfilUser}>
               <h1>Nome de Usuário</h1>
               <p>Perfil de Acesso</p>
             </div>

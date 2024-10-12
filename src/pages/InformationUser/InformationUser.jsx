@@ -6,6 +6,7 @@ import perfil from '../../icons/perfil.png'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import PermissionComponent from '../../components/Permission/PermissionComponent.jsx';
 import { useNavigate } from 'react-router-dom';
+import InformationUser from '../../components/InformationUser/InformationUser.jsx';
 
 const Home = () => {
   const navigate = useNavigate()
@@ -14,10 +15,6 @@ const Home = () => {
     if(window.confirm("Deseja realmente fechar o site?")) {
       navigate("/")
     }
-  }
-
-  const handleBtnPerfilUser = () => {
-    navigate("/InformationUser")
   }
 
   return (
@@ -29,7 +26,7 @@ const Home = () => {
         <div className={styles.navbar_right}>
           <div className={styles.perfil_div}>
             <img src={perfil}></img>
-            <div className={styles.perfil_div_text} onClick={handleBtnPerfilUser}>
+            <div className={styles.perfil_div_text}>
               <h1>Nome de Usuário</h1>
               <p>Perfil de Acesso</p>
             </div>
@@ -48,7 +45,7 @@ const Home = () => {
         </div>
 
         {/* Insira o Component aqui: */}
-        <PermissionComponent />
+        <InformationUser />
 
       </div>
     </div>

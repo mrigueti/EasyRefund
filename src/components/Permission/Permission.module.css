@@ -4,6 +4,21 @@
   margin: 20px auto;
 }
 
+.BackButton {
+  background: none;
+  border: none;
+  color: #007777;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+.BackButton:hover {
+  text-decoration: underline;
+}
+
 .InformationFunc {
   background-color: #00a086;
   color: white;
@@ -77,7 +92,6 @@ span {
   font-size: 16px; 
 }
 
-
 .ApproveButton {
   background-color: #00a086;
 }
@@ -90,7 +104,7 @@ span {
   background-color: #ffa000;
 }
 
-.ReviewButton:hover{
+.ReviewButton:hover {
   opacity: 0.8;
 }
 
