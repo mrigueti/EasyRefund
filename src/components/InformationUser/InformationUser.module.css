@@ -139,6 +139,13 @@ label {
   box-shadow: 0 0 0 2px #007777;
 }
 
+.errorAlert {
+  color: red; /* Ou a cor desejada */
+  font-size: 16px; 
+  margin-top: 10px; /* Ajuste o espaçamento conforme necessário */
+  text-align: center; 
+}
+
 
 @media (max-width: 768px) {
   .infoContainer {
