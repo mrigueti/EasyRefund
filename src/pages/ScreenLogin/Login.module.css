@@ -28,7 +28,7 @@
 .UserInput,
 .UserPassword {
     position: relative;
-    margin-bottom: 10px; /* Diminuiu a margem inferior dos inputs */
+    margin-bottom: 10px; 
 }
 
 .UserInput input,
@@ -37,7 +37,7 @@
     padding: 12px 12px 12px 40px; 
     border: 1px solid #007777;
     border-radius: 10px;
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(255, 255, 255, 0.8); /* Altera para um fundo levemente transparente */
     color: #333;
     font-size: 16px;
     transition: all 0.3s ease;
@@ -64,7 +64,7 @@
 .errorAlert {
     color: red;
     font-size: 16px; 
-    margin-top: 2px; /* Mantive a margem superior para a mensagem de erro */
+    margin-top: 2px; 
     text-align: center; 
 }
 

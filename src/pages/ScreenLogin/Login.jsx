@@ -19,8 +19,8 @@ const Login = () => {
 
   const handleBtnLogin = (e) => {
     e.preventDefault();
-    setNameError(""); // Resetando mensagem de erro do usuário
-    setPasswordError(""); // Resetando mensagem de erro da senha
+    setNameError("");
+    setPasswordError("");
 
     if (!namePermission && !passwordPermission) {
       setNameError("Usuário não pode estar vazio.");
@@ -68,7 +68,6 @@ const Login = () => {
             onChange={(e) => setNamePermission(e.target.value)}
           />
           <img src={user} alt="icone de usuario" className={styles.Icon} />
-
         </div>
         {nameError && <div className={styles.errorAlert}>{nameError}</div>}
         <div className={styles.UserPassword}>
@@ -81,7 +80,6 @@ const Login = () => {
             onChange={(e) => setPasswordPermission(e.target.value)}
           />
           <img src={lock} alt="icone da senha" className={styles.Icon} />
-          
         </div>
         {passwordError && <div className={styles.errorAlert}>{passwordError}</div>}
         <div className={styles.BtnLogin}>
