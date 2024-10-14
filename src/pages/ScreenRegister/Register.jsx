@@ -23,7 +23,7 @@ const Register = () => {
   const [passwordRegisterP, setPasswordRegister] = useState("");
   const [confirmPasswordRegisterP, setConfirmPasswordRegister] = useState("");
   const [errors, setErrors] = useState({}); 
-  const [registrationError, setRegistrationError] = useState(false); // Novo estado para controle de erro de cadastro
+  const [registrationError, setRegistrationError] = useState(false); 
 
   const alertError = (field, message) => {
     setErrors((prev) => ({ ...prev, [field]: message }));
