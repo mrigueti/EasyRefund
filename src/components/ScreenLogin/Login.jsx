@@ -1,6 +1,7 @@
 import styles from "./Login.module.css";
 import { useNavigate } from "react-router-dom";
 import { useState} from 'react';
+import api from '../../axios/axios'
 
 
 
@@ -40,6 +41,24 @@ const Login = () => {
     navigate("/change-password")
   }
 
+
+
+  // const [email, setEmail] = useState('');
+  // const [senha, setSenha] = useState('');
+  // const [error, setError] = useState('');
+
+  // const handleLogin = async (e) => {
+  //   e.preventDefault(); // Previne o comportamento padrão do formulário.
+  //   try {
+  //     const response = await api.post('/login', { email, senha }); // Faz a requisição para o backend.
+  //     localStorage.setItem('token', response.data.token); // armazena o token no localStorage.
+  //     localStorage.setItem('userRole', response.data.userRole); // armazena o cargo do usuário.
+  //     // !! TROCAR HREF !!
+  //     window.location.href = '/'; 
+  //   } catch (err) {
+  //     setError('Email ou senha inválidos'); 
+  //   }
+  // };
 
   return (
     <div className={styles.LoginPermission}>
