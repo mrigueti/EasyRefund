@@ -7,10 +7,15 @@ import lock from '../../icons/cadeado.png';
 const Login = () => {
   const navigate = useNavigate();
 
-  const UserPermission = {
+  const userPermission = {
     name: "Gabryel",
     password: "abc"
   };
+
+  const userFuncionario = {
+    nameFunc: "Lucas",
+    passwordFun: "abc"
+  }
 
   const [namePermission, setNamePermission] = useState("");
   const [passwordPermission, setPasswordPermission] = useState("");
@@ -38,8 +43,10 @@ const Login = () => {
       return;
     }
 
-    if (namePermission === UserPermission.name && passwordPermission === UserPermission.password) {
+    if (namePermission === userPermission.name && passwordPermission === userPermission.password) {
       navigate("/manegement");
+    } else if(namePermission === userFuncionario.nameFunc && passwordPermission === userFuncionario.passwordFun){
+      navigate("/Home")
     } else {
       setNameError("Usuário ou senha incorretos.");
       setPasswordError("Usuário ou senha incorretos.");
