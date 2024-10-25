@@ -90,10 +90,6 @@ const Register = () => {
     }
   };
 
-  const handleBackPageLogin = () => {
-    navigate("/");
-  };
-
   const handleCpfChange = (e) => {
     const value = e.target.value;
     setCpfRegister(value.replace(/\D/g, ""));
@@ -102,7 +98,7 @@ const Register = () => {
   return (
     <div className={styles.RegisterPermission}>
       <form>
-        <h1>Cadastro EasyRefund</h1>
+        <h1>Cadastrar Usuário</h1>
 
         <div className={styles.RegisterInputContainer}>
           <div className={styles.RegisterCpfInput}>
@@ -185,12 +181,6 @@ const Register = () => {
         <div className={styles.RegisterBtnRegister}>
           <button type="submit" onClick={handleRegisterPermission}>
             Cadastrar
-          </button>
-        </div>
-
-        <div className={styles.RegisterBtnLogin}>
-          <button type="button" onClick={handleBackPageLogin}>
-            Já tem uma conta? Faça Login
           </button>
         </div>
       </form>
