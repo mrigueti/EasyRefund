@@ -12,6 +12,7 @@
     "axios": "^1.7.7",
     "bcryptjs": "^2.4.3",
     "bootstrap": "^5.3.3",
+    "easyrefund": "file:",
     "express": "^4.21.1",
     "jsonwebtoken": "^9.0.2",
     "mysql": "^2.18.1",

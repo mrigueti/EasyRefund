@@ -6,6 +6,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  position: relative; /* Adicionado para o posicionamento do botão */
 }
 
 .button_container {
@@ -27,4 +28,25 @@
 .button_refund:hover {
   color: #f8f8ff;
   background-color: #007777;
+}
+
+.infoButtonBack {
+  background: none;
+  border: none;
+  color: #008080;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.infoButtonBack:hover {
+  text-decoration: underline;
+}
+
+/* Nova classe para posicionar o botão no canto superior direito */
+.button_back_position {
+  position: absolute;
+  top: 10px;
+  left: 10px;
 }

@@ -79,8 +79,6 @@ const InformationUser = () => {
 
   const handleBtnBackPage = () => {
     navigate(-1);
-    //se, o usuario for o liberador, ele vai voltar para a pagina ("manegement")
-    //se não for o liberador, irá voltar para a home ou para a pagina anterior que estava.
   };
 
   return (
