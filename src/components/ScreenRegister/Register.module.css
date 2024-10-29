@@ -1,3 +1,4 @@
+/* Container principal */
 .RegisterPermission {
     display: flex;
     flex-direction: column;
@@ -7,16 +8,19 @@
     width: 95%;
     background: linear-gradient(135deg, #f0f0f0 0%, #d9d9d9 100%);
     font-family: Arial, sans-serif;
-}
-
-.RegisterPermission h1 {
+    position: relative;
+  }
+  
+  /* Título */
+  .RegisterPermission h1 {
     color: #333;
     font-size: 28px;
     margin-bottom: 30px;
     text-align: center;
-}
-
-.RegisterPermission form {
+  }
+  
+  /* Formulário */
+  .RegisterPermission form {
     width: 500px;
     background-color: rgba(255, 255, 255, 0.9);
     border-radius: 20px;
@@ -24,102 +28,97 @@
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(10px);
     border: 1px solid #007777;
-}
-
-.RegisterInputContainer {
+  }
+  
+  /* Estilos dos inputs */
+  .RegisterInputContainer {
     position: relative;
     margin-bottom: 10px;
     text-align: left;
-}
-
-.RegisterCpfInput,
-.RegisterNameInput,
-.RegisterEmailInput,
-.RegisterPasswordInput,
-.RegisterConfirmPasswordInput {
+  }
+  
+  .RegisterNameInput,
+  .RegisterEmailInput,
+  .RegisterPasswordInput {
     display: flex;
-    align-items: center; /* Alinhamento vertical dos itens */
-}
-
-.RegisterCpfInput input,
-.RegisterNameInput input,
-.RegisterEmailInput input,
-.RegisterPasswordInput input,
-.RegisterConfirmPasswordInput input {
+    align-items: center;
+  }
+  
+  .RegisterNameInput input,
+  .RegisterEmailInput input,
+  .RegisterPasswordInput input {
     width: 100%;
-    padding: 12px 12px 12px 40px; /* Ajuste o padding para dar espaço ao ícone */
+    padding: 12px 12px 12px 40px;
     border: 1px solid #007777;
     border-radius: 10px;
     background-color: rgba(255, 255, 255, 0.8);
     color: #333;
     font-size: 16px;
     transition: all 0.3s ease;
-}
-
-.RegisterCpfInput input:focus,
-.RegisterNameInput input:focus,
-.RegisterEmailInput input:focus,
-.RegisterPasswordInput input:focus,
-.RegisterConfirmPasswordInput input:focus {
+  }
+  
+  .RegisterNameInput input:focus,
+  .RegisterEmailInput input:focus,
+  .RegisterPasswordInput input:focus {
     outline: none;
     background-color: rgba(255, 255, 255, 1);
     box-shadow: 0 0 0 2px #007777;
-}
-
-.RegisterInputContainer .Icon {
+  }
+  
+  /* Ícone dos inputs */
+  .Icon {
     position: absolute;
-    left: 12px; /* Alinhamento do ícone */
+    left: 12px;
     width: 20px;
     height: 20px;
     background-size: contain;
     background-repeat: no-repeat;
-}
-
-.errorAlert {
+  }
+  
+  /* Mensagens de erro */
+  .errorAlert {
     color: red;
     border-radius: 8px;
     font-size: 16px;
     margin-top: 5px;
-   text-align: center;
-}
-
-.RegisterBtnRegister button,
-.RegisterBtnLogin button {
+    text-align: center;
+  }
+  
+  /* Botão Cadastrar */
+  .RegisterBtnRegister button {
     width: 100%;
     padding: 12px;
     border: 1px solid #007777;
     border-radius: 10px;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: bold;
+    color: #fff;
+    background-color: #008080;
     cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.RegisterBtnRegister button {
-    background-color: #007777;
-    color: white;
-    margin-bottom: 10px;
-}
-
-.RegisterBtnRegister button:hover {
-    background-color: #005a5a;
-    box-shadow: 0 4px 8px rgba(0, 119, 119, 0.5);
-}
-
-.RegisterBtnLogin button {
-    background-color: transparent;
-    color: #007777;
-    margin-bottom: 10px;
-}
-
-.RegisterBtnLogin button:hover {
-    background-color: rgba(0, 119, 119, 0.1);
-    color: #005a5a;
-}
-
-@media (max-width: 480px) {
-    .RegisterPermission form {
-        width: 90%;
-        padding: 20px;
-    }
-}
+    transition: background-color 0.3s ease;
+  }
+  
+  .RegisterBtnRegister button:hover {
+    background-color: #005555;
+  }
+  
+  /* Botão de voltar */
+  .infoButtonBack {
+    background: none;
+    border: none;
+    color: #008080;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 100;
+  }
+  
+  .infoButtonBack:hover {
+    color: #005555;
+    text-decoration: underline;
+  }
+  
