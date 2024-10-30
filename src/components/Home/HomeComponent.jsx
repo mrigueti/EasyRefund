@@ -9,15 +9,15 @@ const HomeComponent = () => {
   const handleFlowRefund = () => {
     navigate("/home/flow-refund")
   }
-  const handleHistory = () => {
-    
-  }
 
+  const handleHistory = () => {
+    navigate('/home/HistoryUser')
+  }
   return (
 
     <div className={styles.component}>
       <Button className={styles.button_refund} size="lg" onClick={handleFlowRefund}>Solicitar novo reembolso</Button>
-      <Button className={styles.button_refund} size="lg" onClick={handleFlowRefund}>Histórico de reembolso</Button>
+      <Button className={styles.button_refund} size="lg" onClick={handleHistory}>Histórico de reembolso</Button>
     </div>
   )
 }

@@ -10,6 +10,7 @@ import Home from "./pages/HomeEmployee/Home.jsx"
 import FlowRefund from "./pages/FlowRefund/FlowRefund.jsx"
 import InformationUser from './pages/InformationUser/InformationUser.jsx';
 import PageManager from './pages/PageManager/PageManager.jsx'
+import HistoryUser from './components/HistoryUser/HistoryUser.jsx';
 
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
           {/* Fluxo do funcionário */}
           <Route path='/home' element={< Home />} />
           <Route path='/home/flow-refund' element={< FlowRefund />} />
+          <Route path='/home/HistoryUser' element={<HistoryUser />}  />
           <Route path='/home/flow-refund/upload-document' element={< UploadDocument />} />
 
           {/* Fluxo do Liberador */}
