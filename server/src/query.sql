@@ -30,7 +30,9 @@ CREATE TABLE usuarios (
     senha VARCHAR(255) NOT NULL,
     data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     idcargo INT,
-    FOREIGN KEY (idcargo) REFERENCES cargo(idcargo)
+    idrole INT,
+    FOREIGN KEY (idcargo) REFERENCES cargo(idcargo),
+    FOREIGN KEY (idrole) REFERENCES roles(idrole)
 );
 
 CREATE TABLE aprovadores (
@@ -40,6 +42,18 @@ CREATE TABLE aprovadores (
     idusuario INT,
     FOREIGN KEY (idusuario) REFERENCES usuarios(idusuario)
 );
+
+CREATE TABLE roles (
+    idrole INT PRIMARY KEY,
+    role_name VARCHAR(45) UNIQUE NOT NULL
+);
+
+-- Inserir os tipos de usuário
+INSERT INTO roles (idrole, role_name) VALUES 
+(1, 'Funcionario'), 
+(2, 'Administrador'), 
+(3, 'Gerente');
+
 
 CREATE TABLE solicitacoes (
     idsolicitacao INT PRIMARY KEY AUTO_INCREMENT,
