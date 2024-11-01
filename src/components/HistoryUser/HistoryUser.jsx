@@ -6,6 +6,7 @@ import exports from '../../icons/export.png'; // Importando ícone de exportaç�
 const HistoryUser = () => {
   const [modalData, setModalData] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [filter, setFilter] = useState("Todas"); // Estado para o filtro
 
   const handleRowClick = (data) => {
     setModalData(data);
@@ -25,26 +26,23 @@ const HistoryUser = () => {
 
   const handleExportAllToPDF = () => {
     const doc = new jsPDF();
-    doc.setFontSize(12); // Define o tamanho da fonte
-    let y = 10; // Posição inicial do texto
+    doc.setFontSize(12);
+    let y = 10;
 
-    // Título do PDF
     doc.setFontSize(18);
     doc.text("Histórico de Reembolsos", 10, y);
-    y += 10; // Espaçamento após o título
+    y += 10;
 
-    // Cabeçalhos da tabela
     doc.setFontSize(12);
     doc.text("ID da Requisição", 10, y);
     doc.text("Nome do Aprovador", 50, y);
     doc.text("Dia da Aprovação", 100, y);
     doc.text("Valor Aprovado", 150, y);
     doc.text("Status", 190, y);
-    y += 10; // Espaçamento após os cabeçalhos
+    y += 10;
 
-    // Adicionando uma linha horizontal
     doc.line(10, y, 200, y); 
-    y += 5; // Espaçamento após a linha
+    y += 5;
 
     refundRequests.forEach((request) => {
       doc.text(request.id, 10, y);
@@ -52,28 +50,26 @@ const HistoryUser = () => {
       doc.text(request.approvalDate, 100, y);
       doc.text(request.approvedAmount, 150, y);
       doc.text(request.status, 190, y);
-      y += 8; // Espaçamento entre as requisições
+      y += 8;
 
-      // Adicionar uma linha horizontal entre requisições
       doc.line(10, y, 200, y);
-      y += 5; // Espaçamento após a linha
+      y += 5;
 
-      // Adicionar uma nova página se necessário
       if (y > 280) {
         doc.addPage();
-        y = 10; // Reiniciar a posição vertical
+        y = 10;
         doc.setFontSize(18);
         doc.text("Histórico de Reembolsos", 10, y);
-        y += 10; // Espaçamento após o título
+        y += 10;
         doc.setFontSize(12);
         doc.text("ID da Requisição", 10, y);
         doc.text("Nome do Aprovador", 50, y);
         doc.text("Dia da Aprovação", 100, y);
         doc.text("Valor Aprovado", 150, y);
         doc.text("Status", 190, y);
-        y += 10; // Espaçamento após os cabeçalhos
+        y += 10;
         doc.line(10, y, 200, y);
-        y += 5; // Espaçamento após a linha
+        y += 5;
       }
     });
 
@@ -86,10 +82,17 @@ const HistoryUser = () => {
   };
 
   const refundRequests = [
-    { id: '#15267', approver: 'John Doe', approvalDate: 'Mar 1, 2023', approvedAmount: '$100', requestedAmount: '$100', status: 'Sucesso' },
-    { id: '#153587', approver: 'Jane Smith', approvalDate: 'Jan 26, 2023', approvedAmount: '$300', requestedAmount: '$300', status: 'Sucesso' },
-    // Adicione mais dados conforme necessário
+    { id: '#15267', approver: 'John Doe', approvalDate: 'Mar 1, 2023', approvedAmount: '$100', requestedAmount: '$100', status: 'Aceita' },
+    { id: '#26540', approver: 'Jane Smith', approvalDate: 'Jan 26, 2023', approvedAmount: '$300', requestedAmount: '$300', status: 'Negada' },
+    { id: '#98754', approver: 'Jane Smith', approvalDate: 'Jan 26, 2023', approvedAmount: '$200', requestedAmount: '$300', status: 'Pendente' },
+    { id: '#51482', approver: 'Jane Smith', approvalDate: 'Jan 26, 2023', approvedAmount: '$400', requestedAmount: '$300', status: 'Revisar' }
   ];
+
+  // Filtra as solicitações com base no status selecionado
+  const filteredRequests = refundRequests.filter((request) => {
+    if (filter === "Todas") return true;
+    return request.status === filter;
+  });
 
   return (
     <div className={Styles.RefundContainer}>
@@ -103,6 +106,16 @@ const HistoryUser = () => {
       
       <div className={Styles.RefundHistory}>
         <h3>Histórico de Reembolso</h3>
+        
+        {/* Botões de filtro */}
+        <div className={Styles.BtnContainer}>
+          <button className={Styles.BtnFilter} onClick={() => setFilter("Todas")}>Todas</button>
+          <button className={Styles.BtnFilter} onClick={() => setFilter("Aceita")}>Aceitas</button>
+          <button className={Styles.BtnFilter} onClick={() => setFilter("Negada")}>Negadas</button>
+          <button className={Styles.BtnFilter} onClick={() => setFilter("Pendente")}>Pendentes</button>
+          <button className={Styles.BtnFilter} onClick={() => setFilter("Revisar")}>Revisar</button>
+        </div>
+
         <button className={Styles.btnExportAll} onClick={handleExportAllToPDF}>
           <img src={exports} alt="Exportar" /> Exportar Todos
         </button>
@@ -116,11 +129,15 @@ const HistoryUser = () => {
             </tr>
           </thead>
           <tbody>
-            {refundRequests.map((request) => (
+            {filteredRequests.map((request) => (
               <tr key={request.id} onClick={() => handleRowClick(request)}>
                 <td>{request.id}</td>
                 <td>{request.approvalDate}</td>
-                <td className={getStatusClass(request.status)}>{request.status}</td>
+                <td>
+                  <span className={`${Styles.StatusBadge} ${getStatusClass(request.status)}`}>
+                    {request.status}
+                  </span>
+                </td>
                 <td>{request.approvedAmount}</td>
               </tr>
             ))}
@@ -138,7 +155,7 @@ const HistoryUser = () => {
               <p>Valor Solicitado: {modalData.requestedAmount}</p>
               <p>Status: {modalData.status}</p>
               <button onClick={handleExportToPDF}>Exportar para PDF</button>
-              <button onClick={handleCloseModal}>Fechar</button>
+              <button className={Styles.closeButton} onClick={handleCloseModal}>Fechar</button>
             </div>
           </div>
         )}
@@ -150,14 +167,14 @@ const HistoryUser = () => {
 // Função para obter a classe de status correspondente
 const getStatusClass = (status) => {
   switch (status) {
-    case 'Sucesso':
-      return Styles.RefundSuccess;
-    case 'Rejeitado':
+    case 'Aceita':
+      return Styles.RefundAccepted;
+    case 'Negada':
       return Styles.RefundRejected;
     case 'Pendente':
       return Styles.RefundPending;
     case 'Revisar':
-      return Styles.RefundReview; // Adicione esta classe no CSS
+      return Styles.RefundReview;
     default:
       return '';
   }

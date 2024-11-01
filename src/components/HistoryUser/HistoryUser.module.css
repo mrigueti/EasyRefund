@@ -73,24 +73,28 @@ body {
 }
 
 /* Estilos dos Status */
-.RefundSuccess {
-    color: #166534; /* Verde */
-    font-weight: 600;
+.RefundAccepted {
+    background-color: #dcfce7;
+    color: #166534;
+    border-radius: 2px;
 }
 
 .RefundRejected {
-    color: #991b1b; /* Vermelho */
-    font-weight: 600;
+    background-color: #fee2e2;
+    color: #991b1b;
+    border-radius: 2px;
 }
 
 .RefundPending {
-    color: #854d0e; /* Laranja */
-    font-weight: 600;
+    background-color: #fef9c3;
+    color: #854d0e;
+    border-radius: 2px;
 }
 
 .RefundReview {
-    color: #ca8a04; /* Amarelo */
-    font-weight: 600;
+    background-color: #FFDAB5;
+    color: #805402;
+    border-radius: 2px;
 }
 
 /* Estilos do Modal */
@@ -100,73 +104,69 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.7); /* Fundo semi-transparente */
+    background-color: rgba(0, 0, 0, 0.7);
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000; /* Z-index alto para sobrepor outros elementos */
+    z-index: 1000;
 }
 
 .ModalContent {
     background-color: #fff;
     border-radius: 8px;
     padding: 20px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); /* Sombra mais suave */
-    width: 400px; /* Largura do modal */
-    max-width: 90%; /* Para dispositivos menores */
-    transition: all 0.3s ease; /* Transição suave */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    width: 400px;
+    max-width: 90%;
+    transition: all 0.3s ease;
 }
 
 .ModalContent h2 {
     margin: 0 0 15px 0;
-    font-size: 24px; /* Tamanho do título */
+    font-size: 24px;
     color: #333;
-    text-align: center; /* Centraliza o título */
+    text-align: center;
 }
 
 .ModalContent p {
-    margin: 10px 0; /* Margem entre os parágrafos */
-    font-size: 14px; /* Tamanho da fonte dos detalhes */
-    line-height: 1.5; /* Espaçamento entre linhas */
+    margin: 10px 0;
+    font-size: 14px;
+    line-height: 1.5;
 }
 
 .ModalContent button {
-    background-color: #007777; /* Cor do botão */
-    color: white; /* Cor do texto */
+    background-color: #007777;
+    color: white;
     border: none;
     border-radius: 5px;
     padding: 10px 15px;
     cursor: pointer;
     transition: background-color 0.3s;
-    margin-top: 15px; /* Espaço acima do botão */
-    display: block; /* Faz o botão ocupar toda a largura */
-    width: 100%; /* Largura do botão */
+    margin-top: 15px;
+    display: block;
+    width: 100%;
 }
 
 .ModalContent button:hover {
-    background-color: #005f5f; /* Cor ao passar o mouse */
+    background-color: #005f5f;
 }
 
 /* Estilos para o botão de exportar */
 .btnExport {
-    background-color: #007777; /* Cor do botão */
-    color: white; /* Cor do texto */
+    background-color: #007777;
+    color: white;
     border: none;
     border-radius: 5px;
     padding: 10px 15px;
     cursor: pointer;
     transition: background-color 0.3s;
-    margin-right: 10px; /* Espaço entre os botões */
-}
-
-.btnExport:hover {
-    background-color: #005f5f; /* Cor ao passar o mouse */
+    margin-left: auto; /* Empurra o botão para a direita */
 }
 
 /* Estilos para o botão fechar */
 .closeButton {
-    background-color: #f44336; /* Vermelho */
-    color: white; /* Cor do texto */
+    background-color: #f44336;
+    color: white;
     border: none;
     border-radius: 5px;
     padding: 10px 15px;
@@ -175,34 +175,97 @@ body {
 }
 
 .closeButton:hover {
-    background-color: #c62828; /* Vermelho escuro ao passar o mouse */
+    background-color: #c62828;
 }
 
 /* Estilo para o botão de exportar todos */
 .btnExportAll {
-    color: rgb(0, 0, 0); /* Cor do texto */
+    color: rgb(0, 0, 0);
     background-color: transparent;
     border: none;
     border-radius: 5px;
     padding: 10px 15px;
     cursor: pointer;
     transition: background-color 0.3s;
-    margin-bottom: 20px; /* Espaço abaixo do botão */
+    margin-bottom: 20px;
+}
+
+/* Estilos para os botões de filtro */
+.BtnContainer {
+    display: flex;
+    justify-content: center; /* Centraliza os botões horizontalmente */
+    flex-wrap: wrap; /* Permite que os botões se movam para a linha seguinte se não houver espaço */
+    margin-bottom: 20px;
+}
+
+.BtnFilter {
+    flex: 0 1 auto; /* Permite que os botões tenham largura automática mas ocupem espaço */
+    min-width: 120px; /* Define uma largura mínima para os botões */
+    max-width: 200px; /* Limita a largura máxima dos botões */
+    background-color: white;
+    border: 1px solid #007777;
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin: 5px; /* Espaçamento entre os botões */
+}
+
+.BtnFilter:hover {
+    opacity: 0.8;
 }
 
 /* Responsividade */
 @media (max-width: 640px) {
     .RefundTable th,
     .RefundTable td {
-        padding: 10px;
-        font-size: 14px;
+        padding: 8px; /* Menor padding para caber melhor em telas pequenas */
+        font-size: 12px; /* Ajusta o tamanho da fonte para telas pequenas */
     }
 
     .RefundTotalRequested h2 {
-        font-size: 20px;
+        font-size: 18px; /* Menor tamanho de fonte para títulos em telas pequenas */
     }
 
     .ModalContent {
-        width: 90%;
+        width: 95%; /* Um pouco mais largo para telas pequenas */
+    }
+
+    .BtnContainer {
+        flex-direction: row; /* Mantenha a direção em linha */
+        justify-content: center; /* Centraliza os botões horizontalmente */
+        flex-wrap: wrap; /* Permite que os botões se movam para a linha seguinte */
+    }
+
+    .BtnFilter {
+        flex: 1; /* Permite que os botões ocupem o espaço restante */
+        margin: 5px 2px; /* Adiciona um pequeno espaço horizontal entre os botões */
+    }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+    /* Estilos específicos para tablets */
+    .RefundTotalRequested h2 {
+        font-size: 22px; /* Ajusta o tamanho do texto para tablets */
+    }
+
+    .ModalContent {
+        width: 80%; /* Ajusta a largura do modal em tablets */
+    }
+
+    .BtnContainer {
+        flex-direction: row; /* Mantém a direção em linha para tablets */
+        justify-content: center; /* Centraliza os botões horizontalmente */
+    }
+}
+
+@media (min-width: 1025px) {
+    /* Estilos para telas maiores */
+    .BtnFilter {
+        margin-left: 10px; /* Mantém espaço entre os botões de filtro */
+    }
+
+    .ModalContent {
+        width: 400px; /* Define uma largura fixa para o modal em telas grandes */
     }
 }
