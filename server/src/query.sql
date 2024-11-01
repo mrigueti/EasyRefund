@@ -19,7 +19,7 @@ CREATE TABLE cargo (
     idcargo INT PRIMARY KEY AUTO_INCREMENT,
     cargo VARCHAR(45) NOT NULL,
     idsetor INT,
-    FOREIGN KEY (idsetor) REFERENCES setor(idsetor)
+    FOREIGN KEY (idsetor) REFERENCES setor (idsetor)
 );
 
 CREATE TABLE usuarios (
@@ -31,8 +31,8 @@ CREATE TABLE usuarios (
     data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     idcargo INT,
     idrole INT,
-    FOREIGN KEY (idcargo) REFERENCES cargo(idcargo),
-    FOREIGN KEY (idrole) REFERENCES roles(idrole)
+    FOREIGN KEY (idcargo) REFERENCES cargo (idcargo),
+    FOREIGN KEY (idrole) REFERENCES roles (idrole)
 );
 
 CREATE TABLE aprovadores (
@@ -40,7 +40,7 @@ CREATE TABLE aprovadores (
     login VARCHAR(45) NOT NULL,
     nome VARCHAR(150) NOT NULL,
     idusuario INT,
-    FOREIGN KEY (idusuario) REFERENCES usuarios(idusuario)
+    FOREIGN KEY (idusuario) REFERENCES usuarios (idusuario)
 );
 
 CREATE TABLE roles (
@@ -49,11 +49,11 @@ CREATE TABLE roles (
 );
 
 -- Inserir os tipos de usuário
-INSERT INTO roles (idrole, role_name) VALUES 
-(1, 'Funcionario'), 
-(2, 'Administrador'), 
-(3, 'Gerente');
-
+INSERT INTO
+    roles (idrole, role_name)
+VALUES (1, 'Funcionario'),
+    (2, 'Administrador'),
+    (3, 'Gerente');
 
 CREATE TABLE solicitacoes (
     idsolicitacao INT PRIMARY KEY AUTO_INCREMENT,
@@ -65,15 +65,17 @@ CREATE TABLE solicitacoes (
     valor_aprovado DECIMAL(10, 2),
     tipo_dedutivel VARCHAR(45),
     dt_aprovacao TIMESTAMP,
-    FOREIGN KEY (idusuario) REFERENCES usuarios(idusuario),
-    FOREIGN KEY (idaprovador) REFERENCES aprovadores(idaprovador)
+    descricao VARCHAR(250),
+    categoria VARCHAR(15),
+    FOREIGN KEY (idusuario) REFERENCES usuarios (idusuario),
+    FOREIGN KEY (idaprovador) REFERENCES aprovadores (idaprovador)
 );
 
 CREATE TABLE nfs (
     idnfs INT PRIMARY KEY AUTO_INCREMENT,
     anexo LONGBLOB NOT NULL,
     idsolicitacao INT,
-    FOREIGN KEY (idsolicitacao) REFERENCES solicitacoes(idsolicitacao)
+    FOREIGN KEY (idsolicitacao) REFERENCES solicitacoes (idsolicitacao)
 );
 
 CREATE TABLE relatorios (
@@ -84,7 +86,6 @@ CREATE TABLE relatorios (
 CREATE TABLE relatorio_solicitacoes (
     idsolicitacao INT,
     idrelatorio VARCHAR(45),
-
     FOREIGN KEY (idsolicitacao) REFERENCES solicitacoes(idsolicitacao),
     FOREIGN KEY (idrelatorio) REFERENCES relatorios(idrelatorios)
 );
@@ -92,6 +93,17 @@ CREATE TABLE relatorio_solicitacoes (
 CREATE TABLE setor_unidade (
     idsetor INT,
     idunidade INT,
-    FOREIGN KEY (idsetor) REFERENCES setor(idsetor),
-    FOREIGN KEY (idunidade) REFERENCES unidade(idunidade)
+    FOREIGN KEY (idsetor) REFERENCES setor (idsetor),
+    FOREIGN KEY (idunidade) REFERENCES unidade (idunidade)
 );
+
+CREATE TABLE notificacao (
+    idnotificacao INT,
+    mensagem VARCHAR(250),
+    idusuario INT,
+    aprovador INT,
+    idsolicitacao INT,
+    FOREIGN (idusuario) REFERENCES usuarios (idusuario),
+    FOREIGN (idaprovador) REFERENCES aprovadores (idaprovador),
+    FOREIGN (idsolicitacao) REFERENCES solicitacoes (idsolicitacao),
+)
