@@ -10,7 +10,7 @@ import Home from "./pages/HomeEmployee/Home.jsx"
 import FlowRefund from "./pages/FlowRefund/FlowRefund.jsx"
 import InformationUser from './pages/InformationUser/InformationUser.jsx';
 import PageManager from './pages/PageManager/PageManager.jsx'
-import HistoryUser from './components/HistoryUser/HistoryUser.jsx';
+import HistoryUser from './pages/HistoryUser/HistoryUser.jsx';
 
 
 function App() {

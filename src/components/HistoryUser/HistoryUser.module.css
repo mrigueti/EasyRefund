@@ -1,0 +1,122 @@
+.RefundContainer {
+    width: 95%;
+    padding: 20px;
+    background-color: #f8fafc;
+  }
+  
+  .RefundHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .RefundTotalRequested {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+  
+  .RefundTotalRequested span {
+    font-size: 14px;
+    color: #555;
+  }
+  
+  .RefundTotalRequested h2 {
+    font-size: 24px;
+    color: #007777;
+    margin: 0;
+  }
+  
+  .RefundHistory {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+  }
+  
+  .RefundTable {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .RefundTable th,
+  .RefundTable td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  
+  .RefundTable th {
+    background-color: #f8fafc;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 12px;
+    color: #000000;
+  }
+  
+  .RefundTable tbody tr:hover {
+    background-color: #f1f5f9;
+    cursor: pointer;
+  }
+  
+  .RefundSuccess {
+    color: #166534;
+    font-weight: 600;
+  }
+  
+  .RefundRejected {
+    color: #991b1b;
+    font-weight: 600;
+  }
+  
+  .RefundPending {
+    color: #854d0e;
+    font-weight: 600;
+  }
+  
+  .btnVoltar,
+  .btnAvancar {
+    background-color: transparent;
+    border: none;
+    font-size: 14px;
+    padding: 10px 15px; /* Espaçamento interno nos botões */
+  }
+  
+  .RefundPagination {
+    display: flex;
+    justify-content: center; /* Centraliza horizontalmente */
+    align-items: center; /* Centraliza verticalmente */
+    margin-top: 20px;
+  }
+  
+  .RefundPagination span {
+    margin: 0 10px; /* Espaçamento entre os elementos */
+    font-size: 14px;
+  }
+  
+  /* Estilo para as setas sem cor */
+  .RefundPagination button::before {
+    content: ''; /* Define um conteúdo vazio para os botões */
+  }
+  
+  .RefundPagination button:hover {
+    text-decoration: underline; /* Adiciona sublinhado ao passar o mouse */
+  }
+  
+  .RefundPagination button:disabled {
+    cursor: not-allowed; /* Cursor indicando que não é clicável */
+  }
+  
+  @media (max-width: 640px) {
+    .RefundTable th,
+    .RefundTable td {
+      padding: 10px;
+      font-size: 14px;
+    }
+  
+    .RefundTotalRequested h2 {
+      font-size: 20px;
+    }
+  }
+  

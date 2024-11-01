@@ -6,8 +6,9 @@ import notification from "../../icons/notifications.png";
 import logout from "../../icons/logout.png";
 import perfil from "../../icons/perfil.png";
 import "bootstrap/dist/css/bootstrap.min.css";
-import PermissionComponent from "../../components/Permission/PermissionComponent.jsx";
+
 import { useNavigate } from "react-router-dom";
+import HistoryUser from "../../components/HistoryUser/HistoryUser.jsx";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -58,7 +59,7 @@ const Home = () => {
         </div>
 
         {/* Componente Principal */}
-        <PermissionComponent />
+        <HistoryUser />
       </div>
 
       {/* Modal de Notificações */}
