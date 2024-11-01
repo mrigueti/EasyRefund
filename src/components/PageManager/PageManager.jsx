@@ -3,6 +3,8 @@ import styles from "./PageManager.module.css";
 import { useNavigate } from "react-router-dom";
 import exportacao from "../../icons/export.png";
 import adduser from "../../icons/addUser.png";
+import { jsPDF } from "jspdf";
+import * as XLSX from "xlsx";
 
 const PageManager = () => {
   const navigate = useNavigate();
@@ -13,6 +15,13 @@ const PageManager = () => {
   const [exportType, setExportType] = useState("PDF");
   const [showPopover, setShowPopover] = useState(false);
 
+  const requests = [
+    { name: "João", date: "01/10/2024", status: "Aceita", description: "Descrição 1", value: 100 },
+    { name: "Maria", date: "02/10/2024", status: "Negada", description: "Descrição 2", value: 200 },
+    { name: "Pedro", date: "03/10/2024", status: "Pendente", description: "Descrição 3", value: 300 },
+    // Adicione mais solicitações conforme necessário
+  ];
+
   const handleExport = () => {
     console.log("Exportando:", {
       startDate,
@@ -20,6 +29,53 @@ const PageManager = () => {
       exportStatus,
       exportType,
     });
+
+    const filteredRequests = requests.filter(request => {
+      const requestDate = new Date(request.date.split("/").reverse().join("/")); // Ajuste para o formato brasileiro
+      return requestDate >= startDate && requestDate <= endDate &&
+             (exportStatus === "Todas" || request.status === exportStatus);
+    });
+
+    if (exportType === "PDF") {
+      exportToPDF(filteredRequests);
+    } else if (exportType === "Excel") {
+      exportToExcel(filteredRequests);
+    }
+  };
+
+  const exportToPDF = (filteredRequests) => {
+    const doc = new jsPDF();
+    doc.setFontSize(16);
+    doc.text("Solicitações Exportadas", 10, 10);
+    
+    doc.setFontSize(12);
+    let y = 20;
+
+    filteredRequests.forEach(request => {
+      doc.text(`Nome: ${request.name}`, 10, y);
+      doc.text(`Data: ${request.date}`, 10, y + 10);
+      doc.text(`Status: ${request.status}`, 10, y + 20);
+      doc.text(`Descrição: ${request.description}`, 10, y + 30);
+      doc.text(`Valor: R$ ${request.value.toFixed(2)}`, 10, y + 40); // Valor formatado
+      y += 50;
+      doc.line(10, y, 200, y);
+      y += 5;
+    });
+
+    doc.save("solicitacoes.pdf");
+  };
+
+  const exportToExcel = (filteredRequests) => {
+    const ws = XLSX.utils.json_to_sheet(filteredRequests.map(request => ({
+      Nome: request.name,
+      Data: request.date,
+      Status: request.status,
+      Descrição: request.description,
+      Valor: request.value,
+    })));
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Solicitações");
+    XLSX.writeFile(wb, "solicitacoes.xlsx");
   };
 
   const handleRegisterUser = () => {
@@ -33,7 +89,6 @@ const PageManager = () => {
   const handleStartDateChange = (e) => {
     const date = new Date(e.target.value);
     setStartDate(date);
-    // Se a data de término for anterior à data de início, ajusta
     if (endDate < date) {
       setEndDate(date);
     }
@@ -41,10 +96,13 @@ const PageManager = () => {
 
   const handleEndDateChange = (e) => {
     const date = new Date(e.target.value);
-    // Permite a mudança se a data de término for igual ou posterior à data de início
     if (date >= startDate) {
       setEndDate(date);
     }
+  };
+
+  const handleFilterByStatus = (status) => {
+    setExportStatus(status);
   };
 
   return (
@@ -66,8 +124,8 @@ const PageManager = () => {
                     className="popover show"
                     style={{
                       position: "absolute",
-                      left: "0%", // Ajuste para centralizar em relação ao botão
-                      top: "100%", // Posicionar diretamente abaixo do botão
+                      left: "0%",
+                      top: "100%",
                       zIndex: 10,
                       width: "300px",
                     }}
@@ -93,7 +151,7 @@ const PageManager = () => {
                           className="form-control"
                           value={endDate.toISOString().split("T")[0]}
                           onChange={handleEndDateChange}
-                          min={startDate.toISOString().split("T")[0]} // Bloquear datas anteriores à data de início
+                          min={startDate.toISOString().split("T")[0]}
                         />
                       </div>
                       <div className="mb-3">
@@ -133,11 +191,11 @@ const PageManager = () => {
 
           <div className="mb-4">
             <div className={styles.BtnContainerGerente}>
-              <button className={styles.BtnFilterGerente} onClick={() => setExportStatus("Todas")}>Todas</button>
-              <button className={styles.BtnFilterGerente} onClick={() => setExportStatus("Aceita")}>Aceitas</button>
-              <button className={styles.BtnFilterGerente} onClick={() => setExportStatus("Negada")}>Negadas</button>
-              <button className={styles.BtnFilterGerente} onClick={() => setExportStatus("Pendente")}>Pendentes</button>
-              <button className={styles.BtnFilterGerente} onClick={() => setExportStatus("Revisar")}>Revisar</button>
+              <button className={styles.BtnFilterGerente} onClick={() => handleFilterByStatus("Todas")}>Todas</button>
+              <button className={styles.BtnFilterGerente} onClick={() => handleFilterByStatus("Aceita")}>Aceitas</button>
+              <button className={styles.BtnFilterGerente} onClick={() => handleFilterByStatus("Negada")}>Negadas</button>
+              <button className={styles.BtnFilterGerente} onClick={() => handleFilterByStatus("Pendente")}>Pendentes</button>
+              <button className={styles.BtnFilterGerente} onClick={() => handleFilterByStatus("Revisar")}>Revisar</button>
             </div>
           </div>
 
@@ -149,18 +207,23 @@ const PageManager = () => {
                   <th className="text-start">Data</th>
                   <th className="text-start">Status</th>
                   <th className="text-start">Descrição</th>
+                  <th className="text-start">Valor</th> {/* Coluna para o valor */}
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>João</td>
-                  <td>01/10/2024</td>
-                  <td>
-                    <span className={styles.StatusAceitaGerente}>Aceita</span>
-                  </td>
-                  <td>Descrição 1</td>
-                </tr>
-                {/* Mais linhas da tabela podem ser adicionadas aqui */}
+                {requests.filter(request => exportStatus === "Todas" || request.status === exportStatus).map((request, index) => (
+                  <tr key={index}>
+                    <td>{request.name}</td>
+                    <td>{request.date}</td>
+                    <td>
+                      <span className={request.status === "Aceita" ? styles.StatusAceitaGerente : styles.StatusNegadaGerente}>
+                        {request.status}
+                      </span>
+                    </td>
+                    <td>{request.description}</td>
+                    <td>R$ {request.value.toFixed(2)}</td> {/* Exibição do valor da solicitação */}
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
