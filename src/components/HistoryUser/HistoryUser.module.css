@@ -38,6 +38,13 @@ body {
     margin: 0;
 }
 
+/* Ajuste para o botão de voltar */
+.button_back_position {
+    margin-right: 20px; /* Espaçamento à direita do botão */
+    display: flex; /* Mantém a exibição em flex */
+    align-items: center; /* Centraliza verticalmente */
+}
+
 /* Histórico de Reembolso */
 .RefundHistory {
     background-color: #ffffff;
@@ -70,6 +77,20 @@ body {
 .RefundTable tbody tr:hover {
     background-color: #f1f5f9;
     cursor: pointer;
+}
+
+.infoButtonBack {
+    background: none;
+    border: none;
+    color: #008080;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.infoButtonBack:hover {
+    text-decoration: underline;
 }
 
 /* Estilos dos Status */

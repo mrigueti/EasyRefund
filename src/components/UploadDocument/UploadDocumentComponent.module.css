@@ -6,7 +6,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  position: relative; /* Adicionado para o posicionamento do botão */
+  position: relative;
 }
 
 .button_container {
@@ -14,6 +14,7 @@
   justify-content: center;
   align-items: center;
   width: 100%;
+  margin-top: 20px; /* Espaçamento entre o botão de enviar e o textarea */
 }
 
 .button_refund {
@@ -23,11 +24,6 @@
   color: black;
   border: solid 1px #007777;
   margin: 10px;
-}
-
-.button_refund:hover {
-  color: #f8f8ff;
-  background-color: #007777;
 }
 
 .infoButtonBack {
@@ -44,9 +40,43 @@
   text-decoration: underline;
 }
 
-/* Nova classe para posicionar o botão no canto superior direito */
 .button_back_position {
   position: absolute;
   top: 10px;
   left: 10px;
+}
+
+.filterBtns {
+  display: flex;
+  flex-direction: column; /* Empilha os botões e textareas */
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.btnHotel, .btnFood, .btnTransport {
+  background-color: transparent;
+  border: 1px solid #007777;
+  border-radius: 5px;
+  margin-bottom: 5px; /* Espaçamento entre os botões */
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+
+
+.textareaLarge {
+  width: 100%; /* Largura do textarea */
+  height: 200px; /* Altura do textarea */
+  background-color: white;
+  margin-top: 10px; /* Espaçamento entre o botão e o textarea */
+  border: 1px solid #007777; /* Estilo de borda */
+  border-radius: 5px; /* Bordas arredondadas */
+  padding: 10px; /* Espaçamento interno */
+  resize: none; /* Impede o redimensionamento manual */
+}
+
+.buttonWithTextArea {
+  display: flex;
+  flex-direction: column; /* Coloca o textarea embaixo do botão */
+  margin-bottom: 20px; /* Espaçamento entre as categorias */
 }
