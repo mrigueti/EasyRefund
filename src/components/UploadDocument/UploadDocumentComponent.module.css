@@ -62,6 +62,20 @@
   cursor: pointer;
 }
 
+.btnHotel:hover {
+  background-color: #007777;
+  color: white;
+}
+
+.btnFood:hover {
+  background-color: #007777;
+  color: white;
+}
+
+.btnTransport:hover {
+  background-color: #007777;
+  color: white;
+}
 
 
 .textareaLarge {

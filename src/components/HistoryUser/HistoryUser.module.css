@@ -233,7 +233,8 @@ body {
 }
 
 .BtnFilter:hover {
-    opacity: 0.8;
+    background-color: #007777;
+    color: white;
 }
 
 /* Responsividade */
