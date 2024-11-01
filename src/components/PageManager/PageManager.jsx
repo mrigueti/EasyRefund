@@ -16,9 +16,34 @@ const PageManager = () => {
   const [showPopover, setShowPopover] = useState(false);
 
   const requests = [
-    { name: "João", date: "01/10/2024", status: "Aceita", description: "Descrição 1", value: 100 },
-    { name: "Maria", date: "02/10/2024", status: "Negada", description: "Descrição 2", value: 200 },
-    { name: "Pedro", date: "03/10/2024", status: "Pendente", description: "Descrição 3", value: 300 },
+    {
+      name: "João",
+      date: "01/10/2024",
+      status: "Aceita",
+      description: "Descrição 1",
+      value: 100,
+    },
+    {
+      name: "Maria",
+      date: "02/10/2024",
+      status: "Negada",
+      description: "Descrição 2",
+      value: 200,
+    },
+    {
+      name: "Pedro",
+      date: "03/10/2024",
+      status: "Pendente",
+      description: "Descrição 3",
+      value: 300,
+    },
+    {
+      name: "Carlos",
+      date: "04/10/2024",
+      status: "Revisar",
+      description: "Descrição 4",
+      value: 150,
+    },
     // Adicione mais solicitações conforme necessário
   ];
 
@@ -30,10 +55,13 @@ const PageManager = () => {
       exportType,
     });
 
-    const filteredRequests = requests.filter(request => {
+    const filteredRequests = requests.filter((request) => {
       const requestDate = new Date(request.date.split("/").reverse().join("/")); // Ajuste para o formato brasileiro
-      return requestDate >= startDate && requestDate <= endDate &&
-             (exportStatus === "Todas" || request.status === exportStatus);
+      return (
+        requestDate >= startDate &&
+        requestDate <= endDate &&
+        (exportStatus === "Todas" || request.status === exportStatus)
+      );
     });
 
     if (exportType === "PDF") {
@@ -47,11 +75,11 @@ const PageManager = () => {
     const doc = new jsPDF();
     doc.setFontSize(16);
     doc.text("Solicitações Exportadas", 10, 10);
-    
+
     doc.setFontSize(12);
     let y = 20;
 
-    filteredRequests.forEach(request => {
+    filteredRequests.forEach((request) => {
       doc.text(`Nome: ${request.name}`, 10, y);
       doc.text(`Data: ${request.date}`, 10, y + 10);
       doc.text(`Status: ${request.status}`, 10, y + 20);
@@ -66,20 +94,22 @@ const PageManager = () => {
   };
 
   const exportToExcel = (filteredRequests) => {
-    const ws = XLSX.utils.json_to_sheet(filteredRequests.map(request => ({
-      Nome: request.name,
-      Data: request.date,
-      Status: request.status,
-      Descrição: request.description,
-      Valor: request.value,
-    })));
+    const ws = XLSX.utils.json_to_sheet(
+      filteredRequests.map((request) => ({
+        Nome: request.name,
+        Data: request.date,
+        Status: request.status,
+        Descrição: request.description,
+        Valor: request.value,
+      }))
+    );
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Solicitações");
     XLSX.writeFile(wb, "solicitacoes.xlsx");
   };
 
   const handleRegisterUser = () => {
-    navigate("/register"); 
+    navigate("/register");
   };
 
   const togglePopover = () => {
@@ -113,10 +143,16 @@ const PageManager = () => {
             <h2 className="h4">Painel de Gestão</h2>
             <div className="d-flex align-items-center">
               <div style={{ position: "relative" }}>
-                <button className={`btn btn-light btn-small`} onClick={togglePopover}>
+                <button
+                  className={`btn btn-light btn-small`}
+                  onClick={togglePopover}
+                >
                   <img src={exportacao} alt="Solicitar relatório" />
                 </button>
-                <button className={`btn btn-light btn-small`} onClick={handleRegisterUser}>
+                <button
+                  className={`btn btn-light btn-small`}
+                  onClick={handleRegisterUser}
+                >
                   <img src={adduser} alt="Adicionar usuário" />
                 </button>
                 {showPopover && (
@@ -132,11 +168,15 @@ const PageManager = () => {
                   >
                     <div className="popover-header">
                       <h4 className="font-weight-bold">Exportar Dados</h4>
-                      <p className="text-muted">Selecione as opções para exportação</p>
+                      <p className="text-muted">
+                        Selecione as opções para exportação
+                      </p>
                     </div>
                     <div className="popover-body">
                       <div className="mb-3">
-                        <label className="form-label" htmlFor="startDate">Data de Início</label>
+                        <label className="form-label" htmlFor="startDate">
+                          Data de Início
+                        </label>
                         <input
                           type="date"
                           className="form-control"
@@ -145,7 +185,9 @@ const PageManager = () => {
                         />
                       </div>
                       <div className="mb-3">
-                        <label className="form-label" htmlFor="endDate">Data de Término</label>
+                        <label className="form-label" htmlFor="endDate">
+                          Data de Término
+                        </label>
                         <input
                           type="date"
                           className="form-control"
@@ -155,7 +197,9 @@ const PageManager = () => {
                         />
                       </div>
                       <div className="mb-3">
-                        <label className="form-label" htmlFor="status">Status</label>
+                        <label className="form-label" htmlFor="status">
+                          Status
+                        </label>
                         <select
                           className="form-select"
                           value={exportStatus}
@@ -169,7 +213,9 @@ const PageManager = () => {
                         </select>
                       </div>
                       <div className="mb-3">
-                        <label className="form-label" htmlFor="type">Tipo de Exportação</label>
+                        <label className="form-label" htmlFor="type">
+                          Tipo de Exportação
+                        </label>
                         <select
                           className="form-select"
                           value={exportType}
@@ -179,7 +225,10 @@ const PageManager = () => {
                           <option value="Excel">Excel</option>
                         </select>
                       </div>
-                      <button onClick={handleExport} className="btn btn-primary">
+                      <button
+                        onClick={handleExport}
+                        className="btn btn-primary"
+                      >
                         Exportar
                       </button>
                     </div>
@@ -191,11 +240,36 @@ const PageManager = () => {
 
           <div className="mb-4">
             <div className={styles.BtnContainerGerente}>
-              <button className={styles.BtnFilterGerente} onClick={() => handleFilterByStatus("Todas")}>Todas</button>
-              <button className={styles.BtnFilterGerente} onClick={() => handleFilterByStatus("Aceita")}>Aceitas</button>
-              <button className={styles.BtnFilterGerente} onClick={() => handleFilterByStatus("Negada")}>Negadas</button>
-              <button className={styles.BtnFilterGerente} onClick={() => handleFilterByStatus("Pendente")}>Pendentes</button>
-              <button className={styles.BtnFilterGerente} onClick={() => handleFilterByStatus("Revisar")}>Revisar</button>
+              <button
+                className={styles.BtnFilterGerente}
+                onClick={() => handleFilterByStatus("Todas")}
+              >
+                Todas
+              </button>
+              <button
+                className={styles.BtnFilterGerente}
+                onClick={() => handleFilterByStatus("Aceita")}
+              >
+                Aceitas
+              </button>
+              <button
+                className={styles.BtnFilterGerente}
+                onClick={() => handleFilterByStatus("Negada")}
+              >
+                Negadas
+              </button>
+              <button
+                className={styles.BtnFilterGerente}
+                onClick={() => handleFilterByStatus("Pendente")}
+              >
+                Pendentes
+              </button>
+              <button
+                className={styles.BtnFilterGerente}
+                onClick={() => handleFilterByStatus("Revisar")}
+              >
+                Revisar
+              </button>
             </div>
           </div>
 
@@ -207,23 +281,41 @@ const PageManager = () => {
                   <th className="text-start">Data</th>
                   <th className="text-start">Status</th>
                   <th className="text-start">Descrição</th>
-                  <th className="text-start">Valor</th> {/* Coluna para o valor */}
+                  <th className="text-start">Valor</th>{" "}
+                  {/* Coluna para o valor */}
                 </tr>
               </thead>
               <tbody>
-                {requests.filter(request => exportStatus === "Todas" || request.status === exportStatus).map((request, index) => (
-                  <tr key={index}>
-                    <td>{request.name}</td>
-                    <td>{request.date}</td>
-                    <td>
-                      <span className={request.status === "Aceita" ? styles.StatusAceitaGerente : styles.StatusNegadaGerente}>
-                        {request.status}
-                      </span>
-                    </td>
-                    <td>{request.description}</td>
-                    <td>R$ {request.value.toFixed(2)}</td> {/* Exibição do valor da solicitação */}
-                  </tr>
-                ))}
+                {requests
+                  .filter(
+                    (request) =>
+                      exportStatus === "Todas" ||
+                      request.status === exportStatus
+                  )
+                  .map((request, index) => (
+                    <tr key={index}>
+                      <td>{request.name}</td>
+                      <td>{request.date}</td>
+                      <td>
+                        <span
+                          className={
+                            request.status === "Aceita"
+                              ? styles.StatusAceitaGerente
+                              : request.status === "Negada"
+                              ? styles.StatusNegadaGerente
+                              : request.status === "Pendente"
+                              ? styles.StatusPendenteGerente
+                              : styles.StatusRevisarGerente
+                          }
+                        >
+                          {request.status}
+                        </span>
+                      </td>
+                      <td>{request.description}</td>
+                      <td>R$ {request.value.toFixed(2)}</td>{" "}
+                      {/* Exibição do valor da solicitação */}
+                    </tr>
+                  ))}
               </tbody>
             </table>
           </div>

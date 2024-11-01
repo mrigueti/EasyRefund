@@ -6,7 +6,7 @@
     align-items: center;
     height: 100%;
     width: 95%;
-    background: linear-gradient(135deg, #f0f0f0 0%, #d9d9d9 100%);
+    background-color: #f8f8FF ;
     font-family: Arial, sans-serif;
     position: relative;
   }
@@ -122,3 +122,9 @@
     text-decoration: underline;
   }
   
+  .CheckBox{
+    display: flex;
+    justify-content: space-between;
+  
+  }
+

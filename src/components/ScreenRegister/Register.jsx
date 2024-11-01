@@ -3,7 +3,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import user from "../../icons/user.png";
 import email from "../../icons/email.png";
-import lock from "../../icons/cadeado.png";
 import sector from "../../icons/setor.png";
 import role from "../../icons/cargo.png";
 import location from "../../icons/unidade.png";
@@ -24,13 +23,11 @@ const Register = () => {
     password: "123456",
   };
 
-  // const [cpfRegisterP, setCpfRegister] = useState("");
   const [nameRegisterP, setNameRegister] = useState("");
   const [roleRegisterP, setRoleRegisterP] = useState("");
   const [sectorRegisterP, setSectorRegisterP] = useState("");
   const [locationRegisterP, setLocationRegisterP] = useState("");
   const [emailRegisterP, setEmailRegister] = useState("");
-  const [passwordRegisterP, setPasswordRegister] = useState("");
   const [errors, setErrors] = useState({});
   const [registrationError, setRegistrationError] = useState(false);
 
@@ -41,77 +38,61 @@ const Register = () => {
   const handleRegisterPermission = (e) => {
     e.preventDefault();
     setErrors({});
-    setRegistrationError(false); // Reseta o estado de erro de cadastro
-
-    // if (!cpfRegisterP) {
-    //   // Mensagem se CPF estiver vazio
-    //   alertError("cpf", "O campo CPF não pode estar vazio!");
-    // } else if (cpfRegisterP.length > 0 && cpfRegisterP.length < 11) {
-    //   // Mensagem se CPF tiver entre 1 e 10 números
-    //   alertError("cpf", "Insira todos os números do CPF");
-    // } else if (cpfRegisterP.length === 11) {
-    //   // Verifica se o CPF tem 11 números
-    //   if (cpfRegisterP.length < 11) {
-    //     alertError("cpf", "Insira todos os números do CPF");
-    //   }
-    // }
+    setRegistrationError(false);
 
     if (!nameRegisterP) {
       alertError("name", "O campo Nome não pode estar vazio!");
     }
-
     if (!roleRegisterP) {
       alertError("role", "O campo Cargo não pode estar vazio");
     }
-
     if (!sectorRegisterP) {
-      alertError("sector", " O campo de Setor não pode estar vazio");
+      alertError("sector", "O campo de Setor não pode estar vazio");
     }
-
     if (!locationRegisterP) {
       alertError("location", "O campo Unidade não pode estar vazio");
     }
-
     if (!emailRegisterP) {
       alertError("email", "O campo E-mail não pode estar vazio!");
     }
 
-    if (!passwordRegisterP) {
-      alertError("password", "a senha não pode estar vazio!");
+    const checkboxes = document.getElementsByName("userRole");
+    const isCheckboxChecked = Array.from(checkboxes).some(
+      (checkbox) => checkbox.checked
+    );
+    if (!isCheckboxChecked) {
+      alertError("checkbox", "Selecione pelo menos uma função.");
     }
 
-    // Verificação final para garantir que não haja erros antes de cadastrar
     if (
       !errors.name &&
       !errors.role &&
       !errors.sector &&
       !errors.location &&
       !errors.email &&
-      !errors.password
+      !errors.checkbox
     ) {
       if (
-        // cpfRegisterP === dataRegister.cpf &&
-        nameRegisterP.toLowerCase() === dataRegister.name &&
-        roleRegisterP.toLowerCase() === dataRegister.role &&
-        sectorRegisterP.toLowerCase() === dataRegister.sector &&
-        locationRegisterP.toLowerCase() === dataRegister.location &&
-        emailRegisterP.toLowerCase() === dataRegister.email &&
-        passwordRegisterP === dataRegister.password
+        nameRegisterP.toUpperCase() === dataRegister.name &&
+        roleRegisterP.toUpperCase() === dataRegister.role &&
+        sectorRegisterP.toUpperCase() === dataRegister.sector &&
+        locationRegisterP.toUpperCase() === dataRegister.location &&
+        emailRegisterP.toUpperCase() === dataRegister.email
       ) {
-        alert(
-          `Cadastro realizado com sucesso!\nBem-vindo, ${dataRegister.name}`
-        );
-        navigate("/");
+        alert(`Cadastro realizado com sucesso!\nBem-vindo, ${dataRegister.name}`);
       } else {
-        setRegistrationError(true); // Ativa a mensagem de erro de cadastro se os dados não corresponderem
+        setRegistrationError(true);
       }
     }
   };
 
-  // const handleCpfChange = (e) => {
-  //   const value = e.target.value;
-  //   setCpfRegister(value.replace(/\D/g, ""));
-  // };
+  const handleCheckboxChange = (e) => {
+    const checkboxes = document.getElementsByName("userRole");
+    checkboxes.forEach((checkbox) => {
+      checkbox.checked = false;
+    });
+    e.target.checked = true;
+  };
 
   return (
     <div className={styles.RegisterPermission}>
@@ -151,7 +132,7 @@ const Register = () => {
               required
             />
           </div>
-          {errors.name && (
+          {errors.role && (
             <div className={styles.errorAlert}>{errors.role}</div>
           )}
         </div>
@@ -167,7 +148,7 @@ const Register = () => {
               required
             />
           </div>
-          {errors.name && (
+          {errors.sector && (
             <div className={styles.errorAlert}>{errors.sector}</div>
           )}
         </div>
@@ -183,7 +164,7 @@ const Register = () => {
               required
             />
           </div>
-          {errors.name && (
+          {errors.location && (
             <div className={styles.errorAlert}>{errors.location}</div>
           )}
         </div>
@@ -203,29 +184,42 @@ const Register = () => {
             <div className={styles.errorAlert}>{errors.email}</div>
           )}
         </div>
-        <div className={styles.RegisterInputContainer}>
-          <div className={styles.RegisterPasswordInput}>
-            <img src={lock} alt="Password Icon" className={styles.Icon} />
+        <div className={styles.CheckBox}>
+          <div className={styles.CheckFuncUser}>
             <input
-              type="password"
-              name="passwordRegisterP"
-              placeholder="Senha"
-              value={passwordRegisterP}
-              onChange={(e) => setPasswordRegister(e.target.value)}
-              required
-            />
+              type="checkbox"
+              name="userRole"
+              onChange={handleCheckboxChange}
+            />{" "}
+            Funcionário
           </div>
-          {errors.password && (
-            <div className={styles.errorAlert}>{errors.password}</div>
-          )}
+          <div className={styles.CheckPermUser}>
+            <input
+              type="checkbox"
+              name="userRole"
+              onChange={handleCheckboxChange}
+            />{" "}
+            Liberador
+          </div>
+          <div className={styles.CheckManagerUser}>
+            <input
+              type="checkbox"
+              name="userRole"
+              onChange={handleCheckboxChange}
+            />{" "}
+            Gerente
+          </div>
         </div>
-        {registrationError && (
-          <div className={styles.errorAlert}>
-            Não foi possível efetuar o cadastro!
-          </div>
-        )}{" "}
-        {/* Mensagem de erro de cadastro */}
+        {errors.checkbox && (
+          <div className={styles.errorAlert}>{errors.checkbox}</div>
+        )}
         <div className={styles.RegisterBtnRegister}>
+          {registrationError && (
+            <div className={styles.errorAlert}>
+              Não foi possível efetuar o cadastro!
+            </div>
+          )}
+
           <button type="submit" onClick={handleRegisterPermission}>
             Cadastrar
           </button>
