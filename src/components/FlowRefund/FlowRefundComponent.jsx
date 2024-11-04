@@ -1,5 +1,4 @@
 import styles from "./FlowRefundComponent.module.css";
-import Button from "react-bootstrap/Button";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
 
@@ -22,20 +21,19 @@ const FlowRefundComponent = () => {
       >
         <span className={styles.infoArrow}>&larr;</span> Voltar
       </button>
-      <Button
-        className={styles.button_refund}
-        size="lg"
+      <button
+        className={styles.BtnDeductible}
         onClick={handleUploadDocument}
       >
         Reembolso Dedutível
-      </Button>
-      <Button
-        className={styles.button_refund}
+        </button>
+      <button
+        className={styles.BtnNonDeductible}
         size="lg"
         onClick={handleUploadDocument}
       >
-        Reembolso Não Dedutível
-      </Button>
+        Reembolso não Dedutível
+        </button>
     </div>
   );
 };
