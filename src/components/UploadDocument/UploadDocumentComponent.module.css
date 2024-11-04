@@ -9,14 +9,26 @@
   position: relative;
 }
 
-.button_container {
+/* Botão de envio */
+.BtnSendDiv {
   display: flex;
   justify-content: center;
-  align-items: center;
-  width: 100%;
-  margin-top: 20px; /* Espaçamento entre o botão de enviar e o textarea */
 }
 
+.BtnSend {
+  background-color: transparent;
+  border: 1px solid #007777;
+  border-radius: 5px;
+  height: 50px;
+  width: 200px;
+}
+
+.BtnSend:hover {
+  background-color: #007777;
+  color: #f8f8ff;
+}
+
+/* Botão de reembolso */
 .button_refund {
   width: 250px;
   height: 50px;
@@ -46,51 +58,88 @@
   left: 10px;
 }
 
-.filterBtns {
+/* Opções de botões */
+.BtnOption {
   display: flex;
-  flex-direction: column; /* Empilha os botões e textareas */
-  justify-content: center;
-  margin-top: 20px;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
-.btnHotel, .btnFood, .btnTransport {
+.BtnHotel, .BtnFood, .BtnTransport {
   background-color: transparent;
   border: 1px solid #007777;
   border-radius: 5px;
-  margin-bottom: 5px; /* Espaçamento entre os botões */
-  padding: 10px 20px;
-  cursor: pointer;
+  height: 40px;
+  width: 150px;
 }
 
-.btnHotel:hover {
+.BtnHotel:hover, .BtnFood:hover, .BtnTransport:hover {
   background-color: #007777;
   color: white;
 }
 
-.btnFood:hover {
+/* Área de texto */
+.textAreaDescription {
+  border: 1px solid #007777;
+  border-radius: 5px;
+  height: 200px;
+  width: 100%;
+  max-width: 650px;
+  margin-top: 20px;
+}
+
+.selected {
   background-color: #007777;
   color: white;
 }
 
-.btnTransport:hover {
-  background-color: #007777;
-  color: white;
+.successMessage {
+  text-align: center; 
+  margin-top: 20px; 
+  font-size: 1.2em; 
+  color: green;
 }
 
 
-.textareaLarge {
-  width: 100%; /* Largura do textarea */
-  height: 200px; /* Altura do textarea */
-  background-color: white;
-  margin-top: 10px; /* Espaçamento entre o botão e o textarea */
-  border: 1px solid #007777; /* Estilo de borda */
-  border-radius: 5px; /* Bordas arredondadas */
-  padding: 10px; /* Espaçamento interno */
-  resize: none; /* Impede o redimensionamento manual */
+/* Responsividade */
+@media (max-width: 768px) {
+  .BtnSend, .button_refund {
+    width: 180px;
+    height: 45px;
+  }
+
+  .textAreaDescription {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .BtnOption {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .BtnHotel, .BtnFood, .BtnTransport {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .infoButtonBack {
+    font-size: 16px;
+  }
 }
 
-.buttonWithTextArea {
-  display: flex;
-  flex-direction: column; /* Coloca o textarea embaixo do botão */
-  margin-bottom: 20px; /* Espaçamento entre as categorias */
+@media (max-width: 576px) {
+  .BtnSend, .button_refund {
+    width: 150px;
+    height: 40px;
+  }
+
+  .textAreaDescription {
+    height: 150px;
+  }
+
+  .infoButtonBack {
+    font-size: 14px;
+  }
 }
