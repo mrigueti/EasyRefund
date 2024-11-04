@@ -9,12 +9,14 @@ import * as XLSX from "xlsx";
 const PageManager = () => {
   const navigate = useNavigate();
 
+  // Estados para armazenar a data de início e de término do filtro
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
-  const [exportStatus, setExportStatus] = useState("Todas");
-  const [exportType, setExportType] = useState("PDF");
-  const [showPopover, setShowPopover] = useState(false);
+  const [exportStatus, setExportStatus] = useState("Todas"); // Estado para o status selecionado
+  const [exportType, setExportType] = useState("PDF"); // Estado para o tipo de exportação selecionado
+  const [showPopover, setShowPopover] = useState(false); // Controle para mostrar/ocultar o popover
 
+  // Dados de exemplo para as solicitações
   const requests = [
     {
       name: "João",
@@ -44,9 +46,9 @@ const PageManager = () => {
       description: "Descrição 4",
       value: 150,
     },
-    // Adicione mais solicitações conforme necessário
   ];
 
+  // Função para exportar as solicitações
   const handleExport = () => {
     console.log("Exportando:", {
       startDate,
@@ -55,8 +57,9 @@ const PageManager = () => {
       exportType,
     });
 
+    // Filtra as solicitações com base nas datas e no status
     const filteredRequests = requests.filter((request) => {
-      const requestDate = new Date(request.date.split("/").reverse().join("/")); // Ajuste para o formato brasileiro
+      const requestDate = new Date(request.date.split("/").reverse().join("/")); // Converte a data para o formato correto
       return (
         requestDate >= startDate &&
         requestDate <= endDate &&
@@ -64,6 +67,7 @@ const PageManager = () => {
       );
     });
 
+    // Exporta conforme o tipo selecionado (PDF ou Excel)
     if (exportType === "PDF") {
       exportToPDF(filteredRequests);
     } else if (exportType === "Excel") {
@@ -71,41 +75,32 @@ const PageManager = () => {
     }
   };
 
- // Função para exportar solicitações filtradas para um arquivo PDF
-const exportToPDF = (filteredRequests) => {
-  // Cria um novo documento PDF usando jsPDF
-  const doc = new jsPDF();
+  // Função para exportar solicitações filtradas para um arquivo PDF
+  const exportToPDF = (filteredRequests) => {
+    const doc = new jsPDF();
+    doc.setFontSize(16);
+    doc.text("Solicitações Exportadas", 10, 10); // Título do PDF
 
-  // Define o título do PDF com fonte maior
-  doc.setFontSize(16);
-  doc.text("Solicitações Exportadas", 10, 10); // Texto "Solicitações Exportadas" posicionado no topo
+    doc.setFontSize(12);
+    let y = 20; // Posição inicial para o conteúdo
 
-  // Define o tamanho da fonte para o restante do conteúdo
-  doc.setFontSize(12);
-  let y = 20; // Define a posição vertical inicial para o conteúdo das solicitações
+    // Adiciona cada solicitação ao PDF
+    filteredRequests.forEach((request) => {
+      doc.text(`Nome: ${request.name}`, 10, y);
+      doc.text(`Data: ${request.date}`, 10, y + 10);
+      doc.text(`Status: ${request.status}`, 10, y + 20);
+      doc.text(`Descrição: ${request.description}`, 10, y + 30);
+      doc.text(`Valor: R$ ${request.value.toFixed(2)}`, 10, y + 40);
 
-  // Loop sobre cada solicitação filtrada para adicionar ao PDF
-  filteredRequests.forEach((request) => {
-      // Adiciona os detalhes da solicitação no PDF, linha por linha
-      doc.text(`Nome: ${request.name}`, 10, y);            // Nome da solicitação
-      doc.text(`Data: ${request.date}`, 10, y + 10);       // Data da solicitação
-      doc.text(`Status: ${request.status}`, 10, y + 20);   // Status da solicitação
-      doc.text(`Descrição: ${request.description}`, 10, y + 30); // Descrição da solicitação
-      doc.text(`Valor: R$ ${request.value.toFixed(2)}`, 10, y + 40); // Valor da solicitação formatado com duas casas decimais
-
-      // Atualiza a posição vertical (y) para a próxima solicitação, deixando um espaço entre elas
       y += 50;
+      doc.line(10, y, 200, y); // Linha separadora
+      y += 5;
+    });
 
-      // Adiciona uma linha horizontal separadora entre cada solicitação
-      doc.line(10, y, 200, y);
-      y += 5; // Adiciona um pequeno espaço abaixo da linha separadora
-  });
+    doc.save("solicitacoes.pdf"); // Salva o arquivo como "solicitacoes.pdf"
+  };
 
-  // Salva o arquivo PDF gerado com o nome "solicitacoes.pdf"
-  doc.save("solicitacoes.pdf");
-};
-
-
+  // Função para exportar solicitações filtradas para um arquivo Excel
   const exportToExcel = (filteredRequests) => {
     const ws = XLSX.utils.json_to_sheet(
       filteredRequests.map((request) => ({
@@ -121,14 +116,17 @@ const exportToPDF = (filteredRequests) => {
     XLSX.writeFile(wb, "solicitacoes.xlsx");
   };
 
+  // Função para navegar até a página de cadastro de usuários
   const handleRegisterUser = () => {
     navigate("/register");
   };
 
+  // Função para mostrar/ocultar o popover de exportação
   const togglePopover = () => {
     setShowPopover(!showPopover);
   };
 
+  // Função para lidar com a mudança da data de início
   const handleStartDateChange = (e) => {
     const date = new Date(e.target.value);
     setStartDate(date);
@@ -137,6 +135,7 @@ const exportToPDF = (filteredRequests) => {
     }
   };
 
+  // Função para lidar com a mudança da data de término
   const handleEndDateChange = (e) => {
     const date = new Date(e.target.value);
     if (date >= startDate) {
@@ -144,6 +143,7 @@ const exportToPDF = (filteredRequests) => {
     }
   };
 
+  // Função para definir o status para filtro
   const handleFilterByStatus = (status) => {
     setExportStatus(status);
   };
@@ -186,6 +186,7 @@ const exportToPDF = (filteredRequests) => {
                       </p>
                     </div>
                     <div className="popover-body">
+                      {/* Campo para selecionar a data de início */}
                       <div className="mb-3">
                         <label className="form-label" htmlFor="startDate">
                           Data de Início
@@ -197,6 +198,7 @@ const exportToPDF = (filteredRequests) => {
                           onChange={handleStartDateChange}
                         />
                       </div>
+                      {/* Campo para selecionar a data de término */}
                       <div className="mb-3">
                         <label className="form-label" htmlFor="endDate">
                           Data de Término
@@ -209,6 +211,7 @@ const exportToPDF = (filteredRequests) => {
                           min={startDate.toISOString().split("T")[0]}
                         />
                       </div>
+                      {/* Campo para selecionar o status das solicitações */}
                       <div className="mb-3">
                         <label className="form-label" htmlFor="status">
                           Status
@@ -225,6 +228,7 @@ const exportToPDF = (filteredRequests) => {
                           <option value="Revisar">Revisar</option>
                         </select>
                       </div>
+                      {/* Campo para selecionar o tipo de exportação */}
                       <div className="mb-3">
                         <label className="form-label" htmlFor="type">
                           Tipo de Exportação
@@ -238,6 +242,7 @@ const exportToPDF = (filteredRequests) => {
                           <option value="Excel">Excel</option>
                         </select>
                       </div>
+                      {/* Botão para iniciar a exportação */}
                       <button
                         onClick={handleExport}
                         className="btn btn-primary"
@@ -251,86 +256,40 @@ const exportToPDF = (filteredRequests) => {
             </div>
           </header>
 
+          {/* Botões de filtro para status das solicitações */}
           <div className="mb-4">
             <div className={styles.BtnContainerGerente}>
               <button
-                className={styles.BtnFilterGerente}
+                className={styles.BtnAcoesGerente}
                 onClick={() => handleFilterByStatus("Todas")}
               >
                 Todas
               </button>
               <button
-                className={styles.BtnFilterGerente}
+                className={styles.BtnAcoesGerente}
                 onClick={() => handleFilterByStatus("Aceita")}
               >
-                Aceitas
+                Aceita
               </button>
               <button
-                className={styles.BtnFilterGerente}
+                className={styles.BtnAcoesGerente}
                 onClick={() => handleFilterByStatus("Negada")}
               >
-                Negadas
+                Negada
               </button>
               <button
-                className={styles.BtnFilterGerente}
+                className={styles.BtnAcoesGerente}
                 onClick={() => handleFilterByStatus("Pendente")}
               >
-                Pendentes
+                Pendente
               </button>
               <button
-                className={styles.BtnFilterGerente}
+                className={styles.BtnAcoesGerente}
                 onClick={() => handleFilterByStatus("Revisar")}
               >
                 Revisar
               </button>
             </div>
-          </div>
-
-          <div className={styles.TableContainerGerente}>
-            <table className={styles.GerenteTable}>
-              <thead>
-                <tr>
-                  <th className="text-start">Nome</th>
-                  <th className="text-start">Data</th>
-                  <th className="text-start">Status</th>
-                  <th className="text-start">Descrição</th>
-                  <th className="text-start">Valor</th>{" "}
-                  {/* Coluna para o valor */}
-                </tr>
-              </thead>
-              <tbody>
-                {requests
-                  .filter(
-                    (request) =>
-                      exportStatus === "Todas" ||
-                      request.status === exportStatus
-                  )
-                  .map((request, index) => (
-                    <tr key={index}>
-                      <td>{request.name}</td>
-                      <td>{request.date}</td>
-                      <td>
-                        <span
-                          className={
-                            request.status === "Aceita"
-                              ? styles.StatusAceitaGerente
-                              : request.status === "Negada"
-                              ? styles.StatusNegadaGerente
-                              : request.status === "Pendente"
-                              ? styles.StatusPendenteGerente
-                              : styles.StatusRevisarGerente
-                          }
-                        >
-                          {request.status}
-                        </span>
-                      </td>
-                      <td>{request.description}</td>
-                      <td>R$ {request.value.toFixed(2)}</td>{" "}
-                      {/* Exibição do valor da solicitação */}
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
           </div>
         </div>
       </div>
