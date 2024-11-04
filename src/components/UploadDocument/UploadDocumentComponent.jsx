@@ -7,10 +7,10 @@ import { useNavigate } from "react-router-dom";
 export default function UploadDocument() {
   const navigate = useNavigate();
   const [files, setFiles] = useState([]);
-  const componentRef = useRef(null);
   const [selectedButton, setSelectedButton] = useState(null);
   const [errorMessages, setErrorMessages] = useState([]);
   const [successMessage, setSuccessMessage] = useState("");
+  const [textArea, setTextArea] = useState("");
   const [showModal, setShowModal] = useState(false); // Estado para o modal de confirmação
   const fileInputRef = useRef(null); // Referência para o input de arquivo
 
@@ -59,6 +59,7 @@ export default function UploadDocument() {
       // Limpa os campos após o envio
       setFiles([]);
       setSelectedButton(null);
+      setTextArea(""); // Limpa o campo de texto
       if (fileInputRef.current) {
         fileInputRef.current.value = ""; // Limpa o input de arquivo
       }
@@ -78,7 +79,7 @@ export default function UploadDocument() {
   };
 
   return (
-    <div ref={componentRef} className={styles.component}>
+    <div className={styles.component}>
       <button
         className={`${styles.infoButtonBack} ${styles.button_back_position}`}
         onClick={handleBtnBackPage}
@@ -98,7 +99,7 @@ export default function UploadDocument() {
                   ref={fileInputRef} // Adicionando a referência aqui
                 />
                 {errorMessages.includes("Por favor, anexe um arquivo.") && (
-                  <div className="text-danger">{errorMessages.find(msg => msg === "Por favor, anexe um arquivo.")}</div>
+                  <div className="text-danger">Por favor, anexe um arquivo.</div>
                 )}
               </Form.Group>
               <div className={styles.BtnOption}>
@@ -131,7 +132,7 @@ export default function UploadDocument() {
                 </div>
               </div>
               {errorMessages.includes("Por favor, selecione uma categoria.") && (
-                <div className="text-danger">{errorMessages.find(msg => msg === "Por favor, selecione uma categoria.")}</div>
+                <div className="text-danger">Por favor, selecione uma categoria.</div>
               )}
               <div className={styles.TextArea}>
                 <textarea
@@ -139,6 +140,8 @@ export default function UploadDocument() {
                   name="textAreaDescription"
                   id="textAreaDescription"
                   placeholder="Descrição..."
+                  value={textArea}
+                  onChange={(e) => setTextArea(e.target.value)} // Atualiza o estado
                 ></textarea>
               </div>
               {files.length > 0 && (
