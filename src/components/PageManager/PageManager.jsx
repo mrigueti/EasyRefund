@@ -71,27 +71,40 @@ const PageManager = () => {
     }
   };
 
-  const exportToPDF = (filteredRequests) => {
-    const doc = new jsPDF();
-    doc.setFontSize(16);
-    doc.text("Solicitações Exportadas", 10, 10);
+ // Função para exportar solicitações filtradas para um arquivo PDF
+const exportToPDF = (filteredRequests) => {
+  // Cria um novo documento PDF usando jsPDF
+  const doc = new jsPDF();
 
-    doc.setFontSize(12);
-    let y = 20;
+  // Define o título do PDF com fonte maior
+  doc.setFontSize(16);
+  doc.text("Solicitações Exportadas", 10, 10); // Texto "Solicitações Exportadas" posicionado no topo
 
-    filteredRequests.forEach((request) => {
-      doc.text(`Nome: ${request.name}`, 10, y);
-      doc.text(`Data: ${request.date}`, 10, y + 10);
-      doc.text(`Status: ${request.status}`, 10, y + 20);
-      doc.text(`Descrição: ${request.description}`, 10, y + 30);
-      doc.text(`Valor: R$ ${request.value.toFixed(2)}`, 10, y + 40); // Valor formatado
+  // Define o tamanho da fonte para o restante do conteúdo
+  doc.setFontSize(12);
+  let y = 20; // Define a posição vertical inicial para o conteúdo das solicitações
+
+  // Loop sobre cada solicitação filtrada para adicionar ao PDF
+  filteredRequests.forEach((request) => {
+      // Adiciona os detalhes da solicitação no PDF, linha por linha
+      doc.text(`Nome: ${request.name}`, 10, y);            // Nome da solicitação
+      doc.text(`Data: ${request.date}`, 10, y + 10);       // Data da solicitação
+      doc.text(`Status: ${request.status}`, 10, y + 20);   // Status da solicitação
+      doc.text(`Descrição: ${request.description}`, 10, y + 30); // Descrição da solicitação
+      doc.text(`Valor: R$ ${request.value.toFixed(2)}`, 10, y + 40); // Valor da solicitação formatado com duas casas decimais
+
+      // Atualiza a posição vertical (y) para a próxima solicitação, deixando um espaço entre elas
       y += 50;
-      doc.line(10, y, 200, y);
-      y += 5;
-    });
 
-    doc.save("solicitacoes.pdf");
-  };
+      // Adiciona uma linha horizontal separadora entre cada solicitação
+      doc.line(10, y, 200, y);
+      y += 5; // Adiciona um pequeno espaço abaixo da linha separadora
+  });
+
+  // Salva o arquivo PDF gerado com o nome "solicitacoes.pdf"
+  doc.save("solicitacoes.pdf");
+};
+
 
   const exportToExcel = (filteredRequests) => {
     const ws = XLSX.utils.json_to_sheet(
