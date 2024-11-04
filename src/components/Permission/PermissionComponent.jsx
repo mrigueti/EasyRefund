@@ -29,10 +29,11 @@ const Permission = () => {
   };
 
   return (
+    
     <div className={style.Container}>
       <button
         className={style.BackButton}
-        onClick={() => navigate("/manegement")}
+        onClick={() => navigate(-1)}
       >
         &larr; Voltar
       </button>

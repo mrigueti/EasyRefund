@@ -10,13 +10,14 @@
   color: #007777;
   cursor: pointer;
   display: flex;
-  align-items: center;
+  align-items: letf;
   font-size: 16px;
   margin-bottom: 20px;
 }
 
 .BackButton:hover {
   text-decoration: underline;
+  
 }
 
 .InformationFunc {
