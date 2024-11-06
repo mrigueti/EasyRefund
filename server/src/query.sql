@@ -1,6 +1,7 @@
-CREATE SCHEMA db;
+-- Active: 1730827393615@@127.0.0.1@3306@easyrefund
+CREATE SCHEMA EasyRefund;
 
-USE db;
+USE EasyRefund;
 
 -- Criando tabelas
 CREATE TABLE unidades (
@@ -107,9 +108,9 @@ INSERT INTO solicitacoes (
     valor_aprovado_solic, tipo_dedutivel_solic, descricao, categoria
 )
 VALUES
-    (1, 2, 'Aprovada', 1500, 1300, TRUE, 'Reembolso de alimentação para evento.', 'Alimentação');
+    (1, 1, 'Aprovada', 1500, 1300, TRUE, 'Reembolso de alimentação para evento.', 'Alimentação');
 
-INSERT INTO nfs (anexo_nf, id_solicitacao) VALUES (0xFFD8FFE000104A464946, 1);
+INSERT INTO nfs (anexo_nf, id_solicitacao) VALUES (0xFFD8FFE000104A464946, 2);
 
 INSERT INTO setores_unidades (id_setor, id_unidade) VALUES (1, 1), (2, 1), (3, 1);
 
@@ -117,7 +118,9 @@ INSERT INTO notificacoes (
     mensagem_notif, id_usuario, id_aprovador, id_solicitacao
 )
 VALUES
-    ('Sua solicitação foi aprovada.', 1, 2, 1);
+    ('Sua solicitação foi aprovada.', 1, 1, 2);
 
 
 -- selects
+
+select * from usuarios WHERE email_usuario = 'aprovador@gmail.com'
