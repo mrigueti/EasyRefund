@@ -1,4 +1,4 @@
--- Active: 1730827393615@@127.0.0.1@3306@easyrefund
+-- Active: 1730946489706@@127.0.0.1@3306@teste
 CREATE SCHEMA EasyRefund;
 
 USE EasyRefund;
@@ -110,7 +110,7 @@ INSERT INTO solicitacoes (
 VALUES
     (1, 1, 'Aprovada', 1500, 1300, TRUE, 'Reembolso de alimentação para evento.', 'Alimentação');
 
-INSERT INTO nfs (anexo_nf, id_solicitacao) VALUES (0xFFD8FFE000104A464946, 2);
+INSERT INTO nfs (anexo_nf, id_solicitacao) VALUES (0xFFD8FFE000104A464946, 1);
 
 INSERT INTO setores_unidades (id_setor, id_unidade) VALUES (1, 1), (2, 1), (3, 1);
 
@@ -118,7 +118,7 @@ INSERT INTO notificacoes (
     mensagem_notif, id_usuario, id_aprovador, id_solicitacao
 )
 VALUES
-    ('Sua solicitação foi aprovada.', 1, 1, 2);
+    ('Sua solicitação foi aprovada.', 1, 1, 1);
 
 
 -- selects

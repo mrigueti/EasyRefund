@@ -1,19 +1,21 @@
-import express from "express"
-import { userRoutes } from "./routes/usuarios.js"
-import cors from "cors"
+import express from 'express';
+import cors from 'cors';
+import { usuariosRouter } from "./routes/usuarios.js";
+import 'dotenv/config';
 
-const app = express()
-const PORT = 3001;
+const app = express();
+const PORT = process.env.PORT || 3001;
 
-app.use(express.json())
-app.use(cors())
+app.use(express.json());
+app.use(cors());
 
-app.use("/login", userRoutes)
+// Confirme que a rota foi configurada corretamente
+app.use("/login", usuariosRouter);
 
-app.use("/", (req, res) => {
-  res.send("Foi meu mano")
-})
+app.get('/', (req, res) => {
+  res.send("Oi, tá funcionando!");
+});
 
 app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta http://localhost:${PORT}/`);
+  console.log(`Servidor rodando na porta ${PORT}`);
 });
