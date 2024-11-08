@@ -1,5 +1,5 @@
 import styles from "./Register.module.css";
-import { useState } from "react";
+import { useState, useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 import user from "../../icons/user.png";
 import email from "../../icons/email.png";
@@ -8,7 +8,8 @@ import role from "../../icons/cargo.png";
 import location from "../../icons/unidade.png";
 import { Modal, Button } from "react-bootstrap"; // Importando o Modal e o Button
 
-const url_register = 'http://localhost:3001/api/register';
+const url_register = 'http://localhost:3001/api/usuarios/register';
+const url_unidades_get = 'http://localhost:3001/api/unidades/get-nome'
 
 const Register = () => {
   const [username, setUsername] = useState('');
@@ -16,11 +17,25 @@ const Register = () => {
   const [senha, setSenha] = useState('');
   const [role, setRole] = useState('');
   const [message, setMessage] = useState('');
+  const [unidades, setUnidades] = useState('');
+
+  useEffect(() => {
+    const fetchUnidades = async () => {
+      try {
+        const response = await fetch(url_unidades_get);
+        const data = await response.json();
+        setUnidades(data); // Atualiza o estado com as unidades recebidas
+      } catch (error) {
+        console.error("Erro ao buscar unidades:", error);
+      }
+    };
+    fetchUnidades();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:3001/api/register', {
+      const response = await fetch(url_register, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -117,6 +132,30 @@ const Register = () => {
             <div className={styles.errorAlert}>{errors.name}</div>
           )}
         </div>
+
+        {/* Select para escolher a Unidade */}
+        <div className={styles.RegisterInputContainer}>
+          <div className={styles.RegisterNameInput}>
+            <img src={location} alt="Location Icon" className={styles.Icon} />
+            <select
+              name="locationRegisterP"
+              value={locationRegisterP}
+              onChange={(e) => setLocationRegisterP(e.target.value)}
+              required
+            >
+              <option value="">Selecione uma unidade</option>
+              {unidades.map((unidade, index) => (
+                <option key={index} value={unidade.nome_unidade}>
+                  {unidade.nome_unidade}
+                </option>
+              ))}
+            </select>
+          </div>
+          {errors.location && (
+            <div className={styles.errorAlert}>{errors.location}</div>
+          )}
+        </div>
+        
         {/* <div className={styles.RegisterInputContainer}>
           <div className={styles.RegisterNameInput}>
             <img src={role} alt="Role Icon" className={styles.Icon} />

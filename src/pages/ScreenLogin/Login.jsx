@@ -4,7 +4,7 @@ import { useState } from 'react';
 import user from '../../icons/user.png';
 import lock from '../../icons/cadeado.png';
 
-const url_login = 'http://localhost:3001/api/login';
+const url_login = 'http://localhost:3001/api/usuarios/login';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -51,7 +51,7 @@ const Login = () => {
   
       // Lógica de navegação baseada no papel do usuário
       if (responseJson.user.role_nome === "Aprovador") {
-        navigate("/management");
+        navigate("/manegement");
       } else if (responseJson.user.role_nome === "Funcionário") {
         navigate("/Home");
       } else if (responseJson.user.role_nome === "Gerente") {

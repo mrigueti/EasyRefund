@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import { usuariosRouter } from "./routes/usuarios.js";
 import 'dotenv/config';
+import { unidadesRouter } from './routes/unidades.js';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -9,7 +10,8 @@ const PORT = process.env.PORT || 3001;
 app.use(express.json());
 app.use(cors());
 
-app.use("/api", usuariosRouter);
+app.use("/api/usuarios", usuariosRouter);
+app.use("/api/unidades", unidadesRouter)
 
 app.get('/', (req, res) => {
   res.send("Oi, tá funcionando!");
