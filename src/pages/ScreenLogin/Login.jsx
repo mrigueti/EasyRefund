@@ -26,12 +26,21 @@ const Login = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, senha }),
       });
-      
+
       const responseJson = await response.json();
+      if (responseJson.user.role_nome === "Aprovador") {
+        navigate("/manegement")
+      } else if (responseJson.user.role_nome === "Funcionário") {
+        navigate("/Home")
+      } else if (responseJson.user.role_nome === "Gerente") {
+        navigate("/manager")
+      }
       console.log(responseJson);
       // const response = await fetch(url_login, { email, senha });
       localStorage.setItem('token', response.data.token); // salva token no web storage
       alert('Login bem-sucedido!');
+
+
 
     } catch (error) {
       setError(error.response?.data?.error || "Erro ao fazer login.");
@@ -141,7 +150,7 @@ const Login = () => {
             {loading ? "Entrando...." : "Login"}
           </button>
         </div>
-        
+
         {isAuthorized && (
           <div className={styles.BtnCreateAccount}>
             <button type="button" onClick={handleRegisterPage}>Cadastrar-se</button>

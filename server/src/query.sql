@@ -1,4 +1,4 @@
--- Active: 1730946489706@@127.0.0.1@3306@teste
+-- Active: 1731084547484@@127.0.0.1@3306@easyrefund
 CREATE SCHEMA EasyRefund;
 
 USE EasyRefund;
@@ -35,7 +35,7 @@ CREATE TABLE usuarios (
 
 ALTER TABLE usuarios MODIFY COLUMN cpf_usuario VARCHAR(11)
 
-ALTER TABLE usuarios MODIFY senha_usuario VARCHAR(60);
+ALTER TABLE usuarios MODIFY senha_usuario VARCHAR(255);
 
 
 CREATE TABLE aprovadores (
