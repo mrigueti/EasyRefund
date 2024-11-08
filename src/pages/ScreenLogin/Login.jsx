@@ -20,95 +20,54 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setNameError("");
+    setPasswordError("");
+  
+    // Validações locais para campos vazios
+    if (!email) {
+      setNameError("Usuário não pode estar vazio.");
+    }
+    if (!senha) {
+      setPasswordError("Senha não pode estar vazia.");
+    }
+    if (!email || !senha) {
+      return; // Interrompe a execução se algum campo estiver vazio
+    }
+  
     try {
       const response = await fetch(url_login, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, senha }),
       });
-
+  
       const responseJson = await response.json();
+  
+      // Verifica o status da resposta e define as mensagens de erro adequadas
+       if (response.status === 401) {
+        setPasswordError("Email ou Senha incorretos.");
+        return;
+      }
+  
+      // Lógica de navegação baseada no papel do usuário
       if (responseJson.user.role_nome === "Aprovador") {
-        navigate("/manegement")
-      } else if (responseJson.user.role_nome === "Funcionário") {
-        navigate("/Home")
-      } else if (responseJson.user.role_nome === "Gerente") {
-        navigate("/manager")
-      }
-      console.log(responseJson);
-      // const response = await fetch(url_login, { email, senha });
-      localStorage.setItem('token', response.data.token); // salva token no web storage
-      alert('Login bem-sucedido!');
-
-
-
-    } catch (error) {
-      setError(error.response?.data?.error || "Erro ao fazer login.");
-    }
-  };
-
-  const userPermission = {
-    name: "Gabryel",
-    password: "abc"
-  };
-
-  const userFuncionario = {
-    nameFunc: "Lucas",
-    passwordFun: "abc"
-  };
-
-  const userGerente = {
-    nameGerente: "Maykel",
-    passwordGerente: "abc"
-  };
-
-  const userAdmin = {
-    nameAdmin: "Gregy",
-    passwordAdmin: "abc"
-  };
-
-  const handleBtnLogin = (e) => {
-    e.preventDefault();
-    setNameError("");
-    setPasswordError("");
-
-    if (!namePermission && !passwordPermission) {
-      setNameError("Usuário não pode estar vazio.");
-      setPasswordError("Senha não pode estar vazia.");
-      return;
-    }
-
-    if (!namePermission) {
-      setNameError("Usuário não pode estar vazio.");
-      return;
-    }
-
-    if (!passwordPermission) {
-      setPasswordError("Senha não pode estar vazia.");
-      return;
-    }
-
-    setLoading(true);
-
-    setTimeout(() => {
-      if (namePermission === userPermission.name && passwordPermission === userPermission.password) {
         navigate("/management");
-      } else if (namePermission === userFuncionario.nameFunc && passwordPermission === userFuncionario.passwordFun) {
+      } else if (responseJson.user.role_nome === "Funcionário") {
         navigate("/Home");
-      } else if (
-        (namePermission === userGerente.nameGerente && passwordPermission === userGerente.passwordGerente) ||
-        (namePermission === userAdmin.nameAdmin && passwordPermission === userAdmin.passwordAdmin)
-      ) {
-        setIsAuthorized(true);
+      } else if (responseJson.user.role_nome === "Gerente") {
         navigate("/manager");
-      } else {
-        setNameError("Usuário ou senha incorretos.");
-        setPasswordError("Usuário ou senha incorretos.");
       }
-      setLoading(false);
-    }, 1000);
+  
+      // Armazena o token no localStorage
+      localStorage.setItem("token", responseJson.token);
+      console.log("Login bem-sucedido!");
+      
+    } catch (error) {
+      setNameError("Erro ao fazer login. Verifique os dados inseridos.");
+      console.error("Erro no login:", error);
+    }
   };
-
+  
   const handleRegisterPage = () => {
     navigate("/register");
   };
