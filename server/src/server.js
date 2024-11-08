@@ -9,8 +9,7 @@ const PORT = process.env.PORT || 3001;
 app.use(express.json());
 app.use(cors());
 
-// Confirme que a rota foi configurada corretamente
-app.use("/login", usuariosRouter);
+app.use("/api", usuariosRouter);
 
 app.get('/', (req, res) => {
   res.send("Oi, tá funcionando!");

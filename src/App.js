@@ -20,11 +20,11 @@ function App() {
         <Routes>
           {/* Fluxo de Login/Cadastro/AlterarSenha */}
           <Route path='/' element={< Login />} />
-          <Route path='/register' element={< Register />} />
           <Route path='/change-password' element={< ChangePassword />} />
 
           {/*Fluxo do gerente*/}
           <Route path='/manager' element={<PageManager />} />
+          <Route path='/register' element={< Register />} />
 
           {/* Fluxo do funcionário */}
           <Route path='/home' element={< Home />} />

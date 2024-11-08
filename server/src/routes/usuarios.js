@@ -1,14 +1,12 @@
-// ./controllers/usuarios.js
+// ./routes/usuarios.js
 
 import express from 'express';
-import { login } from "../controllers/usuarios.js";
+import { login, register } from "../controllers/usuarios.js";
 
 export const usuariosRouter = express.Router();
 
-// Rota para login
-usuariosRouter.post("/", login);
+// Rota de login
+usuariosRouter.post("/login", login);
 
-//router.get('/', usuariosController.getUsuarios);
-//router.post('/', usuariosController.createUsuarios);
-//router.put('/:id', usuariosController.updateUsuarios);
-//router.delete('/:id', usuariosController.deleteUsuarios);
+// Rota de registro
+usuariosRouter.post("/register", register);

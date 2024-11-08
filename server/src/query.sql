@@ -33,6 +33,11 @@ CREATE TABLE usuarios (
     FOREIGN KEY (id_cargo) REFERENCES cargos (id_cargo)
 );
 
+ALTER TABLE usuarios MODIFY COLUMN cpf_usuario VARCHAR(11)
+
+ALTER TABLE usuarios MODIFY senha_usuario VARCHAR(60);
+
+
 CREATE TABLE aprovadores (
     id_aprovador INT PRIMARY KEY AUTO_INCREMENT,
     id_usuario INT,
@@ -123,4 +128,4 @@ VALUES
 
 -- selects
 
-select * from usuarios WHERE email_usuario = 'aprovador@gmail.com'
+select * from usuarios 

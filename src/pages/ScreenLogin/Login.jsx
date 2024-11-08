@@ -3,9 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useState } from 'react';
 import user from '../../icons/user.png';
 import lock from '../../icons/cadeado.png';
-import axios from 'axios';
 
-const url_login = 'http://localhost:3001/login';
+const url_login = 'http://localhost:3001/api/login';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -24,8 +23,8 @@ const Login = () => {
     try {
       const response = await fetch(url_login, {
         method: "POST",
-        body: JSON.stringify({ email, senha }),
         headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, senha }),
       });
       
       const responseJson = await response.json();

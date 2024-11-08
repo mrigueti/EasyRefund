@@ -8,7 +8,43 @@ import role from "../../icons/cargo.png";
 import location from "../../icons/unidade.png";
 import { Modal, Button } from "react-bootstrap"; // Importando o Modal e o Button
 
+const url_register = 'http://localhost:3001/api/register';
+
 const Register = () => {
+  const [username, setUsername] = useState('');
+  const [email, setEmail ] = useState('');
+  const [senha, setSenha] = useState('');
+  const [role, setRole] = useState('');
+  const [message, setMessage] = useState('');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch('http://localhost:3001/api/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          nome_usuario: username,
+          email_usuario: email,
+          senha_usuario: senha,
+          role_nome: role
+        }),
+      });
+      
+      const data = await response.json();
+      if (!response.ok) {
+        console.error("Erro na resposta do servidor:", data);
+      } else {
+        console.log("Usuário cadastrado com sucesso:", data);
+      }
+    } catch (error) {
+      console.error("Erro ao enviar dados:", error);
+    }
+  };
+  
+  
   const navigate = useNavigate();
 
   const handleBtnBackPage = () => {
@@ -63,7 +99,7 @@ const Register = () => {
       >
         <span className={styles.infoArrow}>&larr;</span> Voltar
       </button>
-      <form onSubmit={handleRegisterPermission}>
+      <form onSubmit={handleSubmit}>
         <h1>Cadastrar Usuário</h1>
         <div className={styles.RegisterInputContainer}>
           <div className={styles.RegisterNameInput}>
@@ -72,8 +108,8 @@ const Register = () => {
               type="text"
               name="nameRegisterP"
               placeholder="Nome"
-              value={nameRegisterP}
-              onChange={(e) => setNameRegister(e.target.value)}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               required
             />
           </div>
@@ -81,7 +117,7 @@ const Register = () => {
             <div className={styles.errorAlert}>{errors.name}</div>
           )}
         </div>
-        <div className={styles.RegisterInputContainer}>
+        {/* <div className={styles.RegisterInputContainer}>
           <div className={styles.RegisterNameInput}>
             <img src={role} alt="Role Icon" className={styles.Icon} />
             <input
@@ -96,8 +132,8 @@ const Register = () => {
           {errors.role && (
             <div className={styles.errorAlert}>{errors.role}</div>
           )}
-        </div>
-        <div className={styles.RegisterInputContainer}>
+        </div> */}
+        {/* <div className={styles.RegisterInputContainer}>
           <div className={styles.RegisterNameInput}>
             <img src={sector} alt="Sector Icon" className={styles.Icon} />
             <input
@@ -112,8 +148,8 @@ const Register = () => {
           {errors.sector && (
             <div className={styles.errorAlert}>{errors.sector}</div>
           )}
-        </div>
-        <div className={styles.RegisterInputContainer}>
+        </div> */}
+        {/* <div className={styles.RegisterInputContainer}>
           <div className={styles.RegisterNameInput}>
             <img src={location} alt="Location Icon" className={styles.Icon} />
             <input
@@ -128,7 +164,7 @@ const Register = () => {
           {errors.location && (
             <div className={styles.errorAlert}>{errors.location}</div>
           )}
-        </div>
+        </div> */}
         <div className={styles.RegisterInputContainer}>
           <div className={styles.RegisterEmailInput}>
             <img src={email} alt="Email Icon" className={styles.Icon} />
@@ -136,13 +172,29 @@ const Register = () => {
               type="email"
               name="emailRegisterP"
               placeholder="E-mail"
-              value={emailRegisterP}
-              onChange={(e) => setEmailRegister(e.target.value)}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
             />
           </div>
           {errors.email && (
             <div className={styles.errorAlert}>{errors.email}</div>
+          )}
+        </div>
+        <div className={styles.RegisterInputContainer}>
+          <div className={styles.RegisterNameInput}>
+            <img src={user} alt="User Icon" className={styles.Icon} />
+            <input
+              type="password"
+              name="nameRegisterP"
+              placeholder="Senha"
+              value={senha}
+              onChange={(e) => setSenha(e.target.value)}
+              required
+            />
+          </div>
+          {errors.name && (
+            <div className={styles.errorAlert}>{errors.name}</div>
           )}
         </div>
         <div className={styles.CheckBox}>
@@ -151,8 +203,8 @@ const Register = () => {
               type="radio"
               name="userRole"
               value="Funcionário"
-              checked={selectedRadioButton === "Funcionário"}
-              onChange={(e) => setSelectedRadioButton(e.target.value)}
+              checked={role === "Funcionário"}
+              onChange={(e) => setRole(e.target.value)}
             />
             Funcionário
           </div>
@@ -160,19 +212,19 @@ const Register = () => {
             <input
               type="radio"
               name="userRole"
-              value="Liberador"
-              checked={selectedRadioButton === "Liberador"}
-              onChange={(e) => setSelectedRadioButton(e.target.value)}
+              value="Aprovador"
+              checked={role === "Aprovador"}
+              onChange={(e) => setRole(e.target.value)}
             />
-            Liberador
+            Aprovador
           </div>
           <div className={styles.CheckManagerUser}>
             <input
               type="radio"
               name="userRole"
               value="Gerente"
-              checked={selectedRadioButton === "Gerente"}
-              onChange={(e) => setSelectedRadioButton(e.target.value)}
+              checked={role === "Gerente"}
+              onChange={(e) => setRole(e.target.value)}
             />
             Gerente
           </div>
