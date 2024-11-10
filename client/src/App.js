@@ -11,6 +11,8 @@ import FlowRefund from "./pages/FlowRefund/FlowRefund.jsx"
 import InformationUser from './pages/InformationUser/InformationUser.jsx';
 import PageManager from './pages/PageManager/PageManager.jsx'
 import HistoryUser from './pages/HistoryUser/HistoryUser.jsx';
+import ProtectedPage from './components/ProtectedPage/ProtectedPage.jsx';
+import AccessDenied from './pages/AcessoNegado/AcessoNegado.jsx';
 
 
 function App() {
@@ -18,27 +20,29 @@ function App() {
     <div>
       <BrowserRouter>
         <Routes>
+
           {/* Fluxo de Login/Cadastro/AlterarSenha */}
           <Route path='/' element={< Login />} />
-          <Route path='/change-password' element={< ChangePassword />} />
+          <Route path='/change-password' element={<ChangePassword/>} />
 
           {/*Fluxo do gerente*/}
-          <Route path='/manager' element={<PageManager />} />
-          <Route path='/register' element={< Register />} />
+          <Route path='/manager' element={<ProtectedPage requiredRole="Gerente"><PageManager /></ProtectedPage>} />
+          <Route path='/manager/register' element={<ProtectedPage requiredRole="Gerente"><Register /></ProtectedPage>} />
 
           {/* Fluxo do funcionário */}
-          <Route path='/home' element={< Home />} />
-          <Route path='/home/flow-refund' element={< FlowRefund />} />
-          <Route path='/home/HistoryUser' element={<HistoryUser />}  />
-          <Route path='/home/flow-refund/upload-document' element={< UploadDocument />} />
+          <Route path='/home' element={<ProtectedPage requiredRole="Funcionário"><Home /></ProtectedPage>} />
+          <Route path='/home/flow-refund' element={<ProtectedPage requiredRole="Funcionário"><FlowRefund /></ProtectedPage>} />
+          <Route path='/home/HistoryUser' element={<ProtectedPage requiredRole="Funcionário"><HistoryUser /></ProtectedPage>} />
+          <Route path='/home/flow-refund/upload-document' element={<ProtectedPage requiredRole="Funcionário"><UploadDocument /></ProtectedPage>} />
 
           {/* Fluxo do Liberador */}
-          <Route path='/manegement' element={< Manegement />} />
-          <Route path='/manegement/permission' element={<Permission />} />
+          <Route path='/manegement' element={<ProtectedPage requiredRole="Aprovador"><InformationUser /></ProtectedPage>} />
+          <Route path='/manegement/permission' element={<ProtectedPage requiredRole="Aprovador"><InformationUser /></ProtectedPage>} />
 
           {/*Fluxo de informações do usuário*/}
           <Route path='/informationUser' element={<InformationUser />} />
 
+          <Route path='/acess-denied' element={<AccessDenied />} />
         </Routes>
       </BrowserRouter>
     </div>

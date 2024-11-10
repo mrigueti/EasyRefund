@@ -18,6 +18,7 @@ const Home = () => {
 
   const handleBtnLogout = () => {
     if (window.confirm("Deseja realmente fechar o site?")) {
+      localStorage.clear();
       navigate("/");
     }
   };

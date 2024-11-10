@@ -122,7 +122,7 @@ const exportToPDF = (filteredRequests) => {
   };
 
   const handleRegisterUser = () => {
-    navigate("/register");
+    navigate("/manager/register");
   };
 
   const togglePopover = () => {

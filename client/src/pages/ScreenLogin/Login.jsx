@@ -42,6 +42,12 @@ const Login = () => {
       });
   
       const responseJson = await response.json();
+      console.log(responseJson.token);
+      
+      
+      if (responseJson.token) {
+        localStorage.setItem('token', responseJson.token)
+      }
   
       // Verifica o status da resposta e define as mensagens de erro adequadas
        if (response.status === 401) {
