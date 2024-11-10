@@ -3,47 +3,51 @@ CREATE SCHEMA EasyRefund;
 
 USE EasyRefund;
 
--- Criando tabelas
+-- Criando tabela de Unidades
 CREATE TABLE unidades (
     id_unidade INT PRIMARY KEY AUTO_INCREMENT,
     nome_unidade VARCHAR(45) NOT NULL
 );
 
+-- Criando tabela de Setores
 CREATE TABLE setores (
     id_setor INT PRIMARY KEY AUTO_INCREMENT,
     nome_setor VARCHAR(45) NOT NULL
 );
 
+-- Criando tabela de Cargos (relacionado com setores)
 CREATE TABLE cargos (
     id_cargo INT PRIMARY KEY AUTO_INCREMENT,
     nome_cargo VARCHAR(45) NOT NULL,
     id_setor INT,
-    FOREIGN KEY (id_setor) REFERENCES setores (id_setor)
+    FOREIGN KEY (id_setor) REFERENCES setores(id_setor)
 );
 
+-- Criando tabela de Usuários
 CREATE TABLE usuarios (
     id_usuario INT PRIMARY KEY AUTO_INCREMENT,
     nome_usuario VARCHAR(45) NOT NULL,
-    cpf_usuario CHAR(11) NOT NULL,
+    cpf_usuario CHAR(11),
     email_usuario VARCHAR(45) NOT NULL,
-    senha_usuario VARCHAR(50) NOT NULL,
+    senha_usuario VARCHAR(255) NOT NULL,  -- Corrigido para tamanho ideal para senhas
     dt_criacao_usuario TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     id_cargo INT,
+    id_unidade INT,  -- Chave estrangeira para unidade
+    id_setor INT,    -- Chave estrangeira para setor
     role_nome ENUM('Funcionário', 'Aprovador', 'Gerente', 'Administrador') DEFAULT 'Funcionário',
-    FOREIGN KEY (id_cargo) REFERENCES cargos (id_cargo)
+    FOREIGN KEY (id_cargo) REFERENCES cargos(id_cargo),
+    FOREIGN KEY (id_unidade) REFERENCES unidades(id_unidade),  -- Relacionamento com unidades
+    FOREIGN KEY (id_setor) REFERENCES setores(id_setor)         -- Relacionamento com setores
 );
 
-ALTER TABLE usuarios MODIFY COLUMN cpf_usuario VARCHAR(11)
-
-ALTER TABLE usuarios MODIFY senha_usuario VARCHAR(255);
-
-
+-- Criando tabela de Aprovadores
 CREATE TABLE aprovadores (
     id_aprovador INT PRIMARY KEY AUTO_INCREMENT,
     id_usuario INT,
-    FOREIGN KEY (id_usuario) REFERENCES usuarios (id_usuario)
+    FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario)
 );
 
+-- Criando tabela de Solicitações
 CREATE TABLE solicitacoes (
     id_solicitacao INT PRIMARY KEY AUTO_INCREMENT,
     id_usuario INT,
@@ -56,25 +60,28 @@ CREATE TABLE solicitacoes (
     dt_aprovacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     descricao VARCHAR(250) NOT NULL DEFAULT '',
     categoria ENUM('Alimentação', 'Transporte', 'Hospedagem', 'Outros') NOT NULL,
-    FOREIGN KEY (id_usuario) REFERENCES usuarios (id_usuario),
-    FOREIGN KEY (id_aprovador) REFERENCES aprovadores (id_aprovador)
+    FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario),
+    FOREIGN KEY (id_aprovador) REFERENCES aprovadores(id_aprovador)
 );
 
+-- Criando tabela de Notas Fiscais
 CREATE TABLE nfs (
     id_nf INT PRIMARY KEY AUTO_INCREMENT,
     anexo_nf LONGBLOB NOT NULL,
     id_solicitacao INT,
-    FOREIGN KEY (id_solicitacao) REFERENCES solicitacoes (id_solicitacao)
+    FOREIGN KEY (id_solicitacao) REFERENCES solicitacoes(id_solicitacao)
 );
 
+-- Criando tabela de Setores e Unidades (relacionamento N:N entre Setores e Unidades)
 CREATE TABLE setores_unidades (
     id_setor INT,
     id_unidade INT,
     PRIMARY KEY (id_setor, id_unidade),
-    FOREIGN KEY (id_setor) REFERENCES setores (id_setor),
-    FOREIGN KEY (id_unidade) REFERENCES unidades (id_unidade)
+    FOREIGN KEY (id_setor) REFERENCES setores(id_setor),
+    FOREIGN KEY (id_unidade) REFERENCES unidades(id_unidade)
 );
 
+-- Criando tabela de Notificações
 CREATE TABLE notificacoes (
     id_notificacao INT PRIMARY KEY AUTO_INCREMENT,
     mensagem_notif VARCHAR(250),
@@ -83,21 +90,33 @@ CREATE TABLE notificacoes (
     id_usuario INT,
     id_aprovador INT,
     id_solicitacao INT,
-    FOREIGN KEY (id_usuario) REFERENCES usuarios (id_usuario),
-    FOREIGN KEY (id_aprovador) REFERENCES aprovadores (id_aprovador),
-    FOREIGN KEY (id_solicitacao) REFERENCES solicitacoes (id_solicitacao)
+    FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario),
+    FOREIGN KEY (id_aprovador) REFERENCES aprovadores(id_aprovador),
+    FOREIGN KEY (id_solicitacao) REFERENCES solicitacoes(id_solicitacao)
 );
 
 -- Inserts para testes
-INSERT INTO unidades (nome_unidade) VALUES ('Vitória');
-INSERT INTO unidades (nome_unidade) VALUES ('Vila Velha');
+INSERT INTO setores (nome_setor) VALUES ('TI'), ('RH'), ('Financeiro');
 
-INSERT INTO setores (nome_setor) VALUES ('Financeiro'), ('RH'), ('TI');
+INSERT INTO unidades (nome_unidade) VALUES ('Unidade A'), ('Unidade B'), ('Unidade C');
 
-INSERT INTO cargos (nome_cargo, id_setor) VALUES 
-    ('Analista de Sistema', 3),
-    ('Analista de RH', 2),
-    ('Analista Financeiro', 1);
+-- Associando o setor 'TI' à 'Unidade A' e 'Unidade B'
+INSERT INTO setores_unidades (id_setor, id_unidade) 
+VALUES 
+    ((SELECT id_setor FROM setores WHERE nome_setor = 'TI'), (SELECT id_unidade FROM unidades WHERE nome_unidade = 'Unidade A')),
+    ((SELECT id_setor FROM setores WHERE nome_setor = 'TI'), (SELECT id_unidade FROM unidades WHERE nome_unidade = 'Unidade B'));
+
+-- Associando o setor 'RH' à 'Unidade B' e 'Unidade C'
+INSERT INTO setores_unidades (id_setor, id_unidade) 
+VALUES 
+    ((SELECT id_setor FROM setores WHERE nome_setor = 'RH'), (SELECT id_unidade FROM unidades WHERE nome_unidade = 'Unidade B')),
+    ((SELECT id_setor FROM setores WHERE nome_setor = 'RH'), (SELECT id_unidade FROM unidades WHERE nome_unidade = 'Unidade C'));
+
+INSERT INTO cargos (nome_cargo, id_setor) 
+VALUES 
+    ('Desenvolvedor', (SELECT id_setor FROM setores WHERE nome_setor = 'TI')),
+    ('Analista de RH', (SELECT id_setor FROM setores WHERE nome_setor = 'RH')),
+    ('Gerente Financeiro', (SELECT id_setor FROM setores WHERE nome_setor = 'Financeiro'));
 
 INSERT INTO usuarios (
     nome_usuario, cpf_usuario, email_usuario, senha_usuario, id_cargo, role_nome
@@ -118,7 +137,6 @@ VALUES
 
 INSERT INTO nfs (anexo_nf, id_solicitacao) VALUES (0xFFD8FFE000104A464946, 1);
 
-INSERT INTO setores_unidades (id_setor, id_unidade) VALUES (1, 1), (2, 1), (3, 1);
 
 INSERT INTO notificacoes (
     mensagem_notif, id_usuario, id_aprovador, id_solicitacao
@@ -129,9 +147,24 @@ VALUES
 
 -- selects
 
-select * from usuarios 
+select * from usuarios;
 
 SELECT 
+      c.nome_cargo AS Cargo,
+      s.nome_setor AS Setor,
+      u.nome_unidade AS Unidade
+    FROM 
+      cargos c
+    JOIN 
+      setores s ON c.id_setor = s.id_setor
+    JOIN 
+      setores_unidades su ON s.id_setor = su.id_setor
+    JOIN 
+      unidades u ON su.id_unidade = u.id_unidade
+    GROUP BY 
+      c.nome_cargo, s.nome_setor, u.nome_unidade;
+      
+SELECT DISTINCT
     c.id_cargo,
     c.nome_cargo AS Cargo,
     s.nome_setor AS Setor,
@@ -143,6 +176,25 @@ JOIN
 JOIN 
     setores_unidades su ON s.id_setor = su.id_setor
 JOIN 
-    unidades u ON su.id_unidade = u.id_unidade
-GROUP BY 
-    c.nome_cargo, s.nome_setor, u.nome_unidade;
+    unidades u ON su.id_unidade = u.id_unidade;
+
+
+SELECT id_setor, nome_setor FROM setores;
+SELECT id_unidade, nome_unidade FROM unidades;
+SELECT id_setor, id_unidade FROM setores_unidades;
+
+SELECT 
+    c.id_cargo,
+    c.nome_cargo AS Cargo,
+    s.id_setor,
+    s.nome_setor AS Setor,
+    u.id_unidade,
+    u.nome_unidade AS Unidade
+FROM 
+    cargos c
+JOIN 
+    setores s ON c.id_setor = s.id_setor
+JOIN 
+    setores_unidades su ON s.id_setor = su.id_setor
+JOIN 
+    unidades u ON su.id_unidade = u.id_unidade;

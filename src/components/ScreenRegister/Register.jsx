@@ -2,7 +2,7 @@ import styles from "./Register.module.css";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import user from "../../icons/user.png";
-import email from "../../icons/email.png";
+import emailpng from "../../icons/email.png";
 import sector from "../../icons/setor.png";
 import role from "../../icons/cargo.png";
 import location from "../../icons/unidade.png";
@@ -31,8 +31,6 @@ const Register = () => {
         }
         const data = await response.json();
 
-        console.log(data);
-        
         setCargosSetoresUnidades(data);
       } catch (error) {
         console.error("Erro ao buscar cargos, setores e unidades:", error);
@@ -44,6 +42,14 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // Encontrar o item correspondente ao cargo selecionado
+    const selectedData = cargosSetoresUnidades.find(item => item.Cargo === selectedCargo);
+
+    if (!selectedData) {
+      console.error("Nenhum cargo selecionado ou cargo inválido.");
+      return;  // Impede o envio se não encontrar o cargo
+    }
+
     try {
       const response = await fetch(url_register, {
         method: 'POST',
@@ -54,7 +60,10 @@ const Register = () => {
           nome_usuario: username,
           email_usuario: email,
           senha_usuario: senha,
-          role_nome: role
+          role_nome: role,
+          id_cargo: selectedData.id_cargo,  // Passa o ID do cargo
+          id_setor: selectedData.id_setor,  // Passa o ID do setor
+          id_unidade: selectedData.id_unidade,  // Passa o ID da unidade
         }),
       });
 
@@ -68,6 +77,7 @@ const Register = () => {
       console.error("Erro ao enviar dados:", error);
     }
   };
+
 
 
   const navigate = useNavigate();
@@ -151,7 +161,9 @@ const Register = () => {
               name="cargo"
               value={selectedCargo}
               onChange={(e) => setSelectedCargo(e.target.value)}
-              required>
+              required
+              className={styles.RegisterSelect}
+            >
               <option value="">Cargo - Setor - Unidade</option>
               {cargosSetoresUnidades.map((item, index) => (
                 <option key={index} value={item.Cargo}>
@@ -165,57 +177,9 @@ const Register = () => {
           )}
         </div>
 
-        {/* <div className={styles.RegisterInputContainer}>
-          <div className={styles.RegisterNameInput}>
-            <img src={role} alt="Role Icon" className={styles.Icon} />
-            <input
-              type="text"
-              name="roleRegisterP"
-              placeholder="Cargo"
-              value={roleRegisterP}
-              onChange={(e) => setRoleRegisterP(e.target.value)}
-              required
-            />
-          </div>
-          {errors.role && (
-            <div className={styles.errorAlert}>{errors.role}</div>
-          )}
-        </div> */}
-        {/* <div className={styles.RegisterInputContainer}>
-          <div className={styles.RegisterNameInput}>
-            <img src={sector} alt="Sector Icon" className={styles.Icon} />
-            <input
-              type="text"
-              name="sectorRegisterP"
-              placeholder="Setor"
-              value={sectorRegisterP}
-              onChange={(e) => setSectorRegisterP(e.target.value)}
-              required
-            />
-          </div>
-          {errors.sector && (
-            <div className={styles.errorAlert}>{errors.sector}</div>
-          )}
-        </div> */}
-        {/* <div className={styles.RegisterInputContainer}>
-          <div className={styles.RegisterNameInput}>
-            <img src={location} alt="Location Icon" className={styles.Icon} />
-            <input
-              type="text"
-              name="locationRegisterP"
-              placeholder="Unidade"
-              value={locationRegisterP}
-              onChange={(e) => setLocationRegisterP(e.target.value)}
-              required
-            />
-          </div>
-          {errors.location && (
-            <div className={styles.errorAlert}>{errors.location}</div>
-          )}
-        </div> */}
         <div className={styles.RegisterInputContainer}>
           <div className={styles.RegisterEmailInput}>
-            <img src={email} alt="Email Icon" className={styles.Icon} />
+            <img src={emailpng} alt="Email Icon" className={styles.Icon} />
             <input
               type="email"
               name="emailRegisterP"
@@ -236,7 +200,8 @@ const Register = () => {
               type="password"
               name="nameRegisterP"
               placeholder="Senha"
-              value={senha}
+              value={"123456"}
+              disabled
               onChange={(e) => setSenha(e.target.value)}
               required
             />

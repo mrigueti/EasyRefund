@@ -38,13 +38,13 @@ export const login = (req, res) => {
 };
 
 export const register = async (req, res) => {
-  const { nome_usuario, email_usuario, senha_usuario, role_nome } = req.body;
+  const { nome_usuario, email_usuario, senha_usuario, role_nome, id_cargo, id_setor, id_unidade } = req.body;
 
   try {
     console.log("Recebendo dados do frontend:", req.body); // Log para conferir os dados recebidos
     const hashedPassword = await bcrypt.hash(senha_usuario, 10);
-    const query = 'INSERT INTO usuarios (nome_usuario, email_usuario, senha_usuario, role_nome) VALUES (?, ?, ?, ?)';
-    db.query(query, [nome_usuario, email_usuario, hashedPassword, role_nome], (err, result) => {
+    const query = 'INSERT INTO usuarios (nome_usuario, email_usuario, senha_usuario, role_nome, id_cargo, id_setor, id_unidade) VALUES (?, ?, ?, ?, ?, ?, ?)';
+    db.query(query, [nome_usuario, email_usuario, hashedPassword, role_nome, id_cargo, id_setor, id_unidade], (err, result) => {
       if (err) {
         console.error("Erro ao registrar o usuário:", err); // Log do erro no servidor
         return res.status(500).json({ error: "Erro ao registrar o usuário." });
