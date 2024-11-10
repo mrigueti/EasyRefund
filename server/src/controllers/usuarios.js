@@ -32,8 +32,9 @@ export const login = (req, res) => {
     }
 
     // Gerando um token JWT
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET || 'easyrefund987', { expiresIn: '1h' });
-
+    const token = jwt.sign({ id: user.id_usuario, role: user.role_nome}, process.env.JWT_SECRET || 'easyrefund987', { expiresIn: '1h' });
+    //console.log(user.role_nome);
+    
     return res.status(200).json({ message: "Login bem-sucedido!", token, user});
   });
 };

@@ -2,6 +2,7 @@
 
 import express from 'express';
 import { login, register } from "../controllers/usuarios.js";
+import { checkAuth } from '../middleware/checkAuth.js';
 
 export const usuariosRouter = express.Router();
 
@@ -9,4 +10,4 @@ export const usuariosRouter = express.Router();
 usuariosRouter.post("/login", login);
 
 // Rota de registro
-usuariosRouter.post("/register", register);
+usuariosRouter.post("/register", checkAuth('Gerente'), register);
