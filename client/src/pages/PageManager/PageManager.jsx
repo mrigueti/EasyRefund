@@ -9,11 +9,27 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import PageManager from '../../components/PageManager/PageManager';
 import { useEffect } from 'react';
-import jwtDecode from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 
 const Home = () => {
   const navigate = useNavigate();
 
+  const [userName, setUserName] = useState('');
+  const [userRole, setUserRole] = useState('');
+
+  useEffect(() => {
+    // Recupera o token do sessionStorage
+    const token = sessionStorage.getItem('token');
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        setUserName(decodedToken.nome);
+        setUserRole(decodedToken.role);
+      } catch (error) {
+        console.error('Erro ao decodificar o token:', error);
+      }
+    }
+  }, []);
   // Estado para controlar a visibilidade do modal
   const [showModal, setShowModal] = useState(false);
 
@@ -33,52 +49,52 @@ const Home = () => {
   const handleCloseModal = () => setShowModal(false);
 
   return (
-      <div className={styles.main}>
-        <div className={styles.navbar_main}>
-          <div className={styles.navbar_left}></div>
-          <div className={styles.navbar_right}>
-            <div className={styles.perfil_div}>
-              <img src={perfil} alt="Perfil" />
-              <div className={styles.perfil_div_text} onClick={handleBtnPerfilUser}>
-                <h1>Nome de Usuário</h1>
-                <p>Perfil de Acesso</p>
-              </div>
-            </div>
-            <div className={styles.icon_navbar_div} onClick={handleShowModal}>
-              <img src={notification} alt="Notificações" />
+    <div className={styles.main}>
+      <div className={styles.navbar_main}>
+        <div className={styles.navbar_left}></div>
+        <div className={styles.navbar_right}>
+          <div className={styles.perfil_div}>
+            <img src={perfil} alt="Perfil" />
+            <div className={styles.perfil_div_text} onClick={handleBtnPerfilUser}>
+              <h1>{userName}</h1>
+              <p>{userRole}</p>
             </div>
           </div>
-        </div>
-
-        <div className={styles.content_main}>
-          <div className={styles.content_left}>
-            <div className={styles.options_div}>
-              <img src={logout} alt="Logout" onClick={handleBtnLogout} />
-            </div>
+          <div className={styles.icon_navbar_div} onClick={handleShowModal}>
+            <img src={notification} alt="Notificações" />
           </div>
-
-          {/* Componente Principal de Gerenciamento */}
-          <PageManager />
         </div>
-
-        {/* Modal de Notificações */}
-        <Modal show={showModal} onHide={handleCloseModal}>
-          <Modal.Header closeButton>
-            <Modal.Title>Notificações</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <p>Você tem novas notificações!</p>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={handleCloseModal}>
-              Fechar
-            </Button>
-            <Button variant="primary" onClick={handleCloseModal}>
-              Marcar como lida
-            </Button>
-          </Modal.Footer>
-        </Modal>
       </div>
+
+      <div className={styles.content_main}>
+        <div className={styles.content_left}>
+          <div className={styles.options_div}>
+            <img src={logout} alt="Logout" onClick={handleBtnLogout} />
+          </div>
+        </div>
+
+        {/* Componente Principal de Gerenciamento */}
+        <PageManager />
+      </div>
+
+      {/* Modal de Notificações */}
+      <Modal show={showModal} onHide={handleCloseModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Notificações</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>Você tem novas notificações!</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseModal}>
+            Fechar
+          </Button>
+          <Button variant="primary" onClick={handleCloseModal}>
+            Marcar como lida
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </div>
   );
 };
 

@@ -7,9 +7,29 @@ import logout from '../../icons/logout.png';
 import perfil from '../../icons/perfil.png';
 import UploadDocumentComponent from '../../components/UploadDocument/UploadDocumentComponent';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { jwtDecode } from 'jwt-decode';
+
 
 export default function UploadDocument() {
   const navigate = useNavigate();
+
+  const [userName, setUserName] = useState('');
+  const [userRole, setUserRole] = useState('');
+
+  useEffect(() => {
+    // Recupera o token do sessionStorage
+    const token = sessionStorage.getItem('token');
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        setUserName(decodedToken.nome);
+        setUserRole(decodedToken.role);
+      } catch (error) {
+        console.error('Erro ao decodificar o token:', error);
+      }
+    }
+  }, []);
 
   const [files, setFiles] = useState([]);
   const [showModal, setShowModal] = useState(false); // Estado para o modal de notificações
@@ -42,8 +62,8 @@ export default function UploadDocument() {
           <div className={styles.perfil_div} onClick={() => navigate("/InformationUser")}>
             <img src={perfil} alt="Perfil" />
             <div className={styles.perfil_div_text}>
-              <h1>Nome de Usuário</h1>
-              <p>Perfil de Acesso</p>
+              <h1>{userName}</h1>
+              <p>{userRole}</p>
             </div>
           </div>
           <div className={styles.icon_navbar_div} onClick={handleShowModal}>

@@ -36,8 +36,8 @@ function App() {
           <Route path='/home/flow-refund/upload-document' element={<ProtectedPage requiredRole="Funcionário"><UploadDocument /></ProtectedPage>} />
 
           {/* Fluxo do Liberador */}
-          <Route path='/manegement' element={<ProtectedPage requiredRole="Aprovador"><InformationUser /></ProtectedPage>} />
-          <Route path='/manegement/permission' element={<ProtectedPage requiredRole="Aprovador"><InformationUser /></ProtectedPage>} />
+          <Route path='/manegement' element={<ProtectedPage requiredRole="Aprovador"><Manegement /></ProtectedPage>} />
+          <Route path='/manegement/permission' element={<ProtectedPage requiredRole="Aprovador"><Permission /></ProtectedPage>} />
 
           {/*Fluxo de informações do usuário*/}
           <Route path='/informationUser' element={<InformationUser />} />

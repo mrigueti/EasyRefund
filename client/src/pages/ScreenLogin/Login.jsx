@@ -42,8 +42,6 @@ const Login = () => {
       });
   
       const responseJson = await response.json();
-      console.log(responseJson.token);
-      
       
       if (responseJson.token) {
         sessionStorage.setItem('token', responseJson.token)

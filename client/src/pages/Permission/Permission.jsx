@@ -8,10 +8,28 @@ import perfil from "../../icons/perfil.png";
 import "bootstrap/dist/css/bootstrap.min.css";
 import PermissionComponent from "../../components/Permission/PermissionComponent.jsx";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from 'react';
+import { jwtDecode } from 'jwt-decode';
 
 const Home = () => {
   const navigate = useNavigate();
 
+  const [userName, setUserName] = useState('');
+  const [userRole, setUserRole] = useState('');
+  
+  useEffect(() => {
+    // Recupera o token do sessionStorage
+    const token = sessionStorage.getItem('token');
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        setUserName(decodedToken.nome);
+        setUserRole(decodedToken.role);
+      } catch (error) {
+        console.error('Erro ao decodificar o token:', error);
+      }
+    }
+  }, []);
   // Estado para controlar a visibilidade do modal
   const [showModal, setShowModal] = useState(false);
 
@@ -41,8 +59,8 @@ const Home = () => {
               className={styles.perfil_div_text}
               onClick={handleBtnPerfilUser}
             >
-              <h1>Nome de Usuário</h1>
-              <p>Perfil de Acesso</p>
+              <h1>{userName}</h1>
+              <p>{userRole}</p>
             </div>
           </div>
           <div className={styles.icon_navbar_div} onClick={handleShowModal}>
