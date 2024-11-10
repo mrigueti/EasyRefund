@@ -1,8 +1,9 @@
 // ./routes/unidades.js
 
 import express from 'express';
-import getNome from '../controllers/unidades'
+import { get } from '../controllers/unidades.js'
 
 export const unidadesRouter = express.Router();
 
-unidadesRouter.get("/get-nome", getNome)
+//get unidade
+unidadesRouter.get("/get", get)

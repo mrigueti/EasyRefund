@@ -1,5 +1,5 @@
 import styles from "./Register.module.css";
-import { useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import user from "../../icons/user.png";
 import email from "../../icons/email.png";
@@ -9,27 +9,37 @@ import location from "../../icons/unidade.png";
 import { Modal, Button } from "react-bootstrap"; // Importando o Modal e o Button
 
 const url_register = 'http://localhost:3001/api/usuarios/register';
-const url_unidades_get = 'http://localhost:3001/api/unidades/get-nome'
+const url_unidades_get = 'http://localhost:3001/api/unidades/get'
+const url_cargosSetoresUnidades = 'http://localhost:3001/api/cargos-setores-unidades/get'
 
 const Register = () => {
   const [username, setUsername] = useState('');
-  const [email, setEmail ] = useState('');
+  const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [role, setRole] = useState('');
   const [message, setMessage] = useState('');
-  const [unidades, setUnidades] = useState('');
+  const [cargosSetoresUnidades, setCargosSetoresUnidades] = useState([]);
+  const [selectedCargo, setSelectedCargo] = useState(""); // Estado para o cargo selecionado
+
 
   useEffect(() => {
-    const fetchUnidades = async () => {
+    const fetchCargosSetoresUnidades = async () => {
       try {
-        const response = await fetch(url_unidades_get);
+        const response = await fetch(url_cargosSetoresUnidades); // Altere o URL conforme necessário
+        if (!response.ok) {
+          throw new Error('Erro ao buscar dados');
+        }
         const data = await response.json();
-        setUnidades(data); // Atualiza o estado com as unidades recebidas
+
+        console.log(data);
+        
+        setCargosSetoresUnidades(data);
       } catch (error) {
-        console.error("Erro ao buscar unidades:", error);
+        console.error("Erro ao buscar cargos, setores e unidades:", error);
       }
     };
-    fetchUnidades();
+
+    fetchCargosSetoresUnidades();
   }, []);
 
   const handleSubmit = async (e) => {
@@ -47,7 +57,7 @@ const Register = () => {
           role_nome: role
         }),
       });
-      
+
       const data = await response.json();
       if (!response.ok) {
         console.error("Erro na resposta do servidor:", data);
@@ -58,8 +68,8 @@ const Register = () => {
       console.error("Erro ao enviar dados:", error);
     }
   };
-  
-  
+
+
   const navigate = useNavigate();
 
   const handleBtnBackPage = () => {
@@ -68,8 +78,8 @@ const Register = () => {
 
   const [nameRegisterP, setNameRegister] = useState("");
   const [roleRegisterP, setRoleRegisterP] = useState("");
-  const [sectorRegisterP, setSectorRegisterP] = useState("");
   const [locationRegisterP, setLocationRegisterP] = useState("");
+  const [sectorRegisterP, setSectorRegisterP] = useState("");
   const [emailRegisterP, setEmailRegister] = useState("");
   const [errors, setErrors] = useState({});
   const [showModal, setShowModal] = useState(false); // Estado para o modal de confirmação
@@ -133,20 +143,19 @@ const Register = () => {
           )}
         </div>
 
-        {/* Select para escolher a Unidade */}
+        {/* Select para escolher o Cargo */}
         <div className={styles.RegisterInputContainer}>
           <div className={styles.RegisterNameInput}>
             <img src={location} alt="Location Icon" className={styles.Icon} />
             <select
-              name="locationRegisterP"
-              value={locationRegisterP}
-              onChange={(e) => setLocationRegisterP(e.target.value)}
-              required
-            >
-              <option value="">Selecione uma unidade</option>
-              {unidades.map((unidade, index) => (
-                <option key={index} value={unidade.nome_unidade}>
-                  {unidade.nome_unidade}
+              name="cargo"
+              value={selectedCargo}
+              onChange={(e) => setSelectedCargo(e.target.value)}
+              required>
+              <option value="">Cargo - Setor - Unidade</option>
+              {cargosSetoresUnidades.map((item, index) => (
+                <option key={index} value={item.Cargo}>
+                  {`${item.Cargo} - ${item.Setor} - ${item.Unidade}`}
                 </option>
               ))}
             </select>
@@ -155,7 +164,7 @@ const Register = () => {
             <div className={styles.errorAlert}>{errors.location}</div>
           )}
         </div>
-        
+
         {/* <div className={styles.RegisterInputContainer}>
           <div className={styles.RegisterNameInput}>
             <img src={role} alt="Role Icon" className={styles.Icon} />

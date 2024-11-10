@@ -1,4 +1,4 @@
--- Active: 1731089474625@@127.0.0.1@3306@easyrefund
+-- Active: 1731196320995@@127.0.0.1@3306@easyrefund
 CREATE SCHEMA EasyRefund;
 
 USE EasyRefund;
@@ -90,6 +90,7 @@ CREATE TABLE notificacoes (
 
 -- Inserts para testes
 INSERT INTO unidades (nome_unidade) VALUES ('Vitória');
+INSERT INTO unidades (nome_unidade) VALUES ('Vila Velha');
 
 INSERT INTO setores (nome_setor) VALUES ('Financeiro'), ('RH'), ('TI');
 
@@ -129,3 +130,19 @@ VALUES
 -- selects
 
 select * from usuarios 
+
+SELECT 
+    c.id_cargo,
+    c.nome_cargo AS Cargo,
+    s.nome_setor AS Setor,
+    u.nome_unidade AS Unidade
+FROM 
+    cargos c
+JOIN 
+    setores s ON c.id_setor = s.id_setor
+JOIN 
+    setores_unidades su ON s.id_setor = su.id_setor
+JOIN 
+    unidades u ON su.id_unidade = u.id_unidade
+GROUP BY 
+    c.nome_cargo, s.nome_setor, u.nome_unidade;
