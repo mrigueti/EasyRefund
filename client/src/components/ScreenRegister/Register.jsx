@@ -15,7 +15,7 @@ const url_cargosSetoresUnidades = 'http://localhost:3001/api/cargos-setores-unid
 const Register = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
-  const [senha, setSenha] = useState('');
+  const [senha, setSenha] = useState('123456');
   const [role, setRole] = useState('');
   const [message, setMessage] = useState('');
   const [cargosSetoresUnidades, setCargosSetoresUnidades] = useState([]);
@@ -193,14 +193,14 @@ const Register = () => {
             <div className={styles.errorAlert}>{errors.email}</div>
           )}
         </div>
-        <div className={styles.RegisterInputContainer}>
+        {/* <div className={styles.RegisterInputContainer}>
           <div className={styles.RegisterNameInput}>
             <img src={user} alt="User Icon" className={styles.Icon} />
             <input
               type="password"
               name="nameRegisterP"
               placeholder="Senha"
-              value={"123456"}
+              value={senha}
               disabled
               onChange={(e) => setSenha(e.target.value)}
               required
@@ -209,7 +209,7 @@ const Register = () => {
           {errors.name && (
             <div className={styles.errorAlert}>{errors.name}</div>
           )}
-        </div>
+        </div> */}
         <div className={styles.CheckBox}>
           <div className={styles.CheckFuncUser}>
             <input
