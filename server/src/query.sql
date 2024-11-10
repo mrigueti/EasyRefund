@@ -149,6 +149,8 @@ VALUES
 
 select * from usuarios;
 
+SELECT * FROM aprovadores;
+
 SELECT 
       c.nome_cargo AS Cargo,
       s.nome_setor AS Setor,

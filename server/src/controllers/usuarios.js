@@ -2,6 +2,7 @@ import { db } from '../db.js';
 import bcrypt from 'bcryptjs';
 import { json } from 'express';
 import jwt from 'jsonwebtoken';
+import { registerAprovador } from './aprovadores.js';
 
 export const login = (req, res) => {
   const { email, senha } = req.body;
@@ -49,12 +50,20 @@ export const register = async (req, res) => {
         console.error("Erro ao registrar o usuário:", err); // Log do erro no servidor
         return res.status(500).json({ error: "Erro ao registrar o usuário." });
       }
-
+      
+      if (role_nome === "Aprovador") {
+        try {
+          registerAprovador(result.insertId); // Chama a função passando o ID do usuário inserido
+          console.log("Usuário registrado como aprovador registrado com sucesso.");
+        } catch (error) {
+          console.error("Erro ao registrar o aprovador /usuarios:", error);
+        }
+      }
       const token = jwt.sign({ id: result.insertId }, process.env.JWT_SECRET || 'easyrefund987', { expiresIn: '1h' });
       res.status(201).json({ message: "Usuário cadastrado com sucesso.", token });
     });
   } catch (err) {
-    console.error("Erro ao processar registro:", err); // Log do erro no servidor
-    res.status(500).json({ error: "Erro ao processar registro." });
+    console.error("Erro ao processar registro do usuário:", err); // Log do erro no servidor
+    res.status(500).json({ error: "Erro ao processar registro do usuário." });
   }
 };

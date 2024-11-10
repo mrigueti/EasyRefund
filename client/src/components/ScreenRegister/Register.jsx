@@ -64,7 +64,7 @@ const Register = () => {
           id_cargo: selectedData.id_cargo,  // Passa o ID do cargo
           id_setor: selectedData.id_setor,  // Passa o ID do setor
           id_unidade: selectedData.id_unidade,  // Passa o ID da unidade
-        }),
+        })
       });
 
       const data = await response.json();
