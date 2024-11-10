@@ -46,7 +46,7 @@ const Login = () => {
       
       
       if (responseJson.token) {
-        localStorage.setItem('token', responseJson.token)
+        sessionStorage.setItem('token', responseJson.token)
       }
   
       // Verifica o status da resposta e define as mensagens de erro adequadas
@@ -64,8 +64,6 @@ const Login = () => {
         navigate("/manager");
       }
   
-      // Armazena o token no localStorage
-      localStorage.setItem("token", responseJson.token);
       console.log("Login bem-sucedido!");
       
     } catch (error) {
