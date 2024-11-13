@@ -1,12 +1,16 @@
 import styles from "./FlowRefundComponent.module.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const FlowRefundComponent = () => {
   const navigate = useNavigate();
+  const [tipoDedutivel, setTipoDedutivel] = useState('')
 
   const handleUploadDocument = () => {
-    navigate("/home/flow-refund/upload-document");
+    navigate("/home/flow-refund/upload-document", {
+      state: { tipoDedutivel }
+    });
   };
 
   const handleBtnBackPage = () => {
@@ -24,16 +28,20 @@ const FlowRefundComponent = () => {
       <button
         className={styles.BtnDeductible}
         onClick={handleUploadDocument}
+        value={true}
+        onChange={(e) => setTipoDedutivel(e.target.value)}
       >
         Reembolso Dedutível
-        </button>
+      </button>
       <button
         className={styles.BtnNonDeductible}
         size="lg"
         onClick={handleUploadDocument}
+        value={false}
+        onChange={(e) => setTipoDedutivel(e.target.value)}
       >
         Reembolso não Dedutível
-        </button>
+      </button>
     </div>
   );
 };

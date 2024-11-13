@@ -2,17 +2,22 @@ import React, { useState, useRef } from "react";
 import { Container, Row, Col, Form, Button, ListGroup, Modal } from "react-bootstrap";
 import { XCircleFill } from "react-bootstrap-icons";
 import styles from "./UploadDocumentComponent.module.css";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function UploadDocument() {
   const navigate = useNavigate();
-  const [files, setFiles] = useState([]);
+  const [files, setFiles] = useState(null);
   const [selectedButton, setSelectedButton] = useState(null);
   const [errorMessages, setErrorMessages] = useState([]);
   const [successMessage, setSuccessMessage] = useState("");
   const [textArea, setTextArea] = useState("");
   const [showModal, setShowModal] = useState(false); // Estado para o modal de confirmação
   const fileInputRef = useRef(null); // Referência para o input de arquivo
+  const location = useLocation();
+  const [valor_pedido, setValorPedido] = useState("")
+  const tipoDedutivel = location.state?.tipoDedutivel;
+
+
 
   const handleFileChange = (event) => {
     if (event.target.files) {
@@ -105,30 +110,39 @@ export default function UploadDocument() {
               <div className={styles.BtnOption}>
                 <div>
                   <button
-                    className={`${styles.BtnHotel} ${selectedButton === "hotel" ? styles.selected : ""}`}
+                    className={`${styles.BtnHotel} ${selectedButton === "Hospedagem" ? styles.selected : ""}`}
                     type="button"
-                    onClick={() => handleClickSelected("hotel")}
+                    onClick={() => handleClickSelected('Hospedagem')}
                   >
                     Hotel
                   </button>
                 </div>
                 <div>
                   <button
-                    className={`${styles.BtnFood} ${selectedButton === "food" ? styles.selected : ""}`}
+                    className={`${styles.BtnFood} ${selectedButton === "Alimentação" ? styles.selected : ""}`}
                     type="button"
-                    onClick={() => handleClickSelected("food")}
+                    onClick={() => handleClickSelected('Alimentação')}
                   >
                     Comida
                   </button>
                 </div>
                 <div>
                   <button
-                    className={`${styles.BtnTransport} ${selectedButton === "transport" ? styles.selected : ""}`}
+                    className={`${styles.BtnTransport} ${selectedButton === "Transporte" ? styles.selected : ""}`}
                     type="button"
-                    onClick={() => handleClickSelected("transport")}
+                    onClick={() => handleClickSelected('Transporte')}
                   >
                     Transporte
                   </button>
+                  <div>
+                    <button
+                      className={`${styles.BtnTransport} ${selectedButton === "Outros" ? styles.selected : ""}`}
+                      type="button"
+                      onClick={() => handleClickSelected('Outros')}
+                    >
+                      Transporte
+                    </button>
+                  </div>
                 </div>
               </div>
               {errorMessages.includes("Por favor, selecione uma categoria.") && (

@@ -1,4 +1,4 @@
--- Active: 1731196320995@@127.0.0.1@3306@easyrefund
+-- Active: 1731508464914@@127.0.0.1@3306@easyrefund
 CREATE SCHEMA EasyRefund;
 
 USE EasyRefund;
@@ -71,6 +71,10 @@ CREATE TABLE nfs (
     id_solicitacao INT,
     FOREIGN KEY (id_solicitacao) REFERENCES solicitacoes(id_solicitacao)
 );
+
+ALTER TABLE nfs 
+MODIFY anexo_nf VARCHAR(255) NOT NULL;
+
 
 -- Criando tabela de Setores e Unidades (relacionamento N:N entre Setores e Unidades)
 CREATE TABLE setores_unidades (
