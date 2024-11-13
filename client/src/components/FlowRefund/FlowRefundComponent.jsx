@@ -5,11 +5,12 @@ import { useNavigate } from "react-router-dom";
 
 const FlowRefundComponent = () => {
   const navigate = useNavigate();
-  const [tipoDedutivel, setTipoDedutivel] = useState('')
+  const [tipoDedutivel, setTipoDedutivel] = useState('');
 
-  const handleUploadDocument = () => {
+  const handleUploadDocument = (value) => {
+    setTipoDedutivel(value);
     navigate("/home/flow-refund/upload-document", {
-      state: { tipoDedutivel }
+      state: { tipoDedutivel: value }
     });
   };
 
@@ -27,18 +28,14 @@ const FlowRefundComponent = () => {
       </button>
       <button
         className={styles.BtnDeductible}
-        onClick={handleUploadDocument}
-        value={true}
-        onChange={(e) => setTipoDedutivel(e.target.value)}
+        onClick={() => handleUploadDocument(1)}
       >
         Reembolso Dedutível
       </button>
       <button
         className={styles.BtnNonDeductible}
         size="lg"
-        onClick={handleUploadDocument}
-        value={false}
-        onChange={(e) => setTipoDedutivel(e.target.value)}
+        onClick={() => handleUploadDocument(0)}
       >
         Reembolso não Dedutível
       </button>

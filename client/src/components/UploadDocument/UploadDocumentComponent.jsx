@@ -1,32 +1,45 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Container, Row, Col, Form, Button, ListGroup, Modal } from "react-bootstrap";
 import { XCircleFill } from "react-bootstrap-icons";
 import styles from "./UploadDocumentComponent.module.css";
 import { useLocation, useNavigate } from "react-router-dom";
+import { jwtDecode } from 'jwt-decode';
 
 export default function UploadDocument() {
   const navigate = useNavigate();
-  const [files, setFiles] = useState(null);
+  const [files, setFiles] = useState([]);
   const [selectedButton, setSelectedButton] = useState(null);
   const [errorMessages, setErrorMessages] = useState([]);
   const [successMessage, setSuccessMessage] = useState("");
   const [textArea, setTextArea] = useState("");
-  const [showModal, setShowModal] = useState(false); // Estado para o modal de confirmação
-  const fileInputRef = useRef(null); // Referência para o input de arquivo
+  const [valor_pedido, setValorPedido] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const fileInputRef = useRef(null);
   const location = useLocation();
-  const [valor_pedido, setValorPedido] = useState("")
   const tipoDedutivel = location.state?.tipoDedutivel;
+  const [userId, setUserId] = useState(null);
+  const url_solicitacao = 'http://localhost:3001/api/solicitacoes/create';
 
 
+  useEffect(() => {
+    const token = sessionStorage.getItem('token');
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        setUserId(decodedToken.id);
+      } catch (error) {
+        console.error('Erro ao decodificar o token:', error);
+      }
+    }
+  }, []);
 
   const handleFileChange = (event) => {
-    if (event.target.files) {
-      setFiles((prevFiles) => [
-        ...prevFiles,
-        ...Array.from(event.target.files),
-      ]);
+    const file = event.target.files[0];
+    if (file) {
+      setFiles([file]);
     }
   };
+  
 
   const removeFile = (fileToRemove) => {
     setFiles(files.filter((file) => file !== fileToRemove));
@@ -40,46 +53,75 @@ export default function UploadDocument() {
     setSelectedButton(button);
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault(); // Impede o envio padrão do formulário
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-    const errors = []; // Array para armazenar mensagens de erro
+    setErrorMessages([]);
 
-    // Verificação se não há arquivos ou categoria não selecionada
-    if (files.length === 0) {
-      errors.push("Por favor, anexe um arquivo.");
-    }
     if (!selectedButton) {
-      errors.push("Por favor, selecione uma categoria.");
+      setErrorMessages((prev) => [...prev, "Por favor, selecione uma categoria."]);
+      return;
     }
 
-    // Se houver erros, atualiza o estado de mensagens de erro
-    if (errors.length > 0) {
-      setErrorMessages(errors);
-      setSuccessMessage(""); // Limpa a mensagem de sucesso, se houver
-    } else {
-      setErrorMessages([]); // Limpa as mensagens de erro
-      setSuccessMessage("Envio realizado com sucesso!"); // Define a mensagem de sucesso
+    if (files.length === 0) {
+      setErrorMessages((prev) => [...prev, "Por favor, anexe um arquivo."]);
+      return;
+    }
 
-      // Limpa os campos após o envio
-      setFiles([]);
-      setSelectedButton(null);
-      setTextArea(""); // Limpa o campo de texto
-      if (fileInputRef.current) {
-        fileInputRef.current.value = ""; // Limpa o input de arquivo
+    if (!valor_pedido) {
+      setErrorMessages((prev) => [...prev, "Por favor, insira o valor do pedido."]);
+      return;
+    }
+
+    if (!userId) {
+      console.error('Usuário não autenticado.');
+      return;
+    }
+
+    const formData = new FormData();
+
+    formData.append("id_usuario", userId);
+    formData.append("valor_pedido_solic", valor_pedido);
+    formData.append("tipo_dedutivel_solic", tipoDedutivel);
+    formData.append("categoria", selectedButton);
+    formData.append("descricao", textArea);
+
+    formData.append("anexo_nf", files[0]);
+
+    const token = sessionStorage.getItem('token');
+    try {
+      const response = await fetch(url_solicitacao, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      if (response.ok) {
+        console.log("Dados enviados com sucesso");
+        setSuccessMessage("Comprovante enviado com sucesso!");
+        setFiles([]);
+        fileInputRef.current.value = "";
+        setValorPedido("");
+        setTextArea("");
+        setSelectedButton(null);
+      } else {
+        console.error("Falha ao enviar dados:", response.status);
+        setErrorMessages((prev) => [...prev, "Erro ao enviar dados."]);
       }
-      setShowModal(true); // Mostra o modal após o envio bem-sucedido
+    } catch (error) {
+      console.error("Erro ao enviar dados:", error);
+      setErrorMessages((prev) => [...prev, "Erro ao enviar dados."]);
     }
   };
 
   const handleCloseModal = (sendAnother) => {
-    setShowModal(false); // Fecha o modal
-    if (sendAnother) {
-      // Se o usuário deseja enviar outro documento, não faz nada
-      setSuccessMessage(""); // Limpa a mensagem de sucesso
-    } else {
-      // Se o usuário não deseja enviar outro documento, volta à página anterior
+    setShowModal(false);
+    if (!sendAnother) {
       handleBtnBackPage();
+    } else {
+      setSuccessMessage("");
     }
   };
 
@@ -100,54 +142,56 @@ export default function UploadDocument() {
                 <Form.Control
                   type="file"
                   onChange={handleFileChange}
-                  multiple
-                  ref={fileInputRef} // Adicionando a referência aqui
+                  ref={fileInputRef}
                 />
                 {errorMessages.includes("Por favor, anexe um arquivo.") && (
                   <div className="text-danger">Por favor, anexe um arquivo.</div>
                 )}
               </Form.Group>
+              {/* Input para valor do pedido */}
+              <Form.Group className="mb-3">
+                <Form.Label>Valor do Pedido</Form.Label>
+                <Form.Control
+                  type="number"
+                  placeholder="Digite o valor"
+                  value={valor_pedido}
+                  onChange={(e) => setValorPedido(e.target.value)} // Atualiza o valor do pedido
+                />
+              </Form.Group>
               <div className={styles.BtnOption}>
-                <div>
-                  <button
-                    className={`${styles.BtnHotel} ${selectedButton === "Hospedagem" ? styles.selected : ""}`}
-                    type="button"
-                    onClick={() => handleClickSelected('Hospedagem')}
-                  >
-                    Hotel
-                  </button>
-                </div>
-                <div>
-                  <button
-                    className={`${styles.BtnFood} ${selectedButton === "Alimentação" ? styles.selected : ""}`}
-                    type="button"
-                    onClick={() => handleClickSelected('Alimentação')}
-                  >
-                    Comida
-                  </button>
-                </div>
-                <div>
-                  <button
-                    className={`${styles.BtnTransport} ${selectedButton === "Transporte" ? styles.selected : ""}`}
-                    type="button"
-                    onClick={() => handleClickSelected('Transporte')}
-                  >
-                    Transporte
-                  </button>
-                  <div>
-                    <button
-                      className={`${styles.BtnTransport} ${selectedButton === "Outros" ? styles.selected : ""}`}
-                      type="button"
-                      onClick={() => handleClickSelected('Outros')}
-                    >
-                      Transporte
-                    </button>
-                  </div>
-                </div>
+                <button
+                  className={`${styles.BtnHotel} ${selectedButton === "Hospedagem" ? styles.selected : ""}`}
+                  type="button"
+                  onClick={() => handleClickSelected("Hospedagem")}
+                >
+                  Hotel
+                </button>
+                <button
+                  className={`${styles.BtnFood} ${selectedButton === "Alimentação" ? styles.selected : ""}`}
+                  type="button"
+                  onClick={() => handleClickSelected("Alimentação")}
+                >
+                  Comida
+                </button>
+                <button
+                  className={`${styles.BtnTransport} ${selectedButton === "Transporte" ? styles.selected : ""}`}
+                  type="button"
+                  onClick={() => handleClickSelected("Transporte")}
+                >
+                  Transporte
+                </button>
+                <button
+                  className={`${styles.BtnTransport} ${selectedButton === "Outros" ? styles.selected : ""}`}
+                  type="button"
+                  onClick={() => handleClickSelected("Outros")}
+                >
+                  Outros
+                </button>
               </div>
               {errorMessages.includes("Por favor, selecione uma categoria.") && (
                 <div className="text-danger">Por favor, selecione uma categoria.</div>
               )}
+
               <div className={styles.TextArea}>
                 <textarea
                   className={styles.textAreaDescription}
@@ -155,7 +199,7 @@ export default function UploadDocument() {
                   id="textAreaDescription"
                   placeholder="Descrição..."
                   value={textArea}
-                  onChange={(e) => setTextArea(e.target.value)} // Atualiza o estado
+                  onChange={(e) => setTextArea(e.target.value)}
                 ></textarea>
               </div>
               {files.length > 0 && (
@@ -189,24 +233,6 @@ export default function UploadDocument() {
           </Col>
         </Row>
       </Container>
-
-      {/* Modal de confirmação */}
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Deseja enviar outro documento?</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <p>Você gostaria de enviar outro documento?</p>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => handleCloseModal(false)}>
-            Não
-          </Button>
-          <Button variant="primary" onClick={() => handleCloseModal(true)}>
-            Sim
-          </Button>
-        </Modal.Footer>
-      </Modal>
     </div>
   );
 }

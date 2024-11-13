@@ -155,6 +155,8 @@ select * from usuarios;
 
 SELECT * FROM aprovadores;
 
+SELECT * FROM solicitacoes
+
 SELECT 
       c.nome_cargo AS Cargo,
       s.nome_setor AS Setor,
@@ -204,3 +206,23 @@ JOIN
     setores_unidades su ON s.id_setor = su.id_setor
 JOIN 
     unidades u ON su.id_unidade = u.id_unidade;
+
+
+SELECT 
+    s.id_solicitacao, 
+    s.id_usuario, 
+    s.id_aprovador, 
+    s.status_solicitacao, 
+    s.dt_criacao_solic, 
+    s.valor_pedido_solic, 
+    s.valor_aprovado_solic, 
+    s.tipo_dedutivel_solic, 
+    s.dt_aprovacao, 
+    s.descricao, 
+    s.categoria,
+    n.id_nf,
+    n.anexo_nf
+FROM 
+    solicitacoes s
+LEFT JOIN 
+    nfs n ON s.id_solicitacao = n.id_solicitacao;
