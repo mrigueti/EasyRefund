@@ -1,1 +1,1 @@
-TCC - Análise e Desenvolvimento de Sistemas
+TCC - Desenvolvimento de Sistemas
