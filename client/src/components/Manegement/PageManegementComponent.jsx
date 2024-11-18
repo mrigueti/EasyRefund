@@ -17,6 +17,9 @@ const PageManagement = () => {
           data.map((item) => ({
             id: item.id_solicitacao,
             name: item.nome_usuario,
+            cargo: item.nome_cargo,
+            setor: item.nome_setor,
+            unidade: item.nome_unidade,
             date: new Date(item.dt_criacao_solic).toLocaleDateString("pt-BR"),
             status: item.status_solicitacao,
             descricao: item.descricao,
@@ -54,6 +57,11 @@ const PageManagement = () => {
     }
   };
 
+  const handleRowClick = (solicitacao) => {
+    // Redireciona para a página de permissão com os dados da solicitação
+    navigate(`/manegement/permission`, { state: { solicitacao } });
+  };
+
   return (
     <div className={Styles.component}>
       <header className={Styles.HeaderManagement}></header>
@@ -89,7 +97,7 @@ const PageManagement = () => {
             <tbody>
               {filteredSolicitacoes.length > 0 ? (
                 filteredSolicitacoes.map((solicitacao) => (
-                  <tr key={solicitacao.id}>
+                  <tr key={solicitacao.id} onDoubleClick={() => handleRowClick(solicitacao)}>
                     <td>{solicitacao.id}</td>
                     <td>{solicitacao.name}</td>
                     <td>{solicitacao.date}</td>

@@ -34,10 +34,30 @@ export const getAllSolicitacoes = async (req, res) => {
   try {
     const [rows] = await db.promise().query(`
       SELECT 
-        solicitacoes.*, 
-        usuarios.nome_usuario AS nome_usuario
-      FROM solicitacoes
-      JOIN usuarios ON solicitacoes.id_usuario = usuarios.id_usuario
+    u.nome_usuario,
+    c.nome_cargo,
+    s.nome_setor,
+    u2.nome_unidade,
+    sol.id_solicitacao,
+    sol.status_solicitacao,
+    sol.valor_pedido_solic,
+    sol.dt_criacao_solic,
+    sol.valor_aprovado_solic,
+    sol.descricao,
+    sol.categoria,
+    n.anexo_nf
+FROM 
+    solicitacoes sol
+JOIN 
+    usuarios u ON sol.id_usuario = u.id_usuario
+JOIN 
+    cargos c ON u.id_cargo = c.id_cargo
+JOIN 
+    setores s ON u.id_setor = s.id_setor
+JOIN 
+    unidades u2 ON u.id_unidade = u2.id_unidade
+LEFT JOIN 
+    nfs n ON sol.id_solicitacao = n.id_solicitacao
     `);
     res.status(200).json(rows); // Envia os dados ao cliente como JSON
   } catch (error) {

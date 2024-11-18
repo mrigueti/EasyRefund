@@ -226,3 +226,27 @@ FROM
     solicitacoes s
 LEFT JOIN 
     nfs n ON s.id_solicitacao = n.id_solicitacao;
+
+SELECT 
+    u.nome_usuario,
+    c.nome_cargo,
+    s.nome_setor,
+    u2.nome_unidade,
+    sol.valor_pedido_solic,
+    sol.dt_criacao_solic,
+    sol.valor_aprovado_solic,
+    sol.descricao,
+    sol.categoria,
+    n.anexo_nf
+FROM 
+    solicitacoes sol
+JOIN 
+    usuarios u ON sol.id_usuario = u.id_usuario
+JOIN 
+    cargos c ON u.id_cargo = c.id_cargo
+JOIN 
+    setores s ON u.id_setor = s.id_setor
+JOIN 
+    unidades u2 ON u.id_unidade = u2.id_unidade
+LEFT JOIN 
+    nfs n ON sol.id_solicitacao = n.id_solicitacao
