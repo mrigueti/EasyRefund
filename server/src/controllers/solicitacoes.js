@@ -29,3 +29,19 @@ export const createSolicitacao = async (req, res) => {
     }
   });
 };
+
+export const getAllSolicitacoes = async (req, res) => {
+  try {
+    const [rows] = await db.promise().query(`
+      SELECT 
+        solicitacoes.*, 
+        usuarios.nome_usuario AS nome_usuario
+      FROM solicitacoes
+      JOIN usuarios ON solicitacoes.id_usuario = usuarios.id_usuario
+    `);
+    res.status(200).json(rows); // Envia os dados ao cliente como JSON
+  } catch (error) {
+    console.error("(back) Erro ao buscar solicitações:", error);
+    res.status(500).json({ error: "Erro ao buscar solicitações" }); // Retorna erro em caso de falha
+  }
+};
