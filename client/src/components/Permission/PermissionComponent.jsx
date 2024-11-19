@@ -140,6 +140,11 @@ const Permission = () => {
   
 
   const handleStatusChange = (newStatus) => {
+    if (newStatus === "Recusada" && valorAprovado !== "0" && valorAprovado !== "") {
+      alert("(front)Solicitações recusadas devem ter o valor aprovado igual a 0!");
+      return;
+    }
+  
     if (window.confirm(`Tem certeza que deseja ${newStatus}?`)) {
       setStatus(newStatus);
       alert(`Solicitação ${newStatus}!`);
@@ -147,6 +152,7 @@ const Permission = () => {
       navigate("/manegement");
     }
   };
+  
 
   const formatCurrency = (value) =>
     new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(value);
