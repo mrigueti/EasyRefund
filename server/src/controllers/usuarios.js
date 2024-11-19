@@ -70,3 +70,50 @@ export const register = async (req, res) => {
     res.status(500).json({ error: "Erro ao processar registro do usuário." });
   }
 };
+
+export const get = (req, res) => {
+  const userId = req.params.id;
+
+  const q = `SELECT id_usuario, nome_usuario, cpf_usuario, email_usuario, role_nome, id_cargo, id_setor, id_unidade FROM usuarios WHERE id_usuario = ?`;
+
+  db.query(q, [userId], (err, data) => {
+    if (err) {
+      return res.status(500).json({ error: "Erro ao buscar o usuário." });
+    }
+
+    if (data.length === 0) {
+      return res.status(404).json({ error: "Usuário não encontrado." });
+    }
+
+    const user = data[0];
+    return res.status(200).json({ user });
+  });
+};
+
+export const update = (req, res) => {
+  const userId = req.params.id; // ID do usuário vindo da URL
+  const { nome_usuario, cpf_usuario, email_usuario } = req.body; // Dados enviados pelo frontend
+
+  // Validação básica para evitar dados inválidos
+  if (!nome_usuario || !cpf_usuario || !email_usuario) {
+    return res.status(400).json({ error: "Todos os campos são obrigatórios." });
+  }
+
+  const query = `
+    UPDATE usuarios
+    SET nome_usuario = ?, cpf_usuario = ?, email_usuario = ?
+    WHERE id_usuario = ?`;
+
+  db.query(query, [nome_usuario, cpf_usuario, email_usuario, userId], (err, result) => {
+    if (err) {
+      console.error("Erro ao atualizar o usuário:", err);
+      return res.status(500).json({ sucess: false, error: "Erro no servidor ao atualizar o usuário.", });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({  sucess: false, error: "Usuário não encontrado.", });
+    }
+
+    return res.status(200).json({  sucess: true, message: "Usuário atualizado com sucesso!", });
+  });
+};

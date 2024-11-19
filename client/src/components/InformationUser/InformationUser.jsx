@@ -1,9 +1,10 @@
 import styles from "./InformationUser.module.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import document from '../../icons/document.png';
 import user from '../../icons/user.png';
 import email from '../../icons/email.png';
+import { jwtDecode } from 'jwt-decode'; // Corrigindo para o nome correto da importação
 
 const InformationUser = () => {
   const navigate = useNavigate();
@@ -11,19 +12,51 @@ const InformationUser = () => {
   const [informationName, setInformationName] = useState("");
   const [informationCPF, setInformationCPF] = useState("");
   const [informationEmail, setInformationEmail] = useState("");
-  const [previousEmail, setPreviousEmail] = useState(""); // Estado para o e-mail anterior
+  const [previousEmail, setPreviousEmail] = useState("");
   const [errorMessages, setErrorMessages] = useState({
     cpf: "",
     name: "",
     email: "",
   });
+  const [message, setMessage] = useState(""); // Estado para mensagem de sucesso ou erro
+
+  useEffect(() => {
+    const token = sessionStorage.getItem("token");
+
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        const userId = decoded.id;
+
+        fetch(`http://localhost:3001/api/usuarios/get/${userId}`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.user) {
+              setInformationName(data.user.nome_usuario);
+              setInformationCPF(data.user.cpf_usuario);
+              setInformationEmail(data.user.email_usuario);
+              setPreviousEmail(data.user.email_usuario);
+            }
+          })
+          .catch((err) => {
+            console.error("Erro ao buscar dados do usuário:", err);
+          });
+      } catch (error) {
+        console.error("Erro ao decodificar o token:", error);
+      }
+    }
+  }, []);
 
   const handleSaveChange = (e) => {
     e.preventDefault();
-    // Limpar mensagens de erro
     setErrorMessages({ cpf: "", name: "", email: "" });
+    setMessage("");
 
-    // Verificações de campos vazios
     let hasError = false;
 
     if (informationCPF === "") {
@@ -39,42 +72,68 @@ const InformationUser = () => {
     if (informationEmail === "") {
       setErrorMessages((prev) => ({ ...prev, email: "O campo Email está vazio" }));
       hasError = true;
-    } else {
-      // Verificar se o email contém "@" e termina com ".com" ou ".br"
-      if (!informationEmail.includes('@') || (!informationEmail.endsWith('.com') && !informationEmail.endsWith('.br'))) {
-        setErrorMessages((prev) => ({ ...prev, email: "O email deve conter '@' e terminar com '.com' ou '.br'" }));
-        hasError = true;
-      }
-    }
-
-    if (informationCPF.length < 11) {
-      setErrorMessages((prev) => ({ ...prev, cpf: "Insira todos os números do CPF" }));
+    } else if (
+      !informationEmail.includes("@") ||
+      (!informationEmail.endsWith(".com") && !informationEmail.endsWith(".br"))
+    ) {
+      setErrorMessages((prev) => ({
+        ...prev,
+        email: "O email deve conter '@' e terminar com '.com' ou '.br'",
+      }));
       hasError = true;
     }
 
-    // Se houver erros, não salvar e mostrar alerta
+    if (informationCPF.length < 11) {
+      setErrorMessages((prev) => ({
+        ...prev,
+        cpf: "Insira todos os números do CPF",
+      }));
+      hasError = true;
+    }
+
     if (hasError) {
-      alert("Por favor, preencha todos os campos obrigatórios.");
+      setMessage("Erro: Por favor, preencha todos os campos obrigatórios.");
       return;
     }
 
-    // Verificar se o novo e-mail é igual ao e-mail anterior
-    if (informationEmail === previousEmail) {
-      setErrorMessages((prev) => ({ ...prev, email: "O novo e-mail não pode ser igual ao anterior" }));
-      alert("O novo e-mail não pode ser igual ao anterior.");
-      return;
+    const token = sessionStorage.getItem("token");
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        const userId = decoded.id;
+
+        fetch(`http://localhost:3001/api/usuarios/update/${userId}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            nome_usuario: informationName,
+            cpf_usuario: informationCPF,
+            email_usuario: informationEmail,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              setMessage("Dados atualizados com sucesso!");
+              setInformationName("");
+              setInformationCPF("");
+              setInformationEmail("");
+              setPreviousEmail("");
+            } else {
+              setMessage(data.message || "Erro ao atualizar os dados.");
+            }
+          })
+          .catch((err) => {
+            console.error("Erro ao atualizar os dados:", err);
+            setMessage("Erro ao atualizar os dados.");
+          });
+      } catch (error) {
+        console.error("Erro ao decodificar o token:", error);
+      }
     }
-
-    // Se as validações passarem, aqui você pode adicionar a lógica para salvar as mudanças
-    alert("Dados salvos com sucesso!"); // Exemplo de ação após salvar
-
-    // Limpar os campos após salvar
-    setInformationName("");
-    setInformationCPF("");
-    setInformationEmail("");
-    
-    // Atualizar o e-mail anterior após salvar
-    setPreviousEmail(informationEmail);
   };
 
   const handleBtnBackPage = () => {
@@ -91,6 +150,8 @@ const InformationUser = () => {
           <h1>Editar Perfil</h1>
         </header>
 
+
+
         <div className={styles.infoFormGroup}>
           <div className={styles.UserInput}>
             <img src={document} alt="icone de cpf" />
@@ -104,11 +165,10 @@ const InformationUser = () => {
                 const value = e.target.value.replace(/\D/g, '');
                 setInformationCPF(value);
               }}
-              maxLength={11} // Limita o CPF a 11 dígitos
               required
             />
           </div>
-          {errorMessages.cpf && <div className={styles.errorAlert}>{errorMessages.cpf}</div>} {/* Mensagem de erro para CPF */}
+          {errorMessages.cpf && <div className={styles.errorAlert}>{errorMessages.cpf}</div>}
         </div>
 
         <div className={styles.infoFormGroup}>
@@ -123,7 +183,7 @@ const InformationUser = () => {
               onChange={(e) => setInformationName(e.target.value)}
             />
           </div>
-          {errorMessages.name && <div className={styles.errorAlert}>{errorMessages.name}</div>} {/* Mensagem de erro para Nome */}
+          {errorMessages.name && <div className={styles.errorAlert}>{errorMessages.name}</div>}
         </div>
 
         <div className={styles.infoFormGroup}>
@@ -138,7 +198,21 @@ const InformationUser = () => {
               onChange={(e) => setInformationEmail(e.target.value)}
             />
           </div>
-          {errorMessages.email && <div className={styles.errorAlert}>{errorMessages.email}</div>} {/* Mensagem de erro para Email */}
+          {errorMessages.email && <div className={styles.errorAlert}>{errorMessages.email}</div>}
+        </div>
+
+        <div className={styles.RegisterInputContainer}>
+          {message && (
+            <div
+              className={`${styles.alertMessage} ${message.includes("Erro") ? styles.error : styles.success
+                }`}
+            >
+              <span className={styles.icon}>
+                {message.includes("Erro") ? "❌" : "✅"}
+              </span>
+              {message}
+            </div>
+          )}
         </div>
 
         <div className={styles.infoButtonGroup}>

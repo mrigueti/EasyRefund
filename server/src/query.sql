@@ -40,6 +40,10 @@ CREATE TABLE usuarios (
     FOREIGN KEY (id_setor) REFERENCES setores(id_setor)         -- Relacionamento com setores
 );
 
+ALTER TABLE usuarios
+MODIFY role_nome ENUM('Funcionário', 'Aprovador', 'Gerente', 'Administrador') NOT NULL DEFAULT 'Funcionário';
+
+
 -- Criando tabela de Aprovadores
 CREATE TABLE aprovadores (
     id_aprovador INT PRIMARY KEY AUTO_INCREMENT,

@@ -42,25 +42,32 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     const token = sessionStorage.getItem("token");
-
+  
     if (!token) {
       console.error("Token não encontrado!");
       setMessage("Erro: Token não encontrado!");
       return;
     }
-
+  
     const selectedData = cargosSetoresUnidades.find(
       (item) => item.Cargo === selectedCargo
     );
-
+  
     if (!selectedData) {
       console.error("Nenhum cargo selecionado ou cargo inválido.");
       setMessage("Erro: Nenhum cargo selecionado ou cargo inválido.");
       return;
     }
-
+  
+    // Verifique se o role foi selecionado
+    if (!role) {
+      console.error("Nenhum cargo foi selecionado.");
+      setMessage("Erro: Por favor, selecione um cargo.");
+      return;
+    }
+  
     try {
       const response = await fetch(url_register, {
         method: "POST",
@@ -78,9 +85,9 @@ const Register = () => {
           id_unidade: selectedData.id_unidade,
         }),
       });
-
+  
       const data = await response.json();
-
+  
       if (!response.ok) {
         console.error("Erro na resposta do servidor:", data);
         setMessage(`Erro: ${data.message || "Falha ao cadastrar o usuário."}`);
@@ -94,6 +101,7 @@ const Register = () => {
       setMessage("Erro: Falha ao enviar dados. Tente novamente mais tarde.");
     }
   };
+  
 
   const clearFormFields = () => {
     setUsername("");
