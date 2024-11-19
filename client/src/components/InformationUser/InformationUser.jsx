@@ -9,6 +9,11 @@ import { jwtDecode } from 'jwt-decode'; // Corrigindo para o nome correto da imp
 const InformationUser = () => {
   const navigate = useNavigate();
 
+  const handleBtnBackPage = (e) => {
+    e.preventDefault(); // Impede que o formulário seja enviado
+    navigate(-1);
+  };
+
   const [informationName, setInformationName] = useState("");
   const [informationCPF, setInformationCPF] = useState("");
   const [informationEmail, setInformationEmail] = useState("");
@@ -136,17 +141,14 @@ const InformationUser = () => {
     }
   };
 
-  const handleBtnBackPage = () => {
-    navigate(-1);
-  };
-
   return (
     <div className={styles.infoContainer}>
       <form className={styles.infoProfileEdit}>
         <header className={styles.infoProfileHeader}>
-          <button className={styles.infoButtonBack} onClick={handleBtnBackPage}>
+          <button type="button" className={styles.infoButtonBack} onClick={handleBtnBackPage}>
             <span className={styles.infoArrow}>&larr;</span> Voltar
           </button>
+
           <h1>Editar Perfil</h1>
         </header>
 

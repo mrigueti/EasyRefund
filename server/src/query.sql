@@ -34,15 +34,11 @@ CREATE TABLE usuarios (
     id_cargo INT,
     id_unidade INT,  -- Chave estrangeira para unidade
     id_setor INT,    -- Chave estrangeira para setor
-    role_nome ENUM('Funcionário', 'Aprovador', 'Gerente', 'Administrador') DEFAULT 'Funcionário',
+    role_nome ENUM('Funcionário', 'Aprovador', 'Gerente', 'Administrador') NOT NULL DEFAULT 'Funcionário',
     FOREIGN KEY (id_cargo) REFERENCES cargos(id_cargo),
     FOREIGN KEY (id_unidade) REFERENCES unidades(id_unidade),  -- Relacionamento com unidades
     FOREIGN KEY (id_setor) REFERENCES setores(id_setor)         -- Relacionamento com setores
 );
-
-ALTER TABLE usuarios
-MODIFY role_nome ENUM('Funcionário', 'Aprovador', 'Gerente', 'Administrador') NOT NULL DEFAULT 'Funcionário';
-
 
 -- Criando tabela de Aprovadores
 CREATE TABLE aprovadores (
@@ -71,14 +67,10 @@ CREATE TABLE solicitacoes (
 -- Criando tabela de Notas Fiscais
 CREATE TABLE nfs (
     id_nf INT PRIMARY KEY AUTO_INCREMENT,
-    anexo_nf LONGBLOB NOT NULL,
+    anexo_nf VARCHAR(255) NOT NULL,
     id_solicitacao INT,
     FOREIGN KEY (id_solicitacao) REFERENCES solicitacoes(id_solicitacao)
 );
-
-ALTER TABLE nfs 
-MODIFY anexo_nf VARCHAR(255) NOT NULL;
-
 
 -- Criando tabela de Setores e Unidades (relacionamento N:N entre Setores e Unidades)
 CREATE TABLE setores_unidades (
@@ -125,33 +117,6 @@ VALUES
     ('Desenvolvedor', (SELECT id_setor FROM setores WHERE nome_setor = 'TI')),
     ('Analista de RH', (SELECT id_setor FROM setores WHERE nome_setor = 'RH')),
     ('Gerente Financeiro', (SELECT id_setor FROM setores WHERE nome_setor = 'Financeiro'));
-
-INSERT INTO usuarios (
-    nome_usuario, cpf_usuario, email_usuario, senha_usuario, id_cargo, role_nome
-)
-VALUES
-    ('funcionario', '11111111111', 'funcionario@gmail.com', 'abc', 3, 'Funcionário'),
-    ('aprovador', '22222222222', 'aprovador@gmail.com', 'abc', 1, 'Aprovador'),
-    ('gerente', '33333333333', 'gerente@gmail.com', 'abc', 2, 'Gerente');
-
-INSERT INTO aprovadores (id_usuario) VALUES (2);
-
-INSERT INTO solicitacoes (
-    id_usuario, id_aprovador, status_solicitacao, valor_pedido_solic, 
-    valor_aprovado_solic, tipo_dedutivel_solic, descricao, categoria
-)
-VALUES
-    (1, 1, 'Aprovada', 1500, 1300, TRUE, 'Reembolso de alimentação para evento.', 'Alimentação');
-
-INSERT INTO nfs (anexo_nf, id_solicitacao) VALUES (0xFFD8FFE000104A464946, 1);
-
-
-INSERT INTO notificacoes (
-    mensagem_notif, id_usuario, id_aprovador, id_solicitacao
-)
-VALUES
-    ('Sua solicitação foi aprovada.', 1, 1, 1);
-
 
 -- selects
 
