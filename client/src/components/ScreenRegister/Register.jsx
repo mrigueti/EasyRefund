@@ -42,41 +42,67 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Encontrar o item correspondente ao cargo selecionado
-    const selectedData = cargosSetoresUnidades.find(item => item.Cargo === selectedCargo);
+
+    const token = sessionStorage.getItem("token");
+
+    if (!token) {
+      console.error("Token não encontrado!");
+      setMessage("Erro: Token não encontrado!");
+      return;
+    }
+
+    const selectedData = cargosSetoresUnidades.find(
+      (item) => item.Cargo === selectedCargo
+    );
 
     if (!selectedData) {
       console.error("Nenhum cargo selecionado ou cargo inválido.");
-      return;  // Impede o envio se não encontrar o cargo
+      setMessage("Erro: Nenhum cargo selecionado ou cargo inválido.");
+      return;
     }
 
     try {
       const response = await fetch(url_register, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           nome_usuario: username,
           email_usuario: email,
           senha_usuario: senha,
           role_nome: role,
-          id_cargo: selectedData.id_cargo,  // Passa o ID do cargo
-          id_setor: selectedData.id_setor,  // Passa o ID do setor
-          id_unidade: selectedData.id_unidade,  // Passa o ID da unidade
-        })
+          id_cargo: selectedData.id_cargo,
+          id_setor: selectedData.id_setor,
+          id_unidade: selectedData.id_unidade,
+        }),
       });
 
       const data = await response.json();
+
       if (!response.ok) {
         console.error("Erro na resposta do servidor:", data);
+        setMessage(`Erro: ${data.message || "Falha ao cadastrar o usuário."}`);
       } else {
         console.log("Usuário cadastrado com sucesso:", data);
+        setMessage("Cadastro realizado com sucesso!");
+        clearFormFields(); // Limpa os campos do formulário
       }
     } catch (error) {
       console.error("Erro ao enviar dados:", error);
+      setMessage("Erro: Falha ao enviar dados. Tente novamente mais tarde.");
     }
   };
+
+  const clearFormFields = () => {
+    setUsername("");
+    setEmail("");
+    setSenha("123456");
+    setRole("");
+    setSelectedCargo("");
+  };
+
 
 
 
@@ -255,6 +281,20 @@ const Register = () => {
             Cadastrar
           </button>
         </div>
+        <div className={styles.RegisterInputContainer}>
+          {message && (
+            <div
+              className={`${styles.alertMessage} ${message.includes("Erro") ? styles.error : styles.success
+                }`}
+            >
+              <span className={styles.icon}>
+                {message.includes("Erro") ? "❌" : "✅"}
+              </span>
+              {message}
+            </div>
+          )}
+        </div>
+
       </form>
       {/* Modal de confirmação */}
       <Modal show={showModal} onHide={() => setShowModal(false)}>
