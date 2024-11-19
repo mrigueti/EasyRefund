@@ -12,7 +12,6 @@ const PageManagement = () => {
       const response = await fetch("http://localhost:3001/api/solicitacoes/getAll");
       if (response.ok) {
         const data = await response.json();
-        console.log("Dados recebidos do backend:", data)
         setSolicitacoes(
           data.map((item) => ({
             id: item.id_solicitacao,
@@ -24,7 +23,8 @@ const PageManagement = () => {
             status: item.status_solicitacao,
             descricao: item.descricao,
             categoria: item.categoria,
-            valor: item.valor_pedido_solic,
+            valor_pedido: item.valor_pedido_solic,
+            valor_aprovado: item.valor_aprovado_solic
           }))
         );
       } else {
@@ -92,6 +92,7 @@ const PageManagement = () => {
                 <th>Categoria</th>
                 <th>Descrição</th>
                 <th>Valor</th>
+                <th>Valor Aprovado</th>
               </tr>
             </thead>
             <tbody>
@@ -108,7 +109,8 @@ const PageManagement = () => {
                     </td>
                     <td>{solicitacao.categoria}</td>
                     <td>{solicitacao.descricao}</td>
-                    <td>R$ {solicitacao.valor}</td>
+                    <td>R$ {solicitacao.valor_pedido}</td>
+                    <td>R$ {solicitacao.valor_aprovado}</td>
                   </tr>
                 ))
               ) : (

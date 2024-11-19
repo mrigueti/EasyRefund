@@ -1,4 +1,5 @@
 import { db } from '../db.js';
+import { getAprovador } from './aprovadores.js';
 import { insertNF } from './nfs.js';
 
 export const createSolicitacao = async (req, res) => {
@@ -33,7 +34,7 @@ export const createSolicitacao = async (req, res) => {
 export const getAllSolicitacoes = async (req, res) => {
   try {
     const [rows] = await db.promise().query(`
-      SELECT 
+    SELECT 
     u.nome_usuario,
     c.nome_cargo,
     s.nome_setor,
@@ -46,22 +47,69 @@ export const getAllSolicitacoes = async (req, res) => {
     sol.descricao,
     sol.categoria,
     n.anexo_nf
-FROM 
+    FROM 
     solicitacoes sol
-JOIN 
+    JOIN 
     usuarios u ON sol.id_usuario = u.id_usuario
-JOIN 
+    JOIN 
     cargos c ON u.id_cargo = c.id_cargo
-JOIN 
+    JOIN 
     setores s ON u.id_setor = s.id_setor
-JOIN 
+    JOIN 
     unidades u2 ON u.id_unidade = u2.id_unidade
-LEFT JOIN 
+    LEFT JOIN 
     nfs n ON sol.id_solicitacao = n.id_solicitacao
     `);
     res.status(200).json(rows); // Envia os dados ao cliente como JSON
   } catch (error) {
     console.error("(back) Erro ao buscar solicitações:", error);
     res.status(500).json({ error: "Erro ao buscar solicitações" }); // Retorna erro em caso de falha
+  }
+};
+
+export const updateSolicitacao = async (req, res) => {
+  const { id_usuario, id_solicitacao, status_solicitacao, valor_aprovado_solic } = req.body;
+
+  try {
+    // Obter o id_aprovador com base no id_usuario
+    const id_aprovador = await getAprovador(id_usuario);
+
+    // Verifique se os parâmetros estão corretos
+    if (!id_solicitacao || !status_solicitacao || !valor_aprovado_solic || !id_aprovador) {
+      return res.status(400).json({ error: "Dados insuficientes" });
+    }
+
+    // Verifica se o status fornecido é válido
+    const validStatuses = ['Pendente', 'Aprovada', 'Recusada'];
+    if (!validStatuses.includes(status_solicitacao)) {
+      return res.status(400).json({ error: '(back)Status inválido.' });
+    }
+
+    const valorFinal = status_solicitacao === 'Recusada' ? null : valor_aprovado_solic;
+
+    // Query para atualizar a solicitação
+    const query = `
+      UPDATE solicitacoes
+      SET
+        status_solicitacao = ?,
+        valor_aprovado_solic = ?,
+        id_aprovador = ?
+      WHERE id_solicitacao = ?
+    `;
+
+    // Executa a query
+    db.query(query, [status_solicitacao, valor_aprovado_solic, id_aprovador.id_aprovador, id_solicitacao], (err, result) => {
+      if (err) {
+        console.error("(back)Erro ao executar a query:", err);
+        return res.status(500).json({ error: '(back)Erro ao atualizar a solicitação.', details: err });
+      }
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ error: '(back)Solicitação não encontrada.' });
+      }
+      return res.status(200).json({ message: '(back)Solicitação atualizada com sucesso.' });
+    });
+  } catch (err) {
+    console.error("Erro ao atualizar solicitação:", err);
+    return res.status(500).json({ error: '(back)Erro ao atualizar a solicitação.', details: err });
   }
 };
