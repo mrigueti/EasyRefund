@@ -1,4 +1,4 @@
--- Active: 1732034276421@@127.0.0.1@3306@easyrefund
+-- Active: 1731974966346@@127.0.0.1@3306@easyrefund
 CREATE SCHEMA EasyRefund;
 
 USE EasyRefund;
@@ -27,8 +27,8 @@ CREATE TABLE cargos (
 CREATE TABLE usuarios (
     id_usuario INT PRIMARY KEY AUTO_INCREMENT,
     nome_usuario VARCHAR(45) NOT NULL,
-    cpf_usuario CHAR(11),
-    email_usuario VARCHAR(45) NOT NULL,
+    cpf_usuario CHAR(11) UNIQUE,
+    email_usuario VARCHAR(45) NOT NULL UNIQUE,
     senha_usuario VARCHAR(255) NOT NULL,  -- Corrigido para tamanho ideal para senhas
     dt_criacao_usuario TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     id_cargo INT,

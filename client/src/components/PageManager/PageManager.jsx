@@ -31,6 +31,7 @@ const PageManager = () => {
             setor: item.nome_setor,
             unidade: item.nome_unidade,
             date: new Date(item.dt_criacao_solic).toLocaleDateString("pt-BR"),
+            data_ultima: new Date(item.dt_aprovacao).toLocaleDateString("pt-BR"),
             status: item.status_solicitacao,
             descricao: item.descricao,
             categoria: item.categoria,
@@ -266,6 +267,7 @@ const PageManager = () => {
                   <th>ID</th>
                   <th>Usuário</th>
                   <th>Data</th>
+                  <th>Última Modificação</th>
                   <th>Status</th>
                   <th>Categoria</th>
                   <th>Descrição</th>
@@ -280,6 +282,7 @@ const PageManager = () => {
                       <td>{solicitacao.id}</td>
                       <td>{solicitacao.name}</td>
                       <td>{solicitacao.date}</td>
+                      <td>{solicitacao.data_ultima}</td>
                       <td className={getStatusClass(solicitacao.status)}>{solicitacao.status}</td>
                       <td>{solicitacao.categoria}</td>
                       <td>{solicitacao.descricao}</td>

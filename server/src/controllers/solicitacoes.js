@@ -46,6 +46,7 @@ export const getAllSolicitacoes = async (req, res) => {
     sol.valor_aprovado_solic,
     sol.descricao,
     sol.categoria,
+    sol.dt_aprovacao,
     n.anexo_nf
     FROM 
     solicitacoes sol
@@ -112,4 +113,22 @@ export const updateSolicitacao = async (req, res) => {
     console.error("Erro ao atualizar solicitação:", err);
     return res.status(500).json({ error: '(back)Erro ao atualizar a solicitação.', details: err });
   }
+};
+
+export const getSolicitacoesById = async (req, res) => {
+  const userId = req.params.id; // Pega o id do usuário a partir da URL
+
+  const q = `SELECT * FROM solicitacoes WHERE id_usuario = ?`; // Consulta SQL para buscar as solicitações
+
+  db.query(q, [userId], (err, data) => {
+    if (err) {
+      return res.status(500).json({ error: "Erro ao buscar as solicitações." });
+    }
+
+    if (data.length === 0) {
+      return res.status(404).json({ error: "Nenhuma solicitação encontrada." });
+    }
+
+    return res.status(200).json({ solicitacoes: data });
+  });
 };

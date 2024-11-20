@@ -64,7 +64,7 @@ const InformationUser = () => {
 
     let hasError = false;
 
-    if (informationCPF === "") {
+    if (informationCPF == "") {
       setErrorMessages((prev) => ({ ...prev, cpf: "O campo CPF está vazio" }));
       hasError = true;
     }
@@ -88,12 +88,14 @@ const InformationUser = () => {
       hasError = true;
     }
 
-    if (informationCPF.length < 11) {
-      setErrorMessages((prev) => ({
-        ...prev,
-        cpf: "Insira todos os números do CPF",
-      }));
-      hasError = true;
+    if (!informationCPF == "") {
+      if (informationCPF.length < 11) {
+        setErrorMessages((prev) => ({
+          ...prev,
+          cpf: "Insira todos os números do CPF",
+        }));
+        hasError = true;
+      }
     }
 
     if (hasError) {

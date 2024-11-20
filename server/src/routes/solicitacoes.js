@@ -1,6 +1,6 @@
 import express from 'express';
 import { checkAuth } from '../middleware/checkAuth.js';
-import { createSolicitacao, getAllSolicitacoes, updateSolicitacao } from '../controllers/solicitacoes.js';
+import { createSolicitacao, getAllSolicitacoes, getSolicitacoesById, updateSolicitacao } from '../controllers/solicitacoes.js';
 import multer from 'multer';
 
 export const solicitacoesRouter = express.Router();
@@ -20,3 +20,4 @@ const upload = multer({ storage });
 solicitacoesRouter.post('/create', upload.single('anexo_nf'), checkAuth('Funcionário'), createSolicitacao);
 solicitacoesRouter.get('/getAll', getAllSolicitacoes)
 solicitacoesRouter.put('/updateSolicitacao', updateSolicitacao)
+solicitacoesRouter.post('/getById/:id', getSolicitacoesById)

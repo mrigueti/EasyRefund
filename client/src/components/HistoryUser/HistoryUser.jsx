@@ -1,105 +1,68 @@
 import { jsPDF } from "jspdf";
 import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 import Styles from "./HistoryUser.module.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import exports from "../../icons/export.png"; // Importando ícone de exportação
 
 const HistoryUser = () => {
   const navigate = useNavigate();
 
+  const [requests, setRequests] = useState([]);
+  const [filteredRequests, setFilteredRequests] = useState([]);
   const [modalData, setModalData] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const [filter, setFilter] = useState("Todas"); // Estado para o filtro
+  const [filter, setFilter] = useState("Todas");
+
+  useEffect(() => {
+    const fetchRequests = async () => {
+      try {
+        const token = sessionStorage.getItem("token");
+
+        if (!token) {
+          console.error("Token não encontrado!");
+          return;
+        }
+
+        const decoded = jwtDecode(token);
+        const userId = decoded.id;
+        console.log(userId);
+        
+
+        const response = await fetch(`http://localhost:3001/api/solicitacoes/getById/${userId}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ userId }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Erro ao buscar solicitações.");
+        }
+
+        const data = await response.json();
+        setRequests(data.solicitacoes); // Ajustado para acessar diretamente 'solicitacoes'
+        setFilteredRequests(data.solicitacoes); // Ajustado para acessar diretamente 'solicitacoes'
+      } catch (error) {
+        console.error("Erro ao carregar as solicitações:", error);
+      }
+    };
+
+    fetchRequests();
+  }, []);
+
+  useEffect(() => {
+    const filtered = requests.filter((request) => {
+      if (filter === "Todas") return true;
+      return request.status_solicitacao === filter;
+    });
+    setFilteredRequests(filtered);
+  }, [filter, requests]);
 
   const handleRowClick = (data) => {
     setModalData(data);
     setModalVisible(true);
-  };
-
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString("pt-BR");
-  };
-  // Função para exportar os dados da requisição exibida no modal para um arquivo PDF
-  const handleExportToPDF = () => {
-    // Cria um novo documento PDF usando jsPDF
-    const doc = new jsPDF();
-
-    // Adiciona as informações da requisição ao PDF, com um espaçamento vertical constante
-    doc.text(`ID da Requisição: ${modalData.id}`, 10, 10); // ID da requisição
-    doc.text(`Nome do Aprovador: ${modalData.approver}`, 10, 20); // Nome do aprovador da requisição
-    doc.text(`Dia da Aprovação: ${formatDate(modalData.approvalDate)}`, 10, 30); // Data da aprovação formatada
-    doc.text(`Valor Aprovado: ${modalData.approvedAmount}`, 10, 40); // Valor aprovado para a requisição
-    doc.text(`Valor Solicitado: ${modalData.requestedAmount}`, 10, 50); // Valor inicialmente solicitado
-    doc.text(`Status: ${modalData.status}`, 10, 60); // Status atual da requisição
-
-    // Salva o arquivo PDF com o nome "solicitacao.pdf"
-    doc.save("solicitacao.pdf");
-  };
-
-  // Função para exportar o histórico completo de reembolsos para um arquivo PDF
-  const handleExportAllToPDF = () => {
-    // Cria um novo documento PDF usando jsPDF
-    const doc = new jsPDF();
-
-    // Define o tamanho da fonte para o conteúdo
-    doc.setFontSize(12);
-    let y = 10; // Posição vertical inicial
-
-    // Adiciona o título do PDF e ajusta o espaçamento vertical
-    doc.setFontSize(18);
-    doc.text("Histórico de Reembolsos", 10, y); // Título principal
-    y += 10;
-
-    // Define a fonte para o cabeçalho da tabela e adiciona os títulos das colunas
-    doc.setFontSize(12);
-    doc.text("ID da Requisição", 10, y);
-    doc.text("Nome do Aprovador", 50, y);
-    doc.text("Dia da Aprovação", 100, y);
-    doc.text("Valor Aprovado", 150, y);
-    doc.text("Status", 190, y);
-    y += 10;
-
-    // Desenha uma linha horizontal abaixo do cabeçalho da tabela
-    doc.line(10, y, 200, y);
-    y += 5;
-
-    // Loop sobre cada requisição de reembolso para preencher a tabela
-    refundRequests.forEach((request) => {
-      // Adiciona os detalhes da requisição nas respectivas posições das colunas
-      doc.text(request.id, 10, y); // ID da requisição
-      doc.text(request.approver, 50, y); // Nome do aprovador
-      doc.text(formatDate(request.approvalDate), 100, y); // Data da aprovação (formatada)
-      doc.text(request.approvedAmount, 150, y); // Valor aprovado
-      doc.text(request.status, 190, y); // Status da requisição
-      y += 8; // Move para a próxima linha
-
-      // Adiciona uma linha horizontal entre cada requisição para separá-las
-      doc.line(10, y, 200, y);
-      y += 5;
-
-      // Verifica se a posição y está próxima do fim da página para adicionar uma nova página
-      if (y > 280) {
-        doc.addPage(); // Adiciona uma nova página se necessário
-        y = 10; // Reinicia a posição vertical na nova página
-
-        // Redefine o título e cabeçalho das colunas na nova página
-        doc.setFontSize(18);
-        doc.text("Histórico de Reembolsos", 10, y);
-        y += 10;
-        doc.setFontSize(12);
-        doc.text("ID da Requisição", 10, y);
-        doc.text("Nome do Aprovador", 50, y);
-        doc.text("Dia da Aprovação", 100, y);
-        doc.text("Valor Aprovado", 150, y);
-        doc.text("Status", 190, y);
-        y += 10;
-        doc.line(10, y, 200, y);
-        y += 5;
-      }
-    });
-
-    // Salva o arquivo PDF com o nome "historico_reembolsos.pdf"
-    doc.save("historico_reembolsos.pdf");
   };
 
   const handleCloseModal = () => {
@@ -107,46 +70,60 @@ const HistoryUser = () => {
     setModalData(null);
   };
 
-  const refundRequests = [
-    {
-      id: "#15267",
-      approver: "John Doe",
-      approvalDate: "Mar 1, 2023",
-      approvedAmount: "$100",
-      requestedAmount: "$100",
-      status: "Aceita",
-    },
-    {
-      id: "#26540",
-      approver: "Jane Smith",
-      approvalDate: "Jan 26, 2023",
-      approvedAmount: "$300",
-      requestedAmount: "$300",
-      status: "Negada",
-    },
-    {
-      id: "#98754",
-      approver: "Jane Smith",
-      approvalDate: "Jan 26, 2023",
-      approvedAmount: "$200",
-      requestedAmount: "$300",
-      status: "Pendente",
-    },
-    {
-      id: "#51482",
-      approver: "Jane Smith",
-      approvalDate: "Jan 26, 2023",
-      approvedAmount: "$400",
-      requestedAmount: "$300",
-      status: "Revisar",
-    },
-  ];
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString("pt-BR");
+  };
 
-  // Filtra as solicitações com base no status selecionado
-  const filteredRequests = refundRequests.filter((request) => {
-    if (filter === "Todas") return true;
-    return request.status === filter;
-  });
+  const handleExportToPDF = () => {
+    if (!modalData) return;
+
+    const doc = new jsPDF();
+    doc.text(`ID da Requisição: ${modalData.id_solicitacao}`, 10, 10);
+    doc.text(`Categoria: ${modalData.categoria}`, 10, 20);
+    doc.text(`Data de Criação: ${formatDate(modalData.dt_criacao_solic)}`, 10, 30);
+    doc.text(`Valor Solicitado: ${modalData.valor_pedido_solic}`, 10, 40);
+    doc.text(`Status: ${modalData.status_solicitacao}`, 10, 50);
+    doc.save("solicitacao.pdf");
+  };
+
+  const handleExportAllToPDF = () => {
+    const doc = new jsPDF();
+    let y = 10;
+
+    doc.setFontSize(18);
+    doc.text("Histórico de Reembolsos", 10, y);
+    y += 10;
+
+    doc.setFontSize(12);
+    doc.text("ID", 10, y);
+    doc.text("Data", 50, y);
+    doc.text("Categoria", 100, y);
+    doc.text("Valor", 150, y);
+    doc.text("Status", 190, y);
+    y += 10;
+
+    doc.line(10, y, 200, y);
+    y += 5;
+
+    filteredRequests.forEach((request) => {
+      doc.text(request.id_solicitacao.toString(), 10, y);
+      doc.text(formatDate(request.dt_criacao_solic), 50, y);
+      doc.text(request.categoria, 100, y);
+      doc.text(request.valor_pedido_solic.toString(), 150, y);
+      doc.text(request.status_solicitacao, 190, y);
+      y += 8;
+
+      doc.line(10, y, 200, y);
+      y += 5;
+
+      if (y > 280) {
+        doc.addPage();
+        y = 10;
+      }
+    });
+
+    doc.save("historico_reembolsos.pdf");
+  };
 
   const handleBtnBackPage = () => {
     navigate(-1);
@@ -161,77 +138,57 @@ const HistoryUser = () => {
         >
           <span className={Styles.infoArrow}>&larr;</span> Voltar
         </button>
-        <div className={Styles.RefundTotalRequested}>
-          <span>Total Solicitado</span>
-          <h2>$1600</h2>
-        </div>
       </div>
 
       <div className={Styles.RefundHistory}>
         <h3>Histórico de Reembolso</h3>
 
-        {/* Botões de filtro */}
         <div className={Styles.BtnContainer}>
-          <button
-            className={Styles.BtnFilter}
-            onClick={() => setFilter("Todas")}
-          >
-            Todas
-          </button>
-          <button
-            className={Styles.BtnFilter}
-            onClick={() => setFilter("Aceita")}
-          >
-            Aceitas
-          </button>
-          <button
-            className={Styles.BtnFilter}
-            onClick={() => setFilter("Negada")}
-          >
-            Negadas
-          </button>
-          <button
-            className={Styles.BtnFilter}
-            onClick={() => setFilter("Pendente")}
-          >
-            Pendentes
-          </button>
-          <button
-            className={Styles.BtnFilter}
-            onClick={() => setFilter("Revisar")}
-          >
-            Revisar
-          </button>
+          {["Todas", "Pendente", "Aprovada", "Recusada"].map((status) => (
+            <button
+              key={status}
+              className={Styles.BtnFilter}
+              onClick={() => setFilter(status)}
+            >
+              {status}
+            </button>
+          ))}
         </div>
 
         <button className={Styles.btnExportAll} onClick={handleExportAllToPDF}>
           <img src={exports} alt="Exportar" /> Exportar Todos
         </button>
+
         <table className={Styles.RefundTable}>
           <thead>
             <tr>
               <th>ID</th>
               <th>Data</th>
+              <th>Última Modificação</th>
+              <th>Categoria</th>
+              <th>Valor</th>
+              <th>Valor Aprovado</th>
               <th>Status</th>
-              <th>Quantia</th>
             </tr>
           </thead>
           <tbody>
             {filteredRequests.map((request) => (
-              <tr key={request.id} onClick={() => handleRowClick(request)}>
-                <td>{request.id}</td>
-                <td>{formatDate(request.approvalDate)}</td>{" "}
-                {/* Formata a data */}
+              <tr key={request.id_solicitacao} onClick={() => handleRowClick(request)}>
+                <td>{request.id_solicitacao}</td>
+                <td>{formatDate(request.dt_criacao_solic)}</td>
+                <td>{formatDate(request.dt_aprovacao)}</td>
+                <td>{request.categoria}</td>
+                <td>{request.valor_pedido_solic}</td>
+                <td>{request.valor_aprovado_solic}</td>
                 <td>
                   <span
                     className={`${Styles.StatusBadge} ${getStatusClass(
-                      request.status
+                      request.status_solicitacao
                     )}`}
                   >
-                    {request.status}
+                    {request.status_solicitacao}
                   </span>
                 </td>
-                <td>{request.approvedAmount}</td>
               </tr>
             ))}
           </tbody>
@@ -241,15 +198,16 @@ const HistoryUser = () => {
           <div className={Styles.ModalOverlay}>
             <div className={Styles.ModalContent}>
               <h2>Detalhes da Solicitação</h2>
-              <p>ID da Requisição: {modalData.id}</p>
-              <p>Nome do Aprovador: {modalData.approver}</p>
-              <p>Dia da Aprovação: {formatDate(modalData.approvalDate)}</p>{" "}
-              {/* Formata a data */}
-              <p>Valor Aprovado: {modalData.approvedAmount}</p>
-              <p>Valor Solicitado: {modalData.requestedAmount}</p>
-              <p>Status: {modalData.status}</p>
+              <p>ID: {modalData.id_solicitacao}</p>
+              <p>Categoria: {modalData.categoria}</p>
+              <p>Data de Criação: {formatDate(modalData.dt_criacao_solic)}</p>
+              <p>Valor Solicitado: {modalData.valor_pedido_solic}</p>
+              <p>Status: {modalData.status_solicitacao}</p>
               <button onClick={handleExportToPDF}>Exportar para PDF</button>
-              <button className={Styles.closeButton} onClick={handleCloseModal}>
+              <button
+                className={Styles.closeButton}
+                onClick={handleCloseModal}
+              >
                 Fechar
               </button>
             </div>
@@ -260,17 +218,14 @@ const HistoryUser = () => {
   );
 };
 
-// Função para obter a classe de status correspondente
 const getStatusClass = (status) => {
   switch (status) {
-    case "Aceita":
+    case "Aprovada":
       return Styles.RefundAccepted;
-    case "Negada":
+    case "Recusada":
       return Styles.RefundRejected;
     case "Pendente":
       return Styles.RefundPending;
-    case "Revisar":
-      return Styles.RefundReview;
     default:
       return "";
   }
