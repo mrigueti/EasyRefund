@@ -51,6 +51,28 @@ label {
   margin-bottom: 10px; 
 }
 
+.BtnForgotPassword button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.BtnForgotPassword button {
+  background-color: transparent;
+  color: #007777;
+  margin-bottom: 10px;
+}
+
+.BtnForgotPassword button:hover {
+  background-color: rgba(0, 119, 119, 0.1);
+  color: #005a5a;
+}
+
 .UserInput input, .UserPassword input {
   width: 100%;
   padding: 12px 12px 12px 40px; 

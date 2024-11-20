@@ -34,10 +34,10 @@ export const login = (req, res) => {
     }
 
     // Gerando um token JWT
-    const token = jwt.sign({ id: user.id_usuario, role: user.role_nome, nome: user.nome_usuario}, process.env.JWT_SECRET || 'easyrefund987', { expiresIn: '1h' });
+    const token = jwt.sign({ id: user.id_usuario, role: user.role_nome, nome: user.nome_usuario }, process.env.JWT_SECRET || 'easyrefund987', { expiresIn: '1h' });
     //console.log(user.role_nome);
-    
-    return res.status(200).json({ message: "Login bem-sucedido!", token, user});
+
+    return res.status(200).json({ message: "Login bem-sucedido!", token, user });
   });
 };
 
@@ -53,7 +53,7 @@ export const register = async (req, res) => {
         console.error("Erro ao registrar o usuário:", err); // Log do erro no servidor
         return res.status(500).json({ error: "Erro ao registrar o usuário." });
       }
-      
+
       if (role_nome === "Aprovador") {
         try {
           registerAprovador(result.insertId); // Chama a função passando o ID do usuário inserido
@@ -111,9 +111,63 @@ export const update = (req, res) => {
     }
 
     if (result.affectedRows === 0) {
-      return res.status(404).json({  sucess: false, error: "Usuário não encontrado.", });
+      return res.status(404).json({ sucess: false, error: "Usuário não encontrado.", });
     }
 
-    return res.status(200).json({  sucess: true, message: "Usuário atualizado com sucesso!", });
+    return res.status(200).json({ sucess: true, message: "Usuário atualizado com sucesso!", });
+  });
+};
+
+export const updatePassword = (req, res) => {
+  const { id } = req.params;  // Pega o id do usuário a partir da URL
+  const { senhaAtual, novaSenha } = req.body;  // Recebe as senhas atuais e novas do corpo da requisição
+
+  // Verifica se todos os dados necessários foram fornecidos
+  if (!senhaAtual || !novaSenha) {
+    return res.status(400).json({ message: "Senha atual e nova senha são obrigatórias." });
+  }
+
+  // Consulta o banco de dados para pegar o hash da senha do usuário
+  db.query('SELECT senha_usuario FROM usuarios WHERE id_usuario = ?', [id], (err, rows) => {
+    if (err) {
+      console.error('Erro ao buscar senha:', err);
+      return res.status(500).json({ message: 'Erro no servidor ao buscar senha' });
+    }
+
+    if (rows.length === 0) {
+      return res.status(404).json({ message: 'Usuário não encontrado' });
+    }
+
+    // A senha do banco de dados é armazenada como hash, então comparamos usando bcrypt
+    const senhaHash = rows[0].senha_usuario;
+
+    bcrypt.compare(senhaAtual, senhaHash, (err, result) => {
+      if (err) {
+        console.error('Erro ao comparar senhas:', err);
+        return res.status(500).json({ message: 'Erro ao verificar senha atual' });
+      }
+
+      if (!result) {
+        return res.status(400).json({ message: 'Senha atual incorreta' });
+      }
+
+      // Se a senha atual estiver correta, atualizamos com a nova senha
+      bcrypt.hash(novaSenha, 10, (err, newHashedPassword) => {
+        if (err) {
+          console.error('Erro ao gerar novo hash de senha:', err);
+          return res.status(500).json({ message: 'Erro ao gerar novo hash de senha' });
+        }
+
+        // Atualiza a senha do usuário no banco de dados com o novo hash
+        db.query('UPDATE usuarios SET senha_usuario = ? WHERE id_usuario = ?', [newHashedPassword, id], (err, result) => {
+          if (err) {
+            console.error('Erro ao atualizar a senha:', err);
+            return res.status(500).json({ message: 'Erro ao atualizar a senha' });
+          }
+
+          return res.status(200).json({ message: 'Senha atualizada com sucesso' });
+        });
+      });
+    });
   });
 };

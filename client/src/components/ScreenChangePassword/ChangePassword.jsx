@@ -1,6 +1,7 @@
 import styles from "./ChangePassword.module.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 const ChangePassword = () => {
   const navigate = useNavigate();
@@ -9,11 +10,42 @@ const ChangePassword = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
 
-  const passwords = {
-    current: "Abcd1#",
-    nPassword: "Abcd2#",
-    cPassword: "Abcd2#",
-  };
+  async function alterarSenha(senhaAtual, novaSenha, confirmarSenha) {
+    try {
+      if (novaSenha !== confirmarSenha) {
+        throw new Error("A nova senha e a confirmação não coincidem.");
+      }
+
+      const token = sessionStorage.getItem("token");
+      if (!token) {
+        throw new Error("Token não encontrado. Faça login novamente.");
+      }
+
+      // Decodifica o token para obter o id_usuario
+      const decoded = jwtDecode(token);
+      const userId = decoded.id;
+
+      // Faz o fetch para a rota de alteração de senha
+      const response = await fetch(`http://localhost:3001/api/usuarios/update-password/${userId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Inclui o token para autenticação
+        },
+        body: JSON.stringify({ senhaAtual, novaSenha }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Erro ao alterar a senha.");
+      }
+
+      const result = await response.json();
+      console.log("Senha alterada com sucesso:", result);
+    } catch (error) {
+      console.error("Erro:", error.message);
+    }
+  }
 
   const handleConfirmPasswordChange = (e) => {
     e.preventDefault();
@@ -41,8 +73,9 @@ const ChangePassword = () => {
     }
 
     if (currentPassword === passwords.current && newPassword === confirmNewPassword) {
-      alert("Senha trocada com sucesso!");
-      navigate("/");
+      console.log("Cheguei");
+      
+      alterarSenha(currentPassword, newPassword, confirmNewPassword)
     } else {
       alert("Senha atual incorreta ou as novas senhas não são iguais!");
     }

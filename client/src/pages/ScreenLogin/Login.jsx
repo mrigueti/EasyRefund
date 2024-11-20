@@ -23,7 +23,6 @@ const Login = () => {
     setNameError("");
     setPasswordError("");
   
-    // Validações locais para campos vazios
     if (!email) {
       setNameError("Usuário não pode estar vazio.");
     }
@@ -31,7 +30,7 @@ const Login = () => {
       setPasswordError("Senha não pode estar vazia.");
     }
     if (!email || !senha) {
-      return; // Interrompe a execução se algum campo estiver vazio
+      return;
     }
   
     try {
@@ -47,22 +46,29 @@ const Login = () => {
         sessionStorage.setItem('token', responseJson.token)
       }
   
-      // Verifica o status da resposta e define as mensagens de erro adequadas
        if (response.status === 401) {
         setPasswordError("Email ou Senha incorretos.");
         return;
       }
-  
-      // Lógica de navegação baseada no papel do usuário
+      
+      const primeiroLogin = (senha) =>{
+        if (senha == "123456") {
+          navigate("/change-password")
+        }
+      }
+
       if (responseJson.user.role_nome === "Aprovador") {
         navigate("/manegement");
+        primeiroLogin(senha)
       } else if (responseJson.user.role_nome === "Funcionário") {
         navigate("/Home");
+        primeiroLogin(senha)
       } else if (responseJson.user.role_nome === "Gerente") {
         navigate("/manager");
+        primeiroLogin(senha)
       }
   
-      console.log("Login bem-sucedido!");
+      //console.log("Login bem-sucedido!");
       
     } catch (error) {
       setNameError("Erro ao fazer login. Verifique os dados inseridos.");
@@ -72,10 +78,6 @@ const Login = () => {
   
   const handleRegisterPage = () => {
     navigate("/register");
-  };
-
-  const handleChangePassword = () => {
-    navigate("/change-password");
   };
 
   return (
@@ -117,10 +119,6 @@ const Login = () => {
             <button type="button" onClick={handleRegisterPage}>Cadastrar-se</button>
           </div>
         )}
-
-        <div className={styles.BtnForgotPassword}>
-          <button type="button" onClick={handleChangePassword}>Trocar a Senha</button>
-        </div>
       </form>
     </div>
   );

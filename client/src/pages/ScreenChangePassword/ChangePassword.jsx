@@ -1,7 +1,7 @@
 import styles from "./ChangePassword.module.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import lock from '../../icons/cadeado.png'; // Importando o ícone de cadeado
+import { jwtDecode } from "jwt-decode";
 
 const ChangePassword = () => {
   const navigate = useNavigate();
@@ -9,76 +9,126 @@ const ChangePassword = () => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
-  const [currentPasswordError, setCurrentPasswordError] = useState("");
-  const [newPasswordError, setNewPasswordError] = useState("");
-  const [confirmPasswordError, setConfirmPasswordError] = useState("");
 
-  const passwords = {
-    current: "Abcd1#",
+  const [errorMessages, setErrorMessages] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmNewPassword: "",
+  });
+
+  // Função para alterar a senha
+  const alterarSenha = async (senhaAtual, novaSenha, confirmarSenha) => {
+    try {
+      if (novaSenha !== confirmarSenha) {
+        setErrorMessages((prevState) => ({
+          ...prevState,
+          confirmNewPassword: "A nova senha e a confirmação não coincidem.",
+        }));
+        return;
+      }
+
+      const token = sessionStorage.getItem("token");
+      if (!token) {
+        setErrorMessages((prevState) => ({
+          ...prevState,
+          currentPassword: "Token não encontrado. Faça login novamente.",
+        }));
+        return;
+      }
+
+      // Decodifica o token para obter o id_usuario
+      const decoded = jwtDecode(token);
+      const userId = decoded.id;
+
+      // Faz o fetch para a rota de alteração de senha
+      const response = await fetch(`http://localhost:3001/api/usuarios/update-password/${userId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Inclui o token para autenticação
+        },
+        body: JSON.stringify({ senhaAtual, novaSenha }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Erro ao alterar a senha.");
+      }
+
+      const result = await response.json();
+      console.log("Senha alterada com sucesso:", result);
+      
+      // Limpando sessionStorage e redirecionando para a página inicial
+      sessionStorage.clear();
+      alert("Senha alterada com sucesso.")
+      navigate("/");
+
+    } catch (error) {
+      console.error("Erro:", error.message);
+      setErrorMessages((prevState) => ({
+        ...prevState,
+        currentPassword: error.message, // Exibe a mensagem de erro no campo correspondente
+      }));
+    }
   };
 
   const handleConfirmPasswordChange = (e) => {
-    e.preventDefault(); // Previne o envio padrão do formulário
-    setCurrentPasswordError("");
-    setNewPasswordError("");
-    setConfirmPasswordError("");
+    e.preventDefault();
 
-    let hasError = false; // Para rastrear se houve algum erro
+    // Limpar mensagens de erro antes de nova validação
+    setErrorMessages({
+      currentPassword: "",
+      newPassword: "",
+      confirmNewPassword: "",
+    });
 
-    // Validação dos campos
-    if (!currentPassword) {
-      setCurrentPasswordError("O campo senha atual não pode ser vazio.");
-      hasError = true; // Marca erro
+    if (!currentPassword || !newPassword || !confirmNewPassword) {
+      setErrorMessages((prevState) => ({
+        ...prevState,
+        currentPassword: "Por favor, preencha todos os campos.",
+      }));
+      return;
     }
 
-    if (!newPassword) {
-      setNewPasswordError("O campo nova senha não pode ser vazio.");
-      hasError = true; // Marca erro
-    }
-
-    if (!confirmNewPassword) {
-      setConfirmPasswordError("O campo confirme sua senha não pode ser vazio.");
-      hasError = true; // Marca erro
-    }
-
-    // Se houve algum erro, não continua a validação
-    if (hasError) return;
-
-    // Verificação para nova senha
     const passwordPattern = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+{}":;'\[\]|<>?,.`~\-\/]).{6,}$/;
+
     if (!passwordPattern.test(newPassword)) {
-      setNewPasswordError("A nova senha deve ter pelo menos 6 caracteres, incluindo uma letra maiúscula, um número e um caractere especial.");
-      return; // Sai da função se houver erro
+      setErrorMessages((prevState) => ({
+        ...prevState,
+        newPassword: "A nova senha deve ter pelo menos 6 caracteres, incluindo uma letra maiúscula, um número e um caractere especial.",
+      }));
+      return;
     }
 
-    // Verificação para confirmação de senha
-    if (newPassword !== confirmNewPassword) {
-      setConfirmPasswordError("A confirmação de senha deve ser igual à nova senha.");
-      return; // Sai da função se houver erro
+    if (confirmNewPassword.length < 6) {
+      setErrorMessages((prevState) => ({
+        ...prevState,
+        confirmNewPassword: "A confirmação de senha deve ter pelo menos 6 caracteres.",
+      }));
+      return;
     }
 
-    // Verificação para a senha atual
-    if (currentPassword !== passwords.current) {
-      setCurrentPasswordError("Senha atual incorreta.");
-      return; // Sai da função se houver erro
+    if (currentPassword === newPassword) {
+      setErrorMessages((prevState) => ({
+        ...prevState,
+        newPassword: "A nova senha não pode ser igual à senha atual.",
+      }));
+      return;
     }
 
-    // Se todas as validações passarem
-    alert("Senha trocada com sucesso!");
-    navigate("/");
+    alterarSenha(currentPassword, newPassword, confirmNewPassword);
   };
 
   const handleLoginPage = (e) => {
     e.preventDefault();
     navigate("/");
-  }
+  };
 
   return (
     <div className={styles.ChangePasswordPermission}>
       <form className={styles.ChangePasswordForm}>
         <h1>Troca de Senha</h1>
         <div className={styles.InputCurrentPassword}>
-          <img src={lock} alt="Ícone de cadeado" className={styles.Icon} />
           <input
             type="password"
             name="currentPassword"
@@ -88,11 +138,11 @@ const ChangePassword = () => {
             placeholder="Senha Atual"
             required
           />
+          {errorMessages.currentPassword && (
+            <div className={styles.ErrorMessage}>{errorMessages.currentPassword}</div>
+          )}
         </div>
-        {currentPasswordError && <div className={styles.ErrorMessage}>{currentPasswordError}</div>}
-        
         <div className={styles.InputNewPassword}>
-          <img src={lock} alt="Ícone de cadeado" className={styles.Icon} />
           <input
             type="password"
             name="newPassword"
@@ -102,11 +152,11 @@ const ChangePassword = () => {
             placeholder="Nova Senha"
             required
           />
+          {errorMessages.newPassword && (
+            <div className={styles.ErrorMessage}>{errorMessages.newPassword}</div>
+          )}
         </div>
-        {newPasswordError && <div className={styles.ErrorMessage}>{newPasswordError}</div>}
-        
         <div className={styles.InputConfirmNewPassword}>
-          <img src={lock} alt="Ícone de cadeado" className={styles.Icon} />
           <input
             type="password"
             name="confirmNewPassword"
@@ -116,11 +166,13 @@ const ChangePassword = () => {
             placeholder="Confirme sua senha"
             required
           />
+          {errorMessages.confirmNewPassword && (
+            <div className={styles.ErrorMessage}>{errorMessages.confirmNewPassword}</div>
+          )}
         </div>
-        {confirmPasswordError && <div className={styles.ErrorMessage}>{confirmPasswordError}</div>}
 
         <div className={styles.BtnChangePassword}>
-          <button type="button" onClick={handleConfirmPasswordChange}>
+          <button type="submit" onClick={handleConfirmPasswordChange}>
             Confirmar troca de senha
           </button>
         </div>

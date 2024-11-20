@@ -143,6 +143,10 @@ const InformationUser = () => {
     }
   };
 
+  const handleChangePassword = () => {
+    navigate("/change-password");
+  };
+
   return (
     <div className={styles.infoContainer}>
       <form className={styles.infoProfileEdit}>
@@ -223,6 +227,10 @@ const InformationUser = () => {
           <button type="submit" className={styles.infoButtonSave} onClick={handleSaveChange}>
             Salvar
           </button>
+        </div>
+
+        <div className={styles.BtnForgotPassword}>
+          <button type="button" onClick={handleChangePassword}>Trocar a Senha</button>
         </div>
       </form>
     </div>

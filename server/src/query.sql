@@ -122,6 +122,11 @@ VALUES
 
 select * from usuarios;
 
+SELECT id_usuario, senha_usuario FROM usuarios WHERE id_usuario = 16;
+
+SELECT senha_usuario FROM usuarios WHERE id_usuario = 16;
+
+DESCRIBE usuarios;
 SELECT * FROM aprovadores;
 
 SELECT * FROM solicitacoes
