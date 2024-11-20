@@ -270,7 +270,6 @@ const PageManager = () => {
                   <th>Última Modificação</th>
                   <th>Status</th>
                   <th>Categoria</th>
-                  <th>Descrição</th>
                   <th>Valor</th>
                   <th>Valor Aprovado</th>
                 </tr>
@@ -285,7 +284,6 @@ const PageManager = () => {
                       <td>{solicitacao.data_ultima}</td>
                       <td className={getStatusClass(solicitacao.status)}>{solicitacao.status}</td>
                       <td>{solicitacao.categoria}</td>
-                      <td>{solicitacao.descricao}</td>
                       <td>R$ {solicitacao.valor_pedido}</td>
                       <td>R$ {solicitacao.valor_aprovado}</td>
                     </tr>

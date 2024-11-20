@@ -90,7 +90,6 @@ const PageManagement = () => {
                 <th>Data</th>
                 <th>Status</th>
                 <th>Categoria</th>
-                <th>Descrição</th>
                 <th>Valor</th>
                 <th>Valor Aprovado</th>
               </tr>
@@ -108,7 +107,6 @@ const PageManagement = () => {
                       </span>
                     </td>
                     <td>{solicitacao.categoria}</td>
-                    <td>{solicitacao.descricao}</td>
                     <td>R$ {solicitacao.valor_pedido}</td>
                     <td>R$ {solicitacao.valor_aprovado}</td>
                   </tr>
