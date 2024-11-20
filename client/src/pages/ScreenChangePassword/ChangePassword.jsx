@@ -121,7 +121,7 @@ const ChangePassword = () => {
 
   const handleLoginPage = (e) => {
     e.preventDefault();
-    navigate("/");
+    navigate(-1);
   };
 
   return (
@@ -177,7 +177,7 @@ const ChangePassword = () => {
           </button>
         </div>
         <div className={styles.BtnLogin}>
-          <button type="button" onClick={handleLoginPage}>Faça seu login</button>
+          <button type="button" onClick={handleLoginPage}>Agora não</button>
         </div>
       </form>
     </div>
