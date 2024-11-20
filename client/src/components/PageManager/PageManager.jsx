@@ -6,7 +6,7 @@ import adduser from "../../icons/addUser.png";
 import { jsPDF } from "jspdf";
 import * as XLSX from "xlsx";
 
-const PageManager = () => {
+export default function PageManager() {
   const navigate = useNavigate();
 
   const [startDate, setStartDate] = useState(new Date());
@@ -17,6 +17,8 @@ const PageManager = () => {
 
   const [solicitacoes, setSolicitacoes] = useState([]);
   const [filter, setFilter] = useState("Todas");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8;
 
   const fetchSolicitacoes = async () => {
     try {
@@ -53,6 +55,20 @@ const PageManager = () => {
     filter === "Todas"
       ? solicitacoes
       : solicitacoes.filter((solicitacao) => solicitacao.status === filter);
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredSolicitacoes.slice(indexOfFirstItem, indexOfLastItem);
+
+  const paginate = (pageNumber) => {
+    if (pageNumber === 'prev') {
+      setCurrentPage(prev => Math.max(prev - 1, 1));
+    } else if (pageNumber === 'next') {
+      setCurrentPage(prev => Math.min(prev + 1, Math.ceil(filteredSolicitacoes.length / itemsPerPage)));
+    } else {
+      setCurrentPage(pageNumber);
+    }
+  };
 
   const getStatusClass = (status) => {
     switch (status) {
@@ -113,11 +129,8 @@ const PageManager = () => {
       }
     });
 
-    // Salva o PDF
     doc.save("solicitacoes_exportadas_gerente.pdf");
   };
-
-
 
   const exportToExcel = (filteredRequests) => {
     const ws = XLSX.utils.json_to_sheet(
@@ -163,7 +176,6 @@ const PageManager = () => {
     };
   };
 
-
   const handleStartDateChange = (e) => {
     const date = new Date(e.target.value);
     setStartDate(date);
@@ -181,6 +193,7 @@ const PageManager = () => {
 
   const handleFilterByStatus = (status) => {
     setFilter(status);
+    setCurrentPage(1); // Reset to first page when changing filter
   };
 
   return (
@@ -247,7 +260,6 @@ const PageManager = () => {
             </div>
           )}
 
-
           <div className={styles.BtnContainerGerente}>
             {["Todas", "Aprovada", "Recusada", "Pendente"].map((status) => (
               <button
@@ -275,9 +287,9 @@ const PageManager = () => {
                 </tr>
               </thead>
               <tbody>
-                {filteredSolicitacoes.length > 0 ? (
-                  filteredSolicitacoes.map((solicitacao) => (
-                    <tr key={solicitacao.id}>
+                {currentItems.length > 0 ? (
+                  currentItems.map((solicitacao) => (
+                    <tr key={solicitacao.id} onClick={() => handleRowClick(solicitacao)}>
                       <td>{solicitacao.id}</td>
                       <td>{solicitacao.name}</td>
                       <td>{solicitacao.date}</td>
@@ -296,10 +308,32 @@ const PageManager = () => {
               </tbody>
             </table>
           </div>
+
+          <div className={styles.Pagination}>
+            {filteredSolicitacoes.length > itemsPerPage && (
+              <div className="flex items-center justify-center space-x-2">
+                <button
+                  onClick={() => paginate('prev')}
+                  disabled={currentPage === 1}
+                  className="px-3 py-1 rounded bg-gray-200 text-gray-600 disabled:opacity-50"
+                >
+                  Anterior
+                </button>
+                <span className="text-gray-600">
+                  Página {currentPage} de {Math.ceil(filteredSolicitacoes.length / itemsPerPage)}
+                </span>
+                <button
+                  onClick={() => paginate('next')}
+                  disabled={currentPage === Math.ceil(filteredSolicitacoes.length / itemsPerPage)}
+                  className="px-3 py-1 rounded bg-gray-200 text-gray-600 disabled:opacity-50"
+                >
+                  Próxima
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
   );
-};
-
-export default PageManager;
+}
