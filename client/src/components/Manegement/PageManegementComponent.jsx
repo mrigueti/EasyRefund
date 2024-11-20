@@ -6,6 +6,8 @@ const PageManagement = () => {
   const navigate = useNavigate();
   const [solicitacoes, setSolicitacoes] = useState([]);
   const [filter, setFilter] = useState("Todas");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   const fetchSolicitacoes = async () => {
     try {
@@ -20,6 +22,7 @@ const PageManagement = () => {
             setor: item.nome_setor,
             unidade: item.nome_unidade,
             date: new Date(item.dt_criacao_solic).toLocaleDateString("pt-BR"),
+            aprovacao: new Date(item.dt_aprovacao).toLocaleDateString("pt-BR"),
             status: item.status_solicitacao,
             descricao: item.descricao,
             categoria: item.categoria,
@@ -44,6 +47,11 @@ const PageManagement = () => {
       ? solicitacoes
       : solicitacoes.filter((solicitacao) => solicitacao.status === filter);
 
+  // Paginando os itens filtrados
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredSolicitacoes.slice(indexOfFirstItem, indexOfLastItem);
+
   const getStatusClass = (status) => {
     switch (status) {
       case "Pendente":
@@ -61,6 +69,14 @@ const PageManagement = () => {
     // Redireciona para a página de permissão com os dados da solicitação
     navigate(`/manegement/permission`, { state: { solicitacao } });
   };
+
+  // Função para mudar de página
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  // Número total de páginas
+  const totalPages = Math.ceil(filteredSolicitacoes.length / itemsPerPage);
 
   return (
     <div className={Styles.component}>
@@ -88,6 +104,7 @@ const PageManagement = () => {
                 <th>ID</th>
                 <th>Usuário</th>
                 <th>Data</th>
+                <th>Última Modificação</th>
                 <th>Status</th>
                 <th>Categoria</th>
                 <th>Valor</th>
@@ -95,12 +112,13 @@ const PageManagement = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredSolicitacoes.length > 0 ? (
-                filteredSolicitacoes.map((solicitacao) => (
+              {currentItems.length > 0 ? (
+                currentItems.map((solicitacao) => (
                   <tr key={solicitacao.id} onDoubleClick={() => handleRowClick(solicitacao)}>
                     <td>{solicitacao.id}</td>
                     <td>{solicitacao.name}</td>
                     <td>{solicitacao.date}</td>
+                    <td>{solicitacao.aprovacao}</td>
                     <td>
                       <span className={getStatusClass(solicitacao.status)}>
                         {solicitacao.status}
@@ -120,6 +138,25 @@ const PageManagement = () => {
               )}
             </tbody>
           </table>
+        </div>
+
+        {/* Paginacao */}
+        <div className={Styles.Pagination}>
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            Anterior
+          </button>
+          <span>
+            Página {currentPage} de {totalPages}
+          </span>
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            Próxima
+          </button>
         </div>
       </div>
     </div>

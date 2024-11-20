@@ -13,6 +13,8 @@ const HistoryUser = () => {
   const [modalData, setModalData] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [filter, setFilter] = useState("Todas");
+  const [currentPage, setCurrentPage] = useState(1); // Página atual
+  const itemsPerPage = 8; // Limitar 10 itens por página
 
   useEffect(() => {
     const fetchRequests = async () => {
@@ -26,8 +28,6 @@ const HistoryUser = () => {
 
         const decoded = jwtDecode(token);
         const userId = decoded.id;
-        console.log(userId);
-        
 
         const response = await fetch(`http://localhost:3001/api/solicitacoes/getById/${userId}`, {
           method: "POST",
@@ -129,6 +129,18 @@ const HistoryUser = () => {
     navigate(-1);
   };
 
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const paginate = (requests, currentPage, itemsPerPage) => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return requests.slice(startIndex, endIndex); // Slice correto para exibir apenas 10 itens por página
+  };
+
+  const totalPages = Math.ceil(filteredRequests.length / itemsPerPage);
+
   return (
     <div className={Styles.RefundContainer}>
       <div className={Styles.RefundHeader}>
@@ -172,7 +184,7 @@ const HistoryUser = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredRequests.map((request) => (
+            {paginate(filteredRequests, currentPage, itemsPerPage).map((request) => (
               <tr key={request.id_solicitacao} onClick={() => handleRowClick(request)}>
                 <td>{request.id_solicitacao}</td>
                 <td>{formatDate(request.dt_criacao_solic)}</td>
@@ -193,6 +205,24 @@ const HistoryUser = () => {
             ))}
           </tbody>
         </table>
+
+        <div className={Styles.Pagination}>
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            Anterior
+          </button>
+          <span>
+            Página {currentPage} de {totalPages}
+          </span>
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            Próxima
+          </button>
+        </div>
 
         {modalVisible && (
           <div className={Styles.ModalOverlay}>
@@ -220,15 +250,16 @@ const HistoryUser = () => {
 
 const getStatusClass = (status) => {
   switch (status) {
+    case "Pendente":
+      return Styles.RefundPending;
     case "Aprovada":
       return Styles.RefundAccepted;
     case "Recusada":
       return Styles.RefundRejected;
-    case "Pendente":
-      return Styles.RefundPending;
     default:
       return "";
   }
 };
+
 
 export default HistoryUser;

@@ -137,3 +137,36 @@ color: #854d0e;
     padding: 8px 12px;
   }
 }
+
+.Pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.Pagination button {
+  padding: 8px 16px;
+  margin: 0 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.Pagination button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.Pagination button:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+.Pagination span {
+  font-size: 14px;
+  color: #333;
+}

@@ -5,6 +5,30 @@ body {
     margin: 0;
 }
 
+.Pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .Pagination button {
+    padding: 10px;
+    margin: 0 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .Pagination button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  .Pagination span {
+    align-self: center;
+  }
+  
 /* Container do Reembolso */
 .RefundContainer {
     width: 95%;
