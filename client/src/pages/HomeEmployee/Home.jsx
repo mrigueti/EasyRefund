@@ -1,4 +1,4 @@
-import React, { useState } from 'react'; // Importando useState
+import React, { useState, useEffect } from 'react'; // Importando useState e useEffect
 import styles from '../GlobalCSS/Template.module.css';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal'; // Importando Modal do Bootstrap
@@ -8,7 +8,6 @@ import perfil from '../../icons/perfil.png';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import HomeComponent from '../../components/Home/HomeComponent';
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
 import { jwtDecode } from 'jwt-decode';
 
 const Home = () => {
@@ -30,22 +29,33 @@ const Home = () => {
       }
     }
   }, []);
-  const [showModal, setShowModal] = useState(false);
 
-  const handleBtnLogout = () => {
-    if (window.confirm("Deseja realmente fechar o site?")) {
-      sessionStorage.clear();
-      navigate("/");
-    }
+  // Estados para controle dos modais
+  const [showModal, setShowModal] = useState(false); // Modal de Notificação
+  const [showLogoutModal, setShowLogoutModal] = useState(false); // Modal de Logout
+
+  // Funções para controle do modal de logout
+  const handleShowLogoutModal = () => setShowLogoutModal(true);
+  const handleCloseLogoutModal = () => setShowLogoutModal(false);
+
+  const handleConfirmLogout = () => {
+    sessionStorage.clear(); // Limpa o sessionStorage
+    navigate('/'); // Redireciona para a página de login
   };
 
-  const handleBtnPerfilUser = () => {
-    navigate("/InformationUser");
-  };
-
-  // Funções para abrir e fechar o modal
+  // Função para abrir o modal de notificações
   const handleShowModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
+
+  // Função para logout
+  const handleBtnLogout = () => {
+    handleShowLogoutModal(); // Exibe o modal de logout
+  };
+
+  // Função para abrir a página de informações do usuário
+  const handleBtnPerfilUser = () => {
+    navigate('/InformationUser');
+  };
 
   return (
     <div className={styles.main}>
@@ -72,7 +82,7 @@ const Home = () => {
           </div>
         </div>
 
-        {/* Insira o Componente aqui: */}
+        {/* Componente de Informações */}
         <HomeComponent />
 
         {/* Modal de Notificações */}
@@ -93,6 +103,23 @@ const Home = () => {
           </Modal.Footer>
         </Modal>
 
+        {/* Modal de Logout */}
+        <Modal show={showLogoutModal} onHide={handleCloseLogoutModal}>
+          <Modal.Header closeButton>
+            <Modal.Title>Deseja sair?</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            Você realmente deseja sair do sistema? 
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="danger" onClick={handleConfirmLogout}>
+              Sair
+            </Button>
+            <Button variant="secondary" onClick={handleCloseLogoutModal}>
+              Cancelar
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </div>
     </div>
   );

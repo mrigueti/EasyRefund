@@ -1,4 +1,4 @@
-import React, { useState } from 'react'; // Importando useState
+import React, { useState, useEffect } from 'react'; // Importando useState
 import styles from '../GlobalCSS/Template.module.css';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal'; // Importando Modal do Bootstrap
@@ -8,7 +8,6 @@ import perfil from '../../icons/perfil.png';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import FlowRefundComponent from '../../components/FlowRefund/FlowRefundComponent';
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
 import { jwtDecode } from 'jwt-decode';
 
 const FlowRefund = () => {
@@ -31,23 +30,30 @@ const FlowRefund = () => {
     }
   }, []);
 
-  // Estado para controlar a visibilidade do modal
-  const [showModal, setShowModal] = useState(false);
+  // Estados para controle dos modais
+  const [showModal, setShowModal] = useState(false); // Modal de Notificação
+  const [showLogoutModal, setShowLogoutModal] = useState(false); // Modal de Logout
+
+  // Função para abrir o modal de logout
+  const handleShowLogoutModal = () => setShowLogoutModal(true);
+  const handleCloseLogoutModal = () => setShowLogoutModal(false);
+
+  const handleConfirmLogout = () => {
+    sessionStorage.clear(); // Limpa o sessionStorage
+    navigate("/"); // Redireciona para a página de login
+  };
+
+  // Função para abrir o modal de notificações
+  const handleShowModal = () => setShowModal(true);
+  const handleCloseModal = () => setShowModal(false);
 
   const handleBtnLogout = () => {
-    if (window.confirm("Deseja realmente fechar o site?")) {
-      sessionStorage.clear();
-      navigate("/");
-    }
+    handleShowLogoutModal(); // Exibe o modal de logout
   };
 
   const handleBtnPerfilUser = () => {
     navigate("/InformationUser");
   };
-
-  // Funções para abrir e fechar o modal
-  const handleShowModal = () => setShowModal(true);
-  const handleCloseModal = () => setShowModal(false);
 
   return (
     <div className={styles.main}>
@@ -90,6 +96,24 @@ const FlowRefund = () => {
           </Button>
           <Button variant="primary" onClick={handleCloseModal}>
             Marcar como lida
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Modal de Logout */}
+      <Modal show={showLogoutModal} onHide={handleCloseLogoutModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Deseja sair?</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Você realmente deseja sair do sistema? 
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="danger" onClick={handleConfirmLogout}>
+            Sair
+          </Button>
+          <Button variant="secondary" onClick={handleCloseLogoutModal}>
+            Cancelar
           </Button>
         </Modal.Footer>
       </Modal>

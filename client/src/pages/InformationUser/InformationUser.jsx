@@ -1,18 +1,17 @@
-import styles from '../GlobalCSS/Template.module.css'
+import React, { useState, useEffect } from 'react';
+import styles from '../GlobalCSS/Template.module.css';
 import Button from 'react-bootstrap/Button';
-import notification from '../../icons/notifications.png'
-import logout from '../../icons/logout.png'
-import perfil from '../../icons/perfil.png'
+import Modal from 'react-bootstrap/Modal'; 
+import notification from '../../icons/notifications.png';
+import logout from '../../icons/logout.png';
+import perfil from '../../icons/perfil.png';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import PermissionComponent from '../../components/Permission/PermissionComponent.jsx';
-import { useNavigate } from 'react-router-dom';
 import InformationUser from '../../components/InformationUser/InformationUser.jsx';
-import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
-import React, { useState } from 'react';
 
 const Home = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const [userName, setUserName] = useState('');
   const [userRole, setUserRole] = useState('');
@@ -30,31 +29,32 @@ const Home = () => {
       }
     }
   }, []);
-  const [showModal, setShowModal] = useState(false);
 
-  const handleBtnLogout = () => {
-    if (window.confirm("Deseja realmente fechar o site?")) {
-      sessionStorage.clear();
-      navigate("/")
-    }
-  }
+  // Estado para controlar a visibilidade do modal de logout
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+
+  const handleShowLogoutModal = () => setShowLogoutModal(true);
+  const handleCloseLogoutModal = () => setShowLogoutModal(false);
+
+  const handleConfirmLogout = () => {
+    sessionStorage.clear(); // Limpa o sessionStorage
+    navigate('/'); // Redireciona para a página de login
+  };
 
   return (
     <div className={styles.main}>
       <div className={styles.navbar_main}>
-        <div className={styles.navbar_left}>
-
-        </div>
+        <div className={styles.navbar_left}></div>
         <div className={styles.navbar_right}>
           <div className={styles.perfil_div}>
-            <img src={perfil}></img>
+            <img src={perfil} alt="Perfil" />
             <div className={styles.perfil_div_text}>
               <h1>{userName}</h1>
               <p>{userRole}</p>
             </div>
           </div>
           <div className={styles.icon_navbar_div}>
-            <img src={notification}></img>
+            <img src={notification} alt="Notificações" />
           </div>
         </div>
       </div>
@@ -62,16 +62,33 @@ const Home = () => {
       <div className={styles.content_main}>
         <div className={styles.content_left}>
           <div className={styles.options_div}>
-            <img src={logout} onClick={handleBtnLogout}></img>
+            <img src={logout} alt="Logout" onClick={handleShowLogoutModal} />
           </div>
         </div>
 
-        {/* Insira o Component aqui: */}
+        {/* Componente de Informação do Usuário */}
         <InformationUser />
-
       </div>
-    </div>
-  )
-}
 
-export default Home
+      {/* Modal de Logout */}
+      <Modal show={showLogoutModal} onHide={handleCloseLogoutModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Deseja sair?</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Você realmente deseja sair do sistema? 
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="danger" onClick={handleConfirmLogout}>
+            Sair
+          </Button>
+          <Button variant="secondary" onClick={handleCloseLogoutModal}>
+            Cancelar
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </div>
+  );
+};
+
+export default Home;

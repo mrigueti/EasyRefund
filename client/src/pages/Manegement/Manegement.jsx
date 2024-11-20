@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from '../GlobalCSS/Template.module.css';
 import notification from '../../icons/notifications.png';
 import logout from '../../icons/logout.png';
@@ -8,7 +8,6 @@ import ManegementComponent from '../../components/Manegement/PageManegementCompo
 import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { useEffect } from 'react';
 import { jwtDecode } from 'jwt-decode';
 
 const Home = () => {
@@ -30,21 +29,30 @@ const Home = () => {
       }
     }
   }, []);
-  // Estado para controlar a visibilidade do modal
-  const [showModal, setShowModal] = useState(false);
 
+  // Estado para controlar a visibilidade dos modais
+  const [showModal, setShowModal] = useState(false); // Modal de notificações
+  const [showLogoutModal, setShowLogoutModal] = useState(false); // Modal de logout
+
+  // Função para abrir o modal de logout
+  const handleShowLogoutModal = () => setShowLogoutModal(true);
+  // Função para fechar o modal de logout
+  const handleCloseLogoutModal = () => setShowLogoutModal(false);
+  
   const handleBtnLogout = () => {
-    if (window.confirm("Deseja realmente fechar o site?")) {
-      sessionStorage.clear();
-      navigate("/");
-    }
+    setShowLogoutModal(true); // Abre o modal de logout
+  };
+
+  const handleConfirmLogout = () => {
+    sessionStorage.clear(); // Limpa o sessionStorage
+    navigate("/"); // Redireciona para a página de login
   };
 
   const handleBtnPerfilUser = () => {
     navigate("/InformationUser");
   };
 
-  // Funções para abrir e fechar o modal
+  // Funções para abrir e fechar o modal de notificações
   const handleShowModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
 
@@ -91,6 +99,24 @@ const Home = () => {
           </Button>
           <Button variant="primary" onClick={handleCloseModal}>
             Marcar como lida
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Modal de Logout */}
+      <Modal show={showLogoutModal} onHide={handleCloseLogoutModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Deseja sair?</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Você realmente deseja sair do sistema? 
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="danger" onClick={handleConfirmLogout}>
+            Sair
+          </Button>
+          <Button variant="secondary" onClick={handleCloseLogoutModal}>
+            Cancelar
           </Button>
         </Modal.Footer>
       </Modal>

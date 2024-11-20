@@ -2,6 +2,7 @@ import styles from "./ChangePassword.module.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import { Modal, Button } from "react-bootstrap";
 import user from '../../icons/user.png';
 import lock from '../../icons/cadeado.png';
 
@@ -11,12 +12,13 @@ const ChangePassword = () => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
-
   const [errorMessages, setErrorMessages] = useState({
     currentPassword: "",
     newPassword: "",
     confirmNewPassword: "",
   });
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
 
   // Função para alterar a senha
   const alterarSenha = async (senhaAtual, novaSenha, confirmarSenha) => {
@@ -60,10 +62,13 @@ const ChangePassword = () => {
       const result = await response.json();
       console.log("Senha alterada com sucesso:", result);
       
-      // Limpando sessionStorage e redirecionando para a página inicial
+      // Exibe mensagem no modal e limpa sessionStorage
+      setModalMessage("Senha alterada com sucesso!");
       sessionStorage.clear();
-      alert("Senha alterada com sucesso.")
-      navigate("/");
+      setShowModal(true);
+      setTimeout(() => {
+        navigate("/"); // Redireciona para a página de login após 2 segundos
+      }, 2000);
 
     } catch (error) {
       console.error("Erro:", error.message);
@@ -71,6 +76,8 @@ const ChangePassword = () => {
         ...prevState,
         currentPassword: error.message, // Exibe a mensagem de erro no campo correspondente
       }));
+      setModalMessage(`Erro: ${error.message}`);
+      setShowModal(true);
     }
   };
 
@@ -126,19 +133,24 @@ const ChangePassword = () => {
     navigate(-1);
   };
 
+  const handleCloseModal = () => {
+    setShowModal(false);
+    navigate("/"); // Redireciona para a página de login
+  };
+
   return (
     <div className={styles.ChangePasswordPermission}>
       <form className={styles.ChangePasswordForm}>
         <h1>Troca de Senha</h1>
         {errorMessages.newPassword && (
-            <div className={styles.ErrorMessage}>{errorMessages.newPassword}</div>
-          )}
-          {errorMessages.confirmNewPassword && (
-            <div className={styles.ErrorMessage}>{errorMessages.confirmNewPassword}</div>
-          )}
-          {errorMessages.currentPassword && (
-            <div className={styles.ErrorMessage}>{errorMessages.currentPassword}</div>
-          )}
+          <div className={styles.ErrorMessage}>{errorMessages.newPassword}</div>
+        )}
+        {errorMessages.confirmNewPassword && (
+          <div className={styles.ErrorMessage}>{errorMessages.confirmNewPassword}</div>
+        )}
+        {errorMessages.currentPassword && (
+          <div className={styles.ErrorMessage}>{errorMessages.currentPassword}</div>
+        )}
         <div className={styles.InputCurrentPassword}>
           <input
             type="password"
@@ -185,6 +197,21 @@ const ChangePassword = () => {
           <button type="button" onClick={handleLoginPage}>Agora não</button>
         </div>
       </form>
+
+      {/* Modal de Confirmação */}
+      <Modal show={showModal} onHide={handleCloseModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Resultado da Alteração de Senha</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {modalMessage}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseModal}>
+            Fechar
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

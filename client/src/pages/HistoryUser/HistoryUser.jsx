@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "../GlobalCSS/Template.module.css";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
@@ -6,10 +6,8 @@ import notification from "../../icons/notifications.png";
 import logout from "../../icons/logout.png";
 import perfil from "../../icons/perfil.png";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useEffect } from 'react';
-import { jwtDecode } from 'jwt-decode';
-
 import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 import HistoryUser from "../../components/HistoryUser/HistoryUser.jsx";
 
 const Home = () => {
@@ -31,23 +29,32 @@ const Home = () => {
       }
     }
   }, []);
-  // Estado para controlar a visibilidade do modal
-  const [showModal, setShowModal] = useState(false);
 
+  // Estados para controle dos modais
+  const [showModal, setShowModal] = useState(false); // Modal de Notificação
+  const [showLogoutModal, setShowLogoutModal] = useState(false); // Modal de Logout
+
+  // Função para abrir o modal de logout
+  const handleShowLogoutModal = () => setShowLogoutModal(true);
+  const handleCloseLogoutModal = () => setShowLogoutModal(false);
+
+  const handleConfirmLogout = () => {
+    sessionStorage.clear(); // Limpa o sessionStorage
+    navigate("/"); // Redireciona para a página de login
+  };
+
+  // Função para abrir o modal de notificações
+  const handleShowModal = () => setShowModal(true);
+  const handleCloseModal = () => setShowModal(false);
+
+  // Função para logout
   const handleBtnLogout = () => {
-    if (window.confirm("Deseja realmente fechar o site?")) {
-      sessionStorage.clear();
-      navigate("/");
-    }
+    handleShowLogoutModal(); // Exibe o modal de logout
   };
 
   const handleBtnPerfilUser = () => {
     navigate("/InformationUser");
   };
-
-  // Funções para abrir e fechar o modal
-  const handleShowModal = () => setShowModal(true);
-  const handleCloseModal = () => setShowModal(false);
 
   return (
     <div className={styles.main}>
@@ -56,10 +63,7 @@ const Home = () => {
         <div className={styles.navbar_right}>
           <div className={styles.perfil_div}>
             <img src={perfil} alt="Perfil" />
-            <div
-              className={styles.perfil_div_text}
-              onClick={handleBtnPerfilUser}
-            >
+            <div className={styles.perfil_div_text} onClick={handleBtnPerfilUser}>
               <h1>{userName}</h1>
               <p>{userRole}</p>
             </div>
@@ -95,6 +99,24 @@ const Home = () => {
           </Button>
           <Button variant="primary" onClick={handleCloseModal}>
             Marcar como lida
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Modal de Logout */}
+      <Modal show={showLogoutModal} onHide={handleCloseLogoutModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Deseja sair?</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Você realmente deseja sair do sistema? 
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="danger" onClick={handleConfirmLogout}>
+            Sair
+          </Button>
+          <Button variant="secondary" onClick={handleCloseLogoutModal}>
+            Cancelar
           </Button>
         </Modal.Footer>
       </Modal>

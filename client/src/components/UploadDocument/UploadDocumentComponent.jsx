@@ -13,13 +13,12 @@ export default function UploadDocument() {
   const [successMessage, setSuccessMessage] = useState("");
   const [textArea, setTextArea] = useState("");
   const [valor_pedido, setValorPedido] = useState("");
-  const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState(false); // Controle do Modal
   const fileInputRef = useRef(null);
   const location = useLocation();
   const tipoDedutivel = location.state?.tipoDedutivel;
   const [userId, setUserId] = useState(null);
   const url_solicitacao = 'http://localhost:3001/api/solicitacoes/create';
-
 
   useEffect(() => {
     const token = sessionStorage.getItem('token');
@@ -40,7 +39,6 @@ export default function UploadDocument() {
     }
   };
   
-
   const removeFile = (fileToRemove) => {
     setFiles(files.filter((file) => file !== fileToRemove));
   };
@@ -79,13 +77,11 @@ export default function UploadDocument() {
     }
 
     const formData = new FormData();
-
     formData.append("id_usuario", userId);
     formData.append("valor_pedido_solic", valor_pedido);
     formData.append("tipo_dedutivel_solic", tipoDedutivel);
     formData.append("categoria", selectedButton);
     formData.append("descricao", textArea);
-
     formData.append("anexo_nf", files[0]);
 
     const token = sessionStorage.getItem('token');
@@ -99,13 +95,15 @@ export default function UploadDocument() {
       });
 
       if (response.ok) {
-        console.log("Dados enviados com sucesso");
-        setSuccessMessage("Comprovante enviado com sucesso!");
+        setSuccessMessage("Solicitação enviada com sucesso!");
         setFiles([]);
         fileInputRef.current.value = "";
         setValorPedido("");
         setTextArea("");
         setSelectedButton(null);
+
+        // Exibe o modal de confirmação após o envio
+        setShowModal(true);
       } else {
         console.error("Falha ao enviar dados:", response.status);
         setErrorMessages((prev) => [...prev, "Erro ao enviar dados."]);
@@ -119,9 +117,9 @@ export default function UploadDocument() {
   const handleCloseModal = (sendAnother) => {
     setShowModal(false);
     if (!sendAnother) {
-      handleBtnBackPage();
+      handleBtnBackPage(); // Voltar à página anterior
     } else {
-      setSuccessMessage("");
+      setSuccessMessage(""); // Limpa a mensagem de sucesso
     }
   };
 
@@ -148,16 +146,17 @@ export default function UploadDocument() {
                   <div className="text-danger">Por favor, anexe um arquivo.</div>
                 )}
               </Form.Group>
-              {/* Input para valor do pedido */}
               <Form.Group className="mb-3">
                 <Form.Label>Valor do Pedido</Form.Label>
                 <Form.Control
                   type="number"
                   placeholder="Digite o valor"
                   value={valor_pedido}
-                  onChange={(e) => setValorPedido(e.target.value)} // Atualiza o valor do pedido
+                  onChange={(e) => setValorPedido(e.target.value)} 
                 />
               </Form.Group>
+
+              {/* Opções de categoria */}
               <div className={styles.BtnOption}>
                 <button
                   className={`${styles.BtnHotel} ${selectedButton === "Hospedagem" ? styles.selected : ""}`}
@@ -192,6 +191,7 @@ export default function UploadDocument() {
                 <div className="text-danger">Por favor, selecione uma categoria.</div>
               )}
 
+              {/* Descrição */}
               <div className={styles.TextArea}>
                 <textarea
                   className={styles.textAreaDescription}
@@ -224,12 +224,25 @@ export default function UploadDocument() {
               <div className={styles.BtnSendDiv}>
                 <button className={styles.BtnSend} type="submit">Enviar</button>
               </div>
-              {successMessage && (
-                <div className="text-success mt-3 text-center">
-                  {successMessage}
-                </div>
-              )}
             </Form>
+
+            {/* Modal de Confirmação */}
+            <Modal show={showModal} onHide={() => setShowModal(false)}>
+              <Modal.Header closeButton>
+                <Modal.Title> Solicitação enviada com sucesso!</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                Deseja fazer outra solicitação?
+              </Modal.Body>
+              <Modal.Footer>
+                <Button variant="secondary" onClick={() => handleCloseModal(false)}>
+                  Não
+                </Button>
+                <Button variant="primary" onClick={() => handleCloseModal(true)}>
+                  Sim
+                </Button>
+              </Modal.Footer>
+            </Modal>
           </Col>
         </Row>
       </Container>

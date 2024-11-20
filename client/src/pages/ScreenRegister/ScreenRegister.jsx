@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from '../GlobalCSS/Template.module.css';
 import notification from '../../icons/notifications.png';
 import logout from '../../icons/logout.png';
@@ -8,7 +8,6 @@ import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Register from '../../components/ScreenRegister/Register';
-import { useEffect } from 'react';
 import { jwtDecode } from 'jwt-decode';
 
 const Home = () => {
@@ -16,6 +15,10 @@ const Home = () => {
 
   const [userName, setUserName] = useState('');
   const [userRole, setUserRole] = useState('');
+  
+  // Estado para controlar a visibilidade dos modais
+  const [showModal, setShowModal] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   useEffect(() => {
     // Recupera o token do sessionStorage
@@ -30,23 +33,26 @@ const Home = () => {
       }
     }
   }, []);
-  // Estado para controlar a visibilidade do modal
-  const [showModal, setShowModal] = useState(false);
 
   const handleBtnLogout = () => {
-    if (window.confirm("Deseja realmente fechar o site?")) {
-      sessionStorage.clear();
-      navigate("/");
-    }
+    setShowLogoutModal(true); // Exibe o modal de confirmação de logout
   };
 
   const handleBtnPerfilUser = () => {
     navigate("/InformationUser");
   };
 
-  // Funções para abrir e fechar o modal
+  // Funções para abrir e fechar o modal de notificações
   const handleShowModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
+
+  // Funções para abrir e fechar o modal de logout
+  const handleCloseLogoutModal = () => setShowLogoutModal(false);
+
+  const handleConfirmLogout = () => {
+    sessionStorage.clear();
+    navigate("/");
+  };
 
   return (
     <div className={styles.main}>
@@ -91,6 +97,24 @@ const Home = () => {
           </Button>
           <Button variant="primary" onClick={handleCloseModal}>
             Marcar como lida
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Modal de Confirmação de Logout */}
+      <Modal show={showLogoutModal} onHide={handleCloseLogoutModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Fechar o sistema</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>Você deseja realmente fechar o sistema?</p>
+        </Modal.Body>
+        <Modal.Footer>
+        <Button variant="danger" onClick={handleConfirmLogout}>
+            Sim
+          </Button>
+          <Button variant="secondary" onClick={handleCloseLogoutModal}>
+            Não
           </Button>
         </Modal.Footer>
       </Modal>
