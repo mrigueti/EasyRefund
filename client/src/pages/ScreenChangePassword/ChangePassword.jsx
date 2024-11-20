@@ -2,6 +2,8 @@ import styles from "./ChangePassword.module.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import user from '../../icons/user.png';
+import lock from '../../icons/cadeado.png';
 
 const ChangePassword = () => {
   const navigate = useNavigate();
@@ -138,6 +140,7 @@ const ChangePassword = () => {
             placeholder="Senha Atual"
             required
           />
+          <img src={user} alt="icone de usuario" className={styles.Icon} />
           {errorMessages.currentPassword && (
             <div className={styles.ErrorMessage}>{errorMessages.currentPassword}</div>
           )}
@@ -152,6 +155,7 @@ const ChangePassword = () => {
             placeholder="Nova Senha"
             required
           />
+          <img src={lock} alt="icone da senha" className={styles.Icon} />
           {errorMessages.newPassword && (
             <div className={styles.ErrorMessage}>{errorMessages.newPassword}</div>
           )}
@@ -166,6 +170,7 @@ const ChangePassword = () => {
             placeholder="Confirme sua senha"
             required
           />
+          <img src={lock} alt="icone da senha" className={styles.Icon} />
           {errorMessages.confirmNewPassword && (
             <div className={styles.ErrorMessage}>{errorMessages.confirmNewPassword}</div>
           )}

@@ -32,7 +32,7 @@ export const getAprovador = async (id_usuario) => {
       throw new Error('Aprovador não encontrado');
     }
 
-    return result[0]; // Retorna o primeiro resultado (id_aprovador)
+    return result[0];
   } catch (err) {
     console.error("Erro ao encontrar o aprovador /aprovadores", err);
     throw err;

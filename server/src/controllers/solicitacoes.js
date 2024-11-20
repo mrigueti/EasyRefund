@@ -61,10 +61,10 @@ export const getAllSolicitacoes = async (req, res) => {
     LEFT JOIN 
     nfs n ON sol.id_solicitacao = n.id_solicitacao
     `);
-    res.status(200).json(rows); // Envia os dados ao cliente como JSON
+    res.status(200).json(rows);
   } catch (error) {
     console.error("(back) Erro ao buscar solicitações:", error);
-    res.status(500).json({ error: "Erro ao buscar solicitações" }); // Retorna erro em caso de falha
+    res.status(500).json({ error: "Erro ao buscar solicitações" });
   }
 };
 
@@ -72,15 +72,12 @@ export const updateSolicitacao = async (req, res) => {
   const { id_usuario, id_solicitacao, status_solicitacao, valor_aprovado_solic } = req.body;
 
   try {
-    // Obter o id_aprovador com base no id_usuario
     const id_aprovador = await getAprovador(id_usuario);
 
-    // Verifique se os parâmetros estão corretos
     if (!id_solicitacao || !status_solicitacao || !valor_aprovado_solic || !id_aprovador) {
       return res.status(400).json({ error: "Dados insuficientes" });
     }
 
-    // Verifica se o status fornecido é válido
     const validStatuses = ['Pendente', 'Aprovada', 'Recusada'];
     if (!validStatuses.includes(status_solicitacao)) {
       return res.status(400).json({ error: '(back)Status inválido.' });
@@ -88,7 +85,6 @@ export const updateSolicitacao = async (req, res) => {
 
     const valorFinal = status_solicitacao === 'Recusada' ? null : valor_aprovado_solic;
 
-    // Query para atualizar a solicitação
     const query = `
       UPDATE solicitacoes
       SET
@@ -98,7 +94,6 @@ export const updateSolicitacao = async (req, res) => {
       WHERE id_solicitacao = ?
     `;
 
-    // Executa a query
     db.query(query, [status_solicitacao, valor_aprovado_solic, id_aprovador.id_aprovador, id_solicitacao], (err, result) => {
       if (err) {
         console.error("(back)Erro ao executar a query:", err);
@@ -116,9 +111,9 @@ export const updateSolicitacao = async (req, res) => {
 };
 
 export const getSolicitacoesById = async (req, res) => {
-  const userId = req.params.id; // Pega o id do usuário a partir da URL
+  const userId = req.params.id;
 
-  const q = `SELECT * FROM solicitacoes WHERE id_usuario = ?`; // Consulta SQL para buscar as solicitações
+  const q = `SELECT * FROM solicitacoes WHERE id_usuario = ?`;
 
   db.query(q, [userId], (err, data) => {
     if (err) {

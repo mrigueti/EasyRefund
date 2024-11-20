@@ -6,10 +6,8 @@ import { checkAuth } from '../middleware/checkAuth.js';
 
 export const usuariosRouter = express.Router();
 
-// Rota de login
-usuariosRouter.post("/login", login);
 
-// Rota de registro
+usuariosRouter.post("/login", login);
 usuariosRouter.post("/register", checkAuth('Gerente'), register);
 usuariosRouter.get('/get/:id', get)
 usuariosRouter.put('/update/:id', update)
