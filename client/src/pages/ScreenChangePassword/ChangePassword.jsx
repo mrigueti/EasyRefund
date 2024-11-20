@@ -130,6 +130,15 @@ const ChangePassword = () => {
     <div className={styles.ChangePasswordPermission}>
       <form className={styles.ChangePasswordForm}>
         <h1>Troca de Senha</h1>
+        {errorMessages.newPassword && (
+            <div className={styles.ErrorMessage}>{errorMessages.newPassword}</div>
+          )}
+          {errorMessages.confirmNewPassword && (
+            <div className={styles.ErrorMessage}>{errorMessages.confirmNewPassword}</div>
+          )}
+          {errorMessages.currentPassword && (
+            <div className={styles.ErrorMessage}>{errorMessages.currentPassword}</div>
+          )}
         <div className={styles.InputCurrentPassword}>
           <input
             type="password"
@@ -141,9 +150,6 @@ const ChangePassword = () => {
             required
           />
           <img src={user} alt="icone de usuario" className={styles.Icon} />
-          {errorMessages.currentPassword && (
-            <div className={styles.ErrorMessage}>{errorMessages.currentPassword}</div>
-          )}
         </div>
         <div className={styles.InputNewPassword}>
           <input
@@ -156,9 +162,6 @@ const ChangePassword = () => {
             required
           />
           <img src={lock} alt="icone da senha" className={styles.Icon} />
-          {errorMessages.newPassword && (
-            <div className={styles.ErrorMessage}>{errorMessages.newPassword}</div>
-          )}
         </div>
         <div className={styles.InputConfirmNewPassword}>
           <input
@@ -171,9 +174,6 @@ const ChangePassword = () => {
             required
           />
           <img src={lock} alt="icone da senha" className={styles.Icon} />
-          {errorMessages.confirmNewPassword && (
-            <div className={styles.ErrorMessage}>{errorMessages.confirmNewPassword}</div>
-          )}
         </div>
 
         <div className={styles.BtnChangePassword}>
