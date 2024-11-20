@@ -3,6 +3,7 @@ import styles from '../GlobalCSS/Template.module.css';
 import notification from '../../icons/notifications.png';
 import logout from '../../icons/logout.png';
 import perfil from '../../icons/perfil.png';
+import logo from '../../icons/logo_easy.png'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
@@ -59,7 +60,7 @@ const Home = () => {
   return (
     <div className={styles.main}>
       <div className={styles.navbar_main}>
-        <div className={styles.navbar_left}></div>
+        <div className={styles.navbar_left}><img src={logo} style={{height: '60px', width: '60px'}}/></div>
         <div className={styles.navbar_right}>
           <div className={styles.perfil_div}>
             <img src={perfil} alt="Perfil" />

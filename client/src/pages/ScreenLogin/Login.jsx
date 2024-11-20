@@ -1,6 +1,7 @@
 import styles from "./Login.module.css";
 import { useNavigate } from "react-router-dom";
 import { useState } from 'react';
+import logo_login from '../../icons/logo_login.png'
 import user from '../../icons/user.png';
 import lock from '../../icons/cadeado.png';
 
@@ -22,7 +23,7 @@ const Login = () => {
     e.preventDefault();
     setNameError("");
     setPasswordError("");
-  
+
     if (!email) {
       setNameError("Usuário não pode estar vazio.");
     }
@@ -32,26 +33,26 @@ const Login = () => {
     if (!email || !senha) {
       return;
     }
-  
+
     try {
       const response = await fetch(url_login, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, senha }),
       });
-  
+
       const responseJson = await response.json();
-      
+
       if (responseJson.token) {
         sessionStorage.setItem('token', responseJson.token)
       }
-  
-       if (response.status === 401) {
+
+      if (response.status === 401) {
         setPasswordError("Email ou Senha incorretos.");
         return;
       }
-      
-      const primeiroLogin = (senha) =>{
+
+      const primeiroLogin = (senha) => {
         if (senha == "123456") {
           navigate("/change-password")
         }
@@ -67,23 +68,25 @@ const Login = () => {
         navigate("/manager");
         primeiroLogin(senha)
       }
-  
+
       //console.log("Login bem-sucedido!");
-      
+
     } catch (error) {
       setNameError("Erro ao fazer login. Verifique os dados inseridos.");
       console.error("Erro no login:", error);
     }
   };
-  
+
   const handleRegisterPage = () => {
     navigate("/register");
   };
 
   return (
     <div className={styles.LoginPermission}>
+      <div style={{ justifyContent: 'center', alignItems: 'center' }}>
+        <img src={logo_login} style={{ height: '200px', width: '400px', justifyContent: 'center', alignItems: 'center' }} />
+      </div>
       <form>
-        <h1>Bem-vindo ao EasyRefund</h1>
         <div className={styles.UserInput}>
           <input
             type="email"

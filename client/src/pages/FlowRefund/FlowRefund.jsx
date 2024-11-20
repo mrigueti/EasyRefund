@@ -5,6 +5,7 @@ import Modal from 'react-bootstrap/Modal'; // Importando Modal do Bootstrap
 import notification from '../../icons/notifications.png';
 import logout from '../../icons/logout.png';
 import perfil from '../../icons/perfil.png';
+import logo from '../../icons/logo_easy.png'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import FlowRefundComponent from '../../components/FlowRefund/FlowRefundComponent';
 import { useNavigate } from 'react-router-dom';
@@ -58,7 +59,7 @@ const FlowRefund = () => {
   return (
     <div className={styles.main}>
       <div className={styles.navbar_main}>
-        <div className={styles.navbar_left}></div>
+        <div className={styles.navbar_left}><img src={logo} style={{height: '60px', width: '60px'}}/></div>
         <div className={styles.navbar_right}>
           <div className={styles.perfil_div} onClick={handleBtnPerfilUser}>
             <img src={perfil} alt="Perfil" />
