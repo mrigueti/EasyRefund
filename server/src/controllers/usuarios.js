@@ -43,7 +43,6 @@ export const register = async (req, res) => {
   const { nome_usuario, email_usuario, senha_usuario, role_nome, id_cargo, id_setor, id_unidade } = req.body;
 
   try {
-    console.log("Recebendo dados do frontend:", req.body);
     const hashedPassword = await bcrypt.hash(senha_usuario, 10);
     const query = 'INSERT INTO usuarios (nome_usuario, email_usuario, senha_usuario, role_nome, id_cargo, id_setor, id_unidade) VALUES (?, ?, ?, ?, ?, ?, ?)';
     db.query(query, [nome_usuario, email_usuario, hashedPassword, role_nome, id_cargo, id_setor, id_unidade], (err, result) => {

@@ -1,9 +1,7 @@
 // ./controllers/unidades.js
 
 import { db } from '../db.js';
-import bcrypt from 'bcryptjs';
 import { json } from 'express';
-import jwt from 'jsonwebtoken';
 
 export const get = (req, res) => {
   const query = 'SELECT * FROM unidades';

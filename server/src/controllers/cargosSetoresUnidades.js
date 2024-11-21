@@ -29,8 +29,6 @@ export const getCargosSetoresUnidades = (req, res) => {
     }
 
     const cargosSetoresUnidades = Array.isArray(results) ? results : [];
-    console.log(results);
-
     res.json(cargosSetoresUnidades);
   });
 };

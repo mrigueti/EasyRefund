@@ -291,7 +291,7 @@ export default function PageManager() {
               <tbody>
                 {currentItems.length > 0 ? (
                   currentItems.map((solicitacao) => (
-                    <tr key={solicitacao.id} onClick={() => handleRowClick(solicitacao)}>
+                    <tr key={solicitacao.id}>
                       <td>{solicitacao.id}</td>
                       <td>{solicitacao.name}</td>
                       <td>{solicitacao.date}</td>
