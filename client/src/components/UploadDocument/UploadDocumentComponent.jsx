@@ -156,6 +156,7 @@ export default function UploadDocument() {
                 />
               </Form.Group>
 
+              <label>Selecione uma categoria:</label>
               {/* Opções de categoria */}
               <div className={styles.BtnOption}>
                 <button
@@ -163,14 +164,14 @@ export default function UploadDocument() {
                   type="button"
                   onClick={() => handleClickSelected("Hospedagem")}
                 >
-                  Hotel
+                  Hospedagem
                 </button>
                 <button
                   className={`${styles.BtnFood} ${selectedButton === "Alimentação" ? styles.selected : ""}`}
                   type="button"
                   onClick={() => handleClickSelected("Alimentação")}
                 >
-                  Comida
+                  Alimentação
                 </button>
                 <button
                   className={`${styles.BtnTransport} ${selectedButton === "Transporte" ? styles.selected : ""}`}

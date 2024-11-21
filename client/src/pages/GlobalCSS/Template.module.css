@@ -85,9 +85,10 @@ h2{
   color: #f8f8ff;
 }
 
-.perfil_div{
-  width: 250px;
-  height: 80%;
+.perfil_div {
+  width: 100%;
+  max-width: 250px;
+  height: auto;
   background-color: #1D70BA;
   border-radius: 30px;
   color: #f8f8ff;
@@ -96,25 +97,28 @@ h2{
   justify-content: center;
   align-items: center;
   margin: 15px;
-  
+  padding: 10px;
+  transition: opacity 0.3s ease;
 }
 
-.perfil_div:hover{
+.perfil_div:hover {
   opacity: 0.8;
   cursor: pointer;
 }
 
-.perfil_div_text{
+.perfil_div_text {
   display: flex;
   flex-direction: column;
-  margin: 15px;
+  margin-left: 15px;
 }
 
-.perfil_div p{
+.perfil_div p {
   margin: 0;
+  font-size: 14px;
 }
 
-.perfil_div h1{
+.perfil_div h1 {
   font-size: 20px;
   margin: 0;
+  color:snow;
 }

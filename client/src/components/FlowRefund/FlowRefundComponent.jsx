@@ -30,14 +30,14 @@ const FlowRefundComponent = () => {
         className={styles.BtnDeductible}
         onClick={() => handleUploadDocument(1)}
       >
-        Reembolso Dedutível
+        Reembolso dedutível
       </button>
       <button
         className={styles.BtnNonDeductible}
         size="lg"
         onClick={() => handleUploadDocument(0)}
       >
-        Reembolso não Dedutível
+        Reembolso não dedutível
       </button>
     </div>
   );

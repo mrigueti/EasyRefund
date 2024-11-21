@@ -66,10 +66,10 @@ export default function UploadDocument() {
   return (
     <div className={styles.main}>
       <div className={styles.navbar_main}>
-        <div className={styles.navbar_left}><img src={logo} style={{height: '60px', width: '60px'}}/></div>
+        <div className={styles.navbar_left}><img src={logo} style={{ height: '60px', width: '60px' }} /></div>
         <div className={styles.navbar_right}>
-          <div className={styles.perfil_div} onClick={handleBtnPerfilUser}>
-            <img src={perfil} alt="Perfil" />
+          <div className={styles.perfil_div} onClick={handleBtnPerfilUser} role="button" aria-label="User Profile">
+            <img src={perfil} alt="User Icon" />
             <div className={styles.perfil_div_text}>
               <h1>{userName}</h1>
               <p>{userRole}</p>
