@@ -168,6 +168,7 @@ const InformationUser = () => {
               name="informationCPF"
               id="informationCPF"
               placeholder="CPF"
+              maxLength={11}  
               value={informationCPF}
               onChange={(e) => {
                 const value = e.target.value.replace(/\D/g, '');
