@@ -89,6 +89,7 @@ const Permission = () => {
   const [showApproveModal, setShowApproveModal] = useState(false);
   const [showDenyModal, setShowDenyModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState(""); // Added error message state
+  const isRequestOpen = status !== "Aprovada" && status !== "Recusada";
 
   const getUserIdFromToken = () => {
     const token = sessionStorage.getItem("token");
@@ -131,7 +132,7 @@ const Permission = () => {
       }
 
       const result = await response.json();
-    //  alert("Solicitação atualizada com sucesso!");
+      //  alert("Solicitação atualizada com sucesso!");
       setStatus(newStatus);
       navigate(-1);
     } catch (err) {
@@ -140,7 +141,7 @@ const Permission = () => {
     }
   };
 
-const handleStatusChange = (newStatus) => {
+  const handleStatusChange = (newStatus) => {
     if (
       newStatus === "Recusada" &&
       valorAprovado !== "0" &&
@@ -298,18 +299,20 @@ const handleStatusChange = (newStatus) => {
       </div>
 
       {/* Valor Aprovado */}
-      <div style={styles.card}>
-        <div style={styles.inputContainer}>
-          <label htmlFor="valorAprovado">Valor Aprovado</label>
-          <input
-            id="valorAprovado"
-            style={styles.input}
-            type="number"
-            value={valorAprovado}
-            onChange={(e) => setValorAprovado(e.target.value)}
-          />
+      {isRequestOpen && (
+        <div style={styles.card}>
+          <div style={styles.inputContainer}>
+            <label htmlFor="valorAprovado">Valor Aprovado</label>
+            <input
+              id="valorAprovado"
+              style={styles.input}
+              type="number"
+              value={valorAprovado}
+              onChange={(e) => setValorAprovado(e.target.value)}
+            />
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Erro da solicitação */}
       {errorMessage && (
@@ -328,22 +331,24 @@ const handleStatusChange = (newStatus) => {
       )}
 
       {/* Ações */}
-      <div style={styles.actions}>
-        <Button
-          variant="success"
-          style={{ ...styles.button, ...styles.approveButton }}
-          onClick={() => handleStatusChange("Aprovada")}
-        >
-          Aprovar
-        </Button>
-        <Button
-          variant="danger"
-          style={{ ...styles.button, ...styles.denyButton }}
-          onClick={() => handleStatusChange("Recusada")}
-        >
-          Negar
-        </Button>
-      </div>
+      {isRequestOpen && (
+        <div style={styles.actions}>
+          <Button
+            variant="success"
+            style={{ ...styles.button, ...styles.approveButton }}
+            onClick={() => handleStatusChange("Aprovada")}
+          >
+            Aprovar
+          </Button>
+          <Button
+            variant="danger"
+            style={{ ...styles.button, ...styles.denyButton }}
+            onClick={() => handleStatusChange("Recusada")}
+          >
+            Negar
+          </Button>
+        </div>
+      )}
 
       {/* Modal de Aprovação */}
       <Modal show={showApproveModal} onHide={() => setShowApproveModal(false)}>
