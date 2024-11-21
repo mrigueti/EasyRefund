@@ -1,19 +1,13 @@
-import styles from "./InformationUser.module.css";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { jwtDecode } from 'jwt-decode';
+import styles from "./InformationUser.module.css";
 import document from '../../icons/document.png';
 import user from '../../icons/user.png';
 import email from '../../icons/email.png';
-import { jwtDecode } from 'jwt-decode'; // Corrigindo para o nome correto da importação
 
 const InformationUser = () => {
   const navigate = useNavigate();
-
-  const handleBtnBackPage = (e) => {
-    e.preventDefault(); // Impede que o formulário seja enviado
-    navigate(-1);
-  };
-
   const [informationName, setInformationName] = useState("");
   const [informationCPF, setInformationCPF] = useState("");
   const [informationEmail, setInformationEmail] = useState("");
@@ -23,7 +17,7 @@ const InformationUser = () => {
     name: "",
     email: "",
   });
-  const [message, setMessage] = useState(""); // Estado para mensagem de sucesso ou erro
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     const token = sessionStorage.getItem("token");
@@ -57,6 +51,33 @@ const InformationUser = () => {
     }
   }, []);
 
+  const validateCPF = (cpf) => {
+    cpf = cpf.replace(/[^\d]+/g, '');
+    if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) return false;
+
+    let sum = 0;
+    let remainder;
+
+    for (let i = 1; i <= 9; i++) {
+      sum = sum + parseInt(cpf.substring(i - 1, i)) * (11 - i);
+    }
+
+    remainder = (sum * 10) % 11;
+    if ((remainder === 10) || (remainder === 11)) remainder = 0;
+    if (remainder !== parseInt(cpf.substring(9, 10))) return false;
+
+    sum = 0;
+    for (let i = 1; i <= 10; i++) {
+      sum = sum + parseInt(cpf.substring(i - 1, i)) * (12 - i);
+    }
+
+    remainder = (sum * 10) % 11;
+    if ((remainder === 10) || (remainder === 11)) remainder = 0;
+    if (remainder !== parseInt(cpf.substring(10, 11))) return false;
+
+    return true;
+  };
+
   const handleSaveChange = (e) => {
     e.preventDefault();
     setErrorMessages({ cpf: "", name: "", email: "" });
@@ -64,8 +85,11 @@ const InformationUser = () => {
 
     let hasError = false;
 
-    if (informationCPF == "") {
+    if (informationCPF === "") {
       setErrorMessages((prev) => ({ ...prev, cpf: "O campo CPF está vazio" }));
+      hasError = true;
+    } else if (!validateCPF(informationCPF)) {
+      setErrorMessages((prev) => ({ ...prev, cpf: "CPF inválido" }));
       hasError = true;
     }
 
@@ -88,18 +112,8 @@ const InformationUser = () => {
       hasError = true;
     }
 
-    if (!informationCPF == "") {
-      if (informationCPF.length < 11) {
-        setErrorMessages((prev) => ({
-          ...prev,
-          cpf: "Insira todos os números do CPF",
-        }));
-        hasError = true;
-      }
-    }
-
     if (hasError) {
-      setMessage("Erro: Por favor, preencha todos os campos obrigatórios.");
+      setMessage("Erro: Por favor, preencha todos os campos obrigatórios corretamente.");
       return;
     }
 
@@ -143,6 +157,11 @@ const InformationUser = () => {
     }
   };
 
+  const handleBtnBackPage = (e) => {
+    e.preventDefault();
+    navigate(-1);
+  };
+
   const handleChangePassword = () => {
     navigate("/change-password");
   };
@@ -154,11 +173,8 @@ const InformationUser = () => {
           <button type="button" className={styles.infoButtonBack} onClick={handleBtnBackPage}>
             <span className={styles.infoArrow}>&larr;</span> Voltar
           </button>
-
           <h1>Editar Perfil</h1>
         </header>
-
-
 
         <div className={styles.infoFormGroup}>
           <div className={styles.UserInput}>
@@ -213,8 +229,7 @@ const InformationUser = () => {
         <div className={styles.RegisterInputContainer}>
           {message && (
             <div
-              className={`${styles.alertMessage} ${message.includes("Erro") ? styles.error : styles.success
-                }`}
+              className={`${styles.alertMessage} ${message.includes("Erro") ? styles.error : styles.success}`}
             >
               <span className={styles.icon}>
                 {message.includes("Erro") ? "❌" : "✅"}
@@ -239,3 +254,4 @@ const InformationUser = () => {
 };
 
 export default InformationUser;
+
