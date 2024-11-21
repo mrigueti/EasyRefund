@@ -1,20 +1,16 @@
 import React, { useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import { useLocation, useNavigate } from "react-router-dom";
-import {
-  ArrowLeft,
-  Building2,
-  Calendar,
-  FileText,
-  User,
-  Briefcase,
-  Tag,
-  Receipt,
-  Download,
-} from "lucide-react";
+import { ArrowLeft, Building2, Calendar, FileText, User, Briefcase, Tag, Receipt } from 'lucide-react';
+import { Modal, Button } from "react-bootstrap";
 
 const styles = {
-  container: { padding: "20px", fontFamily: "Arial, sans-serif", maxWidth: "800px", margin: "0 auto" },
+  container: {
+    padding: "20px",
+    fontFamily: "Arial, sans-serif",
+    maxWidth: "800px",
+    margin: "0 auto",
+  },
   header: {
     display: "flex",
     justifyContent: "space-between",
@@ -90,6 +86,9 @@ const Permission = () => {
   const [valorAprovado, setValorAprovado] = useState("");
   const { solicitacao } = location.state || {};
   const [status, setStatus] = useState(solicitacao?.status);
+  const [showApproveModal, setShowApproveModal] = useState(false);
+  const [showDenyModal, setShowDenyModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(""); // Added error message state
 
   const getUserIdFromToken = () => {
     const token = sessionStorage.getItem("token");
@@ -100,66 +99,90 @@ const Permission = () => {
     return null;
   };
 
-  const id_usuario = sessionStorage.getItem("id");
-
   const handleUpdate = async (newStatus) => {
     const id_usuario = getUserIdFromToken();
-  
+
     if (!id_usuario) {
-      alert("(front)Usuário não autenticado!");
+      alert("Usuário não autenticado!");
       return;
     }
-  
+
     const data = {
       id_solicitacao: solicitacao?.id,
       status_solicitacao: newStatus,
       valor_aprovado_solic: valorAprovado || "0",
       id_usuario: id_usuario,
     };
-  
-    try {
-      const response = await fetch("http://localhost:3001/api/solicitacoes/updateSolicitacao", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-  
-      if (!response.ok) {
-        throw new Error("(front)Erro ao atualizar a solicitação");
-      }
-  
-      const result = await response.json();
-      alert("(front)Solicitação atualizada com sucesso!");
-    } catch (err) {
-      console.error("(front)Erro ao atualizar solicitação:", err);
-      alert("(front)Erro ao atualizar solicitação!");
-    }
-  };
-  
 
-  const handleStatusChange = (newStatus) => {
-    if (newStatus === "Recusada" && valorAprovado !== "0" && valorAprovado !== "") {
-      alert("(front)Solicitações recusadas devem ter o valor aprovado igual a 0!");
-      return;
-    }
-  
-    if (window.confirm(`Tem certeza que deseja ${newStatus}?`)) {
+    try {
+      const response = await fetch(
+        "http://localhost:3001/api/solicitacoes/updateSolicitacao",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Erro ao atualizar a solicitação");
+      }
+
+      const result = await response.json();
+    //  alert("Solicitação atualizada com sucesso!");
       setStatus(newStatus);
-      alert(`Solicitação ${newStatus}!`);
-      handleUpdate(newStatus);
-      navigate("/manegement");
+      navigate(-1);
+    } catch (err) {
+      console.error("Erro ao atualizar solicitação:", err);
+      //alert("Erro ao atualizar solicitação!");
     }
   };
-  
+
+const handleStatusChange = (newStatus) => {
+    if (
+      newStatus === "Recusada" &&
+      valorAprovado !== "0" &&
+      valorAprovado !== ""
+    ) {
+      setErrorMessage(
+        "Solicitações recusadas devem ter o valor aprovado igual a 0!"
+      );
+      return;
+    } else if (
+      newStatus === "Aprovada" &&
+      (parseFloat(valorAprovado) > parseFloat(solicitacao?.valor_pedido) ||
+        parseFloat(valorAprovado) < 0)
+    ) {
+      setErrorMessage(
+        "O valor aprovado não pode ser maior que o valor solicitado ou negativo!"
+      );
+      return;
+    } else {
+      setErrorMessage(""); // Clear the error message if the condition is not met
+    }
+
+    if (newStatus === "Aprovada") {
+      setShowApproveModal(true);
+    } else {
+      setShowDenyModal(true);
+    }
+  };
 
   const formatCurrency = (value) =>
-    new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(value);
+    new Intl.NumberFormat("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    }).format(value);
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric" });
+    return date.toLocaleDateString("pt-BR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
   };
 
   const getStatusStyle = (status) => {
@@ -183,12 +206,13 @@ const Permission = () => {
           <ArrowLeft style={{ marginRight: "5px" }} />
           Voltar
         </button>
-        <span style={{ ...styles.status, ...getStatusStyle(status) }}>{status}</span>
+        <span style={{ ...styles.status, ...getStatusStyle(status) }}>
+          {status}
+        </span>
       </div>
 
       {/* Informações da solicitação */}
       <div style={styles.card}>
-        {/* <p>{solicitacao?.id}</p> */}
         <div style={styles.grid}>
           {/* Informações */}
           <div style={styles.infoItem}>
@@ -203,7 +227,10 @@ const Permission = () => {
             <Building2 style={styles.icon} />
             <div>
               <p style={styles.label}>Unidade</p>
-              <p style={styles.value}>{solicitacao?.setor || "Não informado" } - {solicitacao?.unidade || "Não informado"}</p>
+              <p style={styles.value}>
+                {solicitacao?.setor || "Não informado"} -{" "}
+                {solicitacao?.unidade || "Não informado"}
+              </p>
             </div>
           </div>
 
@@ -221,7 +248,9 @@ const Permission = () => {
             <Tag style={styles.icon} />
             <div>
               <p style={styles.label}>Categoria</p>
-              <p style={styles.value}>{solicitacao?.categoria || "Não informado"}</p>
+              <p style={styles.value}>
+                {solicitacao?.categoria || "Não informado"}
+              </p>
             </div>
           </div>
 
@@ -230,7 +259,9 @@ const Permission = () => {
             <Receipt style={styles.icon} />
             <div>
               <p style={styles.label}>Valor Solicitado</p>
-              <p style={styles.value}>{formatCurrency(solicitacao?.valor_pedido) || "Não informado"}</p>
+              <p style={styles.value}>
+                {formatCurrency(solicitacao?.valor_pedido) || "Não informado"}
+              </p>
             </div>
           </div>
 
@@ -239,10 +270,11 @@ const Permission = () => {
             <Briefcase style={styles.icon} />
             <div>
               <p style={styles.label}>Cargo</p>
-              <p style={styles.value}>{solicitacao?.cargo || "Não informado"}</p>
+              <p style={styles.value}>
+                {solicitacao?.cargo || "Não informado"}
+              </p>
             </div>
           </div>
-
         </div>
       </div>
 
@@ -254,44 +286,112 @@ const Permission = () => {
 
       {/* Arquivo Anexado */}
       <div style={styles.card}>
-        <h2 style={{ marginBottom: "10px" }}>Arquivo Anexado:</h2>
-        {solicitacao?.arquivo ? (
-          <a href={solicitacao.arquivo} style={styles.link} target="_blank" rel="noopener noreferrer">
-            <Download style={{ marginRight: "5px" }} />
-            Baixar arquivo
-          </a>
-        ) : (
-          <p>Nenhum arquivo anexado.</p>
-        )}
+        <h2 style={{ marginBottom: "10px" }}>Arquivo Anexado</h2>
+        <a
+          href={`http://localhost:3001/${solicitacao?.documento}`}
+          style={styles.link}
+          download
+        >
+          <FileText style={{ marginRight: "5px" }} />
+          Baixar Arquivo
+        </a>
       </div>
 
-            {/* Campo Valor Aprovado */}
+      {/* Valor Aprovado */}
       <div style={styles.card}>
-        <h2 style={{ marginBottom: "10px" }}>Valor Aprovado:</h2>
-        <input
-          style={styles.input}
-          type="number"
-          placeholder="Insira o valor aprovado"
-          value={valorAprovado}
-          onChange={(e) => setValorAprovado(e.target.value)}
-        />
+        <div style={styles.inputContainer}>
+          <label htmlFor="valorAprovado">Valor Aprovado</label>
+          <input
+            id="valorAprovado"
+            style={styles.input}
+            type="number"
+            value={valorAprovado}
+            onChange={(e) => setValorAprovado(e.target.value)}
+          />
+        </div>
       </div>
+
+      {/* Erro da solicitação */}
+      {errorMessage && (
+        <div
+          style={{
+            color: "#721c24",
+            backgroundColor: "#f8d7da",
+            padding: "5px",
+            borderRadius: "5px",
+            marginBottom: "10px",
+            textAlign: "center",
+          }}
+        >
+          {errorMessage}
+        </div>
+      )}
 
       {/* Ações */}
       <div style={styles.actions}>
-        <button
+        <Button
+          variant="success"
           style={{ ...styles.button, ...styles.approveButton }}
           onClick={() => handleStatusChange("Aprovada")}
         >
           Aprovar
-        </button>
-        <button
+        </Button>
+        <Button
+          variant="danger"
           style={{ ...styles.button, ...styles.denyButton }}
           onClick={() => handleStatusChange("Recusada")}
         >
           Negar
-        </button>
+        </Button>
       </div>
+
+      {/* Modal de Aprovação */}
+      <Modal show={showApproveModal} onHide={() => setShowApproveModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirmar Aprovação</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Tem certeza de que deseja aprovar esta solicitação?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowApproveModal(false)}>
+            Cancelar
+          </Button>
+          <Button
+            variant="primary"
+            onClick={() => {
+              handleUpdate("Aprovada");
+              setShowApproveModal(false);
+            }}
+          >
+            Confirmar
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Modal de Negação */}
+      <Modal show={showDenyModal} onHide={() => setShowDenyModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirmar Negação</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Tem certeza de que deseja negar esta solicitação?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowDenyModal(false)}>
+            Cancelar
+          </Button>
+          <Button
+            variant="danger"
+            onClick={() => {
+              handleUpdate("Recusada");
+              setShowDenyModal(false);
+            }}
+          >
+            Confirmar
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

@@ -196,6 +196,8 @@ export default function PageManager() {
     setCurrentPage(1); // Reset to first page when changing filter
   };
 
+  
+
   return (
     <div className={styles.componentGerente}>
       <div className="min-h-screen bg-light p-4">
