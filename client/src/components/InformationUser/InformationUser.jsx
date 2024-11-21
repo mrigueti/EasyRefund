@@ -85,20 +85,20 @@ const InformationUser = () => {
 
     let hasError = false;
 
-    if (informationCPF === "") {
+    if (informationCPF.trim() === "") {
       setErrorMessages((prev) => ({ ...prev, cpf: "O campo CPF está vazio" }));
       hasError = true;
-    } else if (!validateCPF(informationCPF)) {
+    } else if (informationCPF.length !== 11 || !validateCPF(informationCPF)) {
       setErrorMessages((prev) => ({ ...prev, cpf: "CPF inválido" }));
       hasError = true;
     }
 
-    if (informationName === "") {
+    if (informationName.trim() === "") {
       setErrorMessages((prev) => ({ ...prev, name: "O campo Nome está vazio" }));
       hasError = true;
     }
 
-    if (informationEmail === "") {
+    if (informationEmail.trim() === "") {
       setErrorMessages((prev) => ({ ...prev, email: "O campo Email está vazio" }));
       hasError = true;
     } else if (
@@ -139,10 +139,6 @@ const InformationUser = () => {
           .then((data) => {
             if (data.success) {
               setMessage("Dados atualizados com sucesso!");
-              setInformationName("");
-              setInformationCPF("");
-              setInformationEmail("");
-              setPreviousEmail("");
             } else {
               setMessage(data.message || "Erro ao atualizar os dados.");
             }
@@ -153,6 +149,7 @@ const InformationUser = () => {
           });
       } catch (error) {
         console.error("Erro ao decodificar o token:", error);
+        setMessage("Erro ao processar a solicitação.");
       }
     }
   };
@@ -168,7 +165,7 @@ const InformationUser = () => {
 
   return (
     <div className={styles.infoContainer}>
-      <form className={styles.infoProfileEdit}>
+      <form className={styles.infoProfileEdit} onSubmit={handleSaveChange}>
         <header className={styles.infoProfileHeader}>
           <button type="button" className={styles.infoButtonBack} onClick={handleBtnBackPage}>
             <span className={styles.infoArrow}>&larr;</span> Voltar
@@ -206,6 +203,7 @@ const InformationUser = () => {
               placeholder="Nome"
               value={informationName}
               onChange={(e) => setInformationName(e.target.value)}
+              required
             />
           </div>
           {errorMessages.name && <div className={styles.errorAlert}>{errorMessages.name}</div>}
@@ -221,6 +219,7 @@ const InformationUser = () => {
               placeholder="Email"
               value={informationEmail}
               onChange={(e) => setInformationEmail(e.target.value)}
+              required
             />
           </div>
           {errorMessages.email && <div className={styles.errorAlert}>{errorMessages.email}</div>}
@@ -240,7 +239,7 @@ const InformationUser = () => {
         </div>
 
         <div className={styles.infoButtonGroup}>
-          <button type="submit" className={styles.infoButtonSave} onClick={handleSaveChange}>
+          <button type="submit" className={styles.infoButtonSave}>
             Salvar
           </button>
         </div>
