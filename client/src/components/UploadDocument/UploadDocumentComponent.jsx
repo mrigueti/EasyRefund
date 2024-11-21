@@ -13,7 +13,7 @@ export default function UploadDocument() {
   const [successMessage, setSuccessMessage] = useState("");
   const [textArea, setTextArea] = useState("");
   const [valor_pedido, setValorPedido] = useState("");
-  const [showModal, setShowModal] = useState(false); // Controle do Modal
+  const [showModal, setShowModal] = useState(false);
   const fileInputRef = useRef(null);
   const location = useLocation();
   const tipoDedutivel = location.state?.tipoDedutivel;
@@ -66,8 +66,14 @@ export default function UploadDocument() {
       return;
     }
 
-    if (!valor_pedido) {
+    if (!valor_pedido || valor_pedido.trim() === "") {
       setErrorMessages((prev) => [...prev, "Por favor, insira o valor do pedido."]);
+      return;
+    }
+
+    const valorNumerico = parseFloat(valor_pedido);
+    if (isNaN(valorNumerico) || valorNumerico <= 0) {
+      setErrorMessages((prev) => [...prev, "O valor do pedido deve ser um número positivo."]);
       return;
     }
 
@@ -101,8 +107,6 @@ export default function UploadDocument() {
         setValorPedido("");
         setTextArea("");
         setSelectedButton(null);
-
-        // Exibe o modal de confirmação após o envio
         setShowModal(true);
       } else {
         console.error("Falha ao enviar dados:", response.status);
@@ -117,9 +121,9 @@ export default function UploadDocument() {
   const handleCloseModal = (sendAnother) => {
     setShowModal(false);
     if (!sendAnother) {
-      handleBtnBackPage(); // Voltar à página anterior
+      handleBtnBackPage();
     } else {
-      setSuccessMessage(""); // Limpa a mensagem de sucesso
+      setSuccessMessage("");
     }
   };
 
@@ -154,10 +158,15 @@ export default function UploadDocument() {
                   value={valor_pedido}
                   onChange={(e) => setValorPedido(e.target.value)} 
                 />
+                {errorMessages.includes("Por favor, insira o valor do pedido.") && (
+                  <div className="text-danger">Por favor, insira o valor do pedido.</div>
+                )}
+                {errorMessages.includes("O valor do pedido deve ser um número positivo.") && (
+                  <div className="text-danger">O valor do pedido deve ser um número positivo.</div>
+                )}
               </Form.Group>
 
               <label>Selecione uma categoria:</label>
-              {/* Opções de categoria */}
               <div className={styles.BtnOption}>
                 <button
                   className={`${styles.BtnHotel} ${selectedButton === "Hospedagem" ? styles.selected : ""}`}
@@ -192,7 +201,6 @@ export default function UploadDocument() {
                 <div className="text-danger">Por favor, selecione uma categoria.</div>
               )}
 
-              {/* Descrição */}
               <div className={styles.TextArea}>
                 <textarea
                   className={styles.textAreaDescription}
@@ -227,10 +235,9 @@ export default function UploadDocument() {
               </div>
             </Form>
 
-            {/* Modal de Confirmação */}
             <Modal show={showModal} onHide={() => setShowModal(false)}>
               <Modal.Header closeButton>
-                <Modal.Title> Solicitação enviada com sucesso!</Modal.Title>
+                <Modal.Title>Solicitação enviada com sucesso!</Modal.Title>
               </Modal.Header>
               <Modal.Body>
                 Deseja fazer outra solicitação?
@@ -250,3 +257,4 @@ export default function UploadDocument() {
     </div>
   );
 }
+
