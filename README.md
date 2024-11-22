@@ -26,9 +26,9 @@ Diante disso, o EasyRefund foi desenvolvido para centralizar e automatizar a ges
    ```  
 
 2. Configure o banco de dados:  
-   - Execute o **dump** SQL do banco de dados para criar as tabelas necessárias: "./dump_default_easyrefund.sql"
-   - Configure o arquivo **.env** de acordo com as configurações locais para o banco funcionar corretamente.
-   - Crie uma pasta com o nome de **uploads** dentro de "./server/src/", para armazenar os anexos das solicitações adequadamente.
+   - Execute o **dump** SQL do banco de dados para criar as tabelas necessárias: "**./dump_default_easyrefund.sql**"
+   - Configure o arquivo **./server/src/.env** de acordo com as configurações locais para o banco funcionar corretamente.
+   - Crie uma pasta com o nome de **uploads** dentro de "**./server/src/**", para armazenar os anexos das solicitações adequadamente.
 
 3. Configure o servidor:  
    ```bash
@@ -44,6 +44,12 @@ Diante disso, o EasyRefund foi desenvolvido para centralizar e automatizar a ges
    npm install  
    npm start  
    ```  
+
+## ❗ Observações: ❗
+   - O dump do banco vem com 3 usuários cadastrados por padrão: login:senha
+   - gerente@gmail.com:123456
+   - aprovador@gmai.com:123456
+   - funcionario@gmail.com:123456
 
 ## 📜 Créditos  
 
