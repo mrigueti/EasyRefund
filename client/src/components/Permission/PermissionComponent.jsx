@@ -68,16 +68,18 @@ const styles = {
     gap: "10px",
     marginTop: "20px",
   },
-  button: {
-    padding: "10px 20px",
+  approveButton: { backgroundColor: "#28a745", padding: "10px 20px",
     border: "none",
     borderRadius: "4px",
     fontSize: "16px",
     cursor: "pointer",
-    color: "#fff",
-  },
-  approveButton: { backgroundColor: "#28a745" },
-  denyButton: { backgroundColor: "#dc3545" },
+    color: "#fff" },
+  denyButton: { backgroundColor: "#dc3545", padding: "10px 20px",
+    border: "none",
+    borderRadius: "4px",
+    fontSize: "16px",
+    cursor: "pointer",
+    color: "#fff" },
   link: { color: "#007bff", textDecoration: "none", fontWeight: "bold" },
   errorMessage: {
     color: "#721c24",
@@ -357,12 +359,14 @@ const Permission = () => {
           <Button
             variant="default"
             onClick={() => handleStatusChange("Aprovada")}
+            style={styles.approveButton}
           >
             Aprovar
           </Button>
           <Button
             variant="destructive"
             onClick={() => handleStatusChange("Recusada")}
+            style={styles.denyButton}
           >
             Negar
           </Button>
