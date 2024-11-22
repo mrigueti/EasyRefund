@@ -16,6 +16,7 @@ app.use("/api/usuarios", usuariosRouter);
 app.use("/api/unidades", unidadesRouter)
 app.use("/api/cargos-setores-unidades", cargosSetoresUnidadesRouter)
 app.use("/api/solicitacoes", solicitacoesRouter)
+app.use('/uploads', express.static('uploads'));
 
 app.get('/', (req, res) => {
   res.send("Oi, tá funcionando!");

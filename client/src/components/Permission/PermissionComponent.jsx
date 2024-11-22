@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, Building2, Calendar, FileText, User, Briefcase, Tag, Receipt } from 'lucide-react';
 import { Modal, Button } from "react-bootstrap";
+import FileDownloader from "../FileDownloader/FileDownloader";
 
 const styles = {
   container: {
@@ -83,13 +84,45 @@ const styles = {
 const Permission = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { id } = useParams();
   const [valorAprovado, setValorAprovado] = useState("");
-  const { solicitacao } = location.state || {};
-  const [status, setStatus] = useState(solicitacao?.status);
+  const [solicitacao, setSolicitacao] = useState(null);
+  const [status, setStatus] = useState("");
   const [showApproveModal, setShowApproveModal] = useState(false);
   const [showDenyModal, setShowDenyModal] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(""); // Added error message state
-  const isRequestOpen = status !== "Aprovada" && status !== "Recusada";
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchSolicitacao = async () => {
+      try {
+        if (location.state && location.state.solicitacao) {
+          console.log("Solicitacao from state:", location.state.solicitacao);
+          setSolicitacao(location.state.solicitacao);
+          setStatus(location.state.solicitacao.status);
+          setIsLoading(false);
+        } else if (id) {
+          const response = await fetch(`http://localhost:3001/api/solicitacoes/get/${id}`);
+          if (!response.ok) {
+            throw new Error('Falha ao buscar dados da solicitação');
+          }
+          const data = await response.json();
+          console.log("Solicitacao from API:", data);
+          setSolicitacao(data);
+          setStatus(data.status);
+          setIsLoading(false);
+        } else {
+          throw new Error('Nenhum ID de solicitação fornecido');
+        }
+      } catch (error) {
+        console.error('Erro ao buscar solicitação:', error);
+        setErrorMessage('Erro ao carregar dados da solicitação');
+        setIsLoading(false);
+      }
+    };
+
+    fetchSolicitacao();
+  }, [id, location.state]);
 
   const getUserIdFromToken = () => {
     const token = sessionStorage.getItem("token");
@@ -104,12 +137,12 @@ const Permission = () => {
     const id_usuario = getUserIdFromToken();
 
     if (!id_usuario) {
-      alert("Usuário não autenticado!");
+      setErrorMessage("Usuário não autenticado!");
       return;
     }
 
     const data = {
-      id_solicitacao: solicitacao?.id,
+      id_solicitacao: solicitacao.id,
       status_solicitacao: newStatus,
       valor_aprovado_solic: valorAprovado || "0",
       id_usuario: id_usuario,
@@ -132,12 +165,13 @@ const Permission = () => {
       }
 
       const result = await response.json();
-      //  alert("Solicitação atualizada com sucesso!");
       setStatus(newStatus);
-      navigate(-1);
+      setSolicitacao(prevState => ({ ...prevState, status: newStatus }));
+      setShowApproveModal(false);
+      setShowDenyModal(false);
     } catch (err) {
       console.error("Erro ao atualizar solicitação:", err);
-      //alert("Erro ao atualizar solicitação!");
+      setErrorMessage("Erro ao atualizar solicitação!");
     }
   };
 
@@ -199,9 +233,20 @@ const Permission = () => {
     }
   };
 
+  const getFileUrl = (id) => {
+    return `http://localhost:3001/api/solicitacoes/download/${id}`;
+  };
+
+  if (isLoading) {
+    return <div>Carregando...</div>;
+  }
+
+  if (!solicitacao) {
+    return <div>Solicitação não encontrada</div>;
+  }
+
   return (
     <div style={styles.container}>
-      {/* Header */}
       <div style={styles.header}>
         <button style={styles.backButton} onClick={() => navigate(-1)}>
           <ArrowLeft style={{ marginRight: "5px" }} />
@@ -212,94 +257,73 @@ const Permission = () => {
         </span>
       </div>
 
-      {/* Informações da solicitação */}
       <div style={styles.card}>
         <div style={styles.grid}>
-          {/* Informações */}
           <div style={styles.infoItem}>
             <User style={styles.icon} />
             <div>
               <p style={styles.label}>Funcionário</p>
-              <p style={styles.value}>{solicitacao?.name || "Não informado"}</p>
+              <p style={styles.value}>{solicitacao.name || "Não informado"}</p>
             </div>
           </div>
-          {/* Unidade */}
           <div style={styles.infoItem}>
             <Building2 style={styles.icon} />
             <div>
               <p style={styles.label}>Unidade</p>
               <p style={styles.value}>
-                {solicitacao?.setor || "Não informado"} -{" "}
-                {solicitacao?.unidade || "Não informado"}
+                {solicitacao.setor || "Não informado"} - {solicitacao.unidade || "Não informado"}
               </p>
             </div>
           </div>
-
-          {/* Data da solicitação */}
           <div style={styles.infoItem}>
             <Calendar style={styles.icon} />
             <div>
               <p style={styles.label}>Data da Solicitação</p>
-              <p style={styles.value}>{solicitacao?.date || "Não informado"}</p>
+              <p style={styles.value}>{formatDate(solicitacao.date) || "Não informado"}</p>
             </div>
           </div>
-
-          {/* Categoria */}
           <div style={styles.infoItem}>
             <Tag style={styles.icon} />
             <div>
               <p style={styles.label}>Categoria</p>
-              <p style={styles.value}>
-                {solicitacao?.categoria || "Não informado"}
-              </p>
+              <p style={styles.value}>{solicitacao.categoria || "Não informado"}</p>
             </div>
           </div>
-
-          {/* Valor Solicitado */}
           <div style={styles.infoItem}>
             <Receipt style={styles.icon} />
             <div>
               <p style={styles.label}>Valor Solicitado</p>
-              <p style={styles.value}>
-                {formatCurrency(solicitacao?.valor_pedido) || "Não informado"}
-              </p>
+              <p style={styles.value}>{formatCurrency(solicitacao.valor_pedido) || "Não informado"}</p>
             </div>
           </div>
-
-          {/* Cargo */}
           <div style={styles.infoItem}>
             <Briefcase style={styles.icon} />
             <div>
               <p style={styles.label}>Cargo</p>
-              <p style={styles.value}>
-                {solicitacao?.cargo || "Não informado"}
-              </p>
+              <p style={styles.value}>{solicitacao.cargo || "Não informado"}</p>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Descrição */}
       <div style={styles.card}>
         <h2 style={{ marginBottom: "10px" }}>Descrição</h2>
-        <p>{solicitacao?.descricao || "Nenhuma descrição fornecida."}</p>
+        <p>{solicitacao.descricao || "Nenhuma descrição fornecida."}</p>
       </div>
 
-      {/* Arquivo Anexado */}
       <div style={styles.card}>
         <h2 style={{ marginBottom: "10px" }}>Arquivo Anexado</h2>
-        <a
-          href={`http://localhost:3001/${solicitacao?.documento}`}
-          style={styles.link}
-          download
-        >
-          <FileText style={{ marginRight: "5px" }} />
-          Baixar Arquivo
-        </a>
+        {solicitacao.id ? (
+          <FileDownloader
+            fileUrl={getFileUrl(solicitacao.id)}
+            fileName={`anexo_${solicitacao.id}`}
+          />
+        ) : (
+          <p>Nenhum arquivo anexado.</p>
+        )}
       </div>
 
-      {/* Valor Aprovado */}
-      {isRequestOpen && (
+      {status === "Pendente" && (
         <div style={styles.card}>
           <div style={styles.inputContainer}>
             <label htmlFor="valorAprovado">Valor Aprovado</label>
@@ -314,35 +338,22 @@ const Permission = () => {
         </div>
       )}
 
-      {/* Erro da solicitação */}
       {errorMessage && (
-        <div
-          style={{
-            color: "#721c24",
-            backgroundColor: "#f8d7da",
-            padding: "5px",
-            borderRadius: "5px",
-            marginBottom: "10px",
-            textAlign: "center",
-          }}
-        >
+        <div style={styles.errorMessage}>
           {errorMessage}
         </div>
       )}
 
-      {/* Ações */}
-      {isRequestOpen && (
+      {status === "Pendente" && (
         <div style={styles.actions}>
           <Button
-            variant="success"
-            style={{ ...styles.button, ...styles.approveButton }}
+            variant="default"
             onClick={() => handleStatusChange("Aprovada")}
           >
             Aprovar
           </Button>
           <Button
-            variant="danger"
-            style={{ ...styles.button, ...styles.denyButton }}
+            variant="destructive"
             onClick={() => handleStatusChange("Recusada")}
           >
             Negar

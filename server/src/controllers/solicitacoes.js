@@ -1,6 +1,11 @@
 import { db } from '../db.js';
 import { getAprovador } from './aprovadores.js';
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
 import { insertNF } from './nfs.js';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export const createSolicitacao = async (req, res) => {
   const { id_usuario, valor_pedido_solic, tipo_dedutivel_solic, descricao, categoria } = req.body;
@@ -31,41 +36,43 @@ export const createSolicitacao = async (req, res) => {
   });
 };
 
-export const getAllSolicitacoes = async (req, res) => {
-  try {
-    const [rows] = await db.promise().query(`
+export const getAllSolicitacoes = (req, res) => {
+  const query = `
     SELECT 
-    u.nome_usuario,
-    c.nome_cargo,
-    s.nome_setor,
-    u2.nome_unidade,
-    sol.id_solicitacao,
-    sol.status_solicitacao,
-    sol.valor_pedido_solic,
-    sol.dt_criacao_solic,
-    sol.valor_aprovado_solic,
-    sol.descricao,
-    sol.categoria,
-    sol.dt_aprovacao,
-    n.anexo_nf
+      u.nome_usuario,
+      c.nome_cargo,
+      s.nome_setor,
+      u2.nome_unidade,
+      sol.id_solicitacao,
+      sol.status_solicitacao,
+      sol.valor_pedido_solic,
+      sol.dt_criacao_solic,
+      sol.valor_aprovado_solic,
+      sol.descricao,
+      sol.categoria,
+      sol.dt_aprovacao,
+      n.anexo_nf
     FROM 
-    solicitacoes sol
+      solicitacoes sol
     JOIN 
-    usuarios u ON sol.id_usuario = u.id_usuario
+      usuarios u ON sol.id_usuario = u.id_usuario
     JOIN 
-    cargos c ON u.id_cargo = c.id_cargo
+      cargos c ON u.id_cargo = c.id_cargo
     JOIN 
-    setores s ON u.id_setor = s.id_setor
+      setores s ON u.id_setor = s.id_setor
     JOIN 
-    unidades u2 ON u.id_unidade = u2.id_unidade
+      unidades u2 ON u.id_unidade = u2.id_unidade
     LEFT JOIN 
-    nfs n ON sol.id_solicitacao = n.id_solicitacao
-    `);
-    res.status(200).json(rows);
-  } catch (error) {
-    console.error("(back) Erro ao buscar solicitações:", error);
-    res.status(500).json({ error: "Erro ao buscar solicitações" });
-  }
+      nfs n ON sol.id_solicitacao = n.id_solicitacao
+  `;
+
+  db.query(query, (error, results) => {
+    if (error) {
+      console.error("(back) Erro ao buscar solicitações:", error);
+      return res.status(500).json({ error: "Erro ao buscar solicitações" });
+    }
+    res.status(200).json(results);
+  });
 };
 
 export const updateSolicitacao = async (req, res) => {
@@ -94,7 +101,7 @@ export const updateSolicitacao = async (req, res) => {
       WHERE id_solicitacao = ?
     `;
 
-    db.query(query, [status_solicitacao, valor_aprovado_solic, id_aprovador.id_aprovador, id_solicitacao], (err, result) => {
+    db.query(query, [status_solicitacao, valorFinal, id_aprovador.id_aprovador, id_solicitacao], (err, result) => {
       if (err) {
         console.error("(back)Erro ao executar a query:", err);
         return res.status(500).json({ error: '(back)Erro ao atualizar a solicitação.', details: err });
@@ -110,7 +117,7 @@ export const updateSolicitacao = async (req, res) => {
   }
 };
 
-export const getSolicitacoesById = async (req, res) => {
+export const getSolicitacoesById = (req, res) => {
   const userId = req.params.id;
 
   const q = `SELECT * FROM solicitacoes WHERE id_usuario = ?`;
@@ -125,5 +132,60 @@ export const getSolicitacoesById = async (req, res) => {
     }
 
     return res.status(200).json({ solicitacoes: data });
+  });
+};
+
+export const getSolicitacao = (req, res) => {
+  const { id } = req.params;
+  const query = `
+    SELECT s.*, u.nome_usuario as name, u.setor, u.cargo, un.nome_unidade as unidade, 
+           nf.anexo_nf, nf.id_nf
+    FROM solicitacoes s 
+    JOIN usuarios u ON s.id_usuario = u.id_usuario 
+    JOIN unidades un ON u.id_unidade = un.id_unidade 
+    LEFT JOIN nfs nf ON s.id_solicitacao = nf.id_solicitacao 
+    WHERE s.id_solicitacao = ?
+  `;
+
+  db.query(query, [id], (error, results) => {
+    if (error) {
+      console.error('Erro ao buscar solicitação:', error);
+      return res.status(500).json({ message: 'Erro interno do servidor' });
+    }
+
+    if (results.length === 0) {
+      return res.status(404).json({ message: 'Solicitação não encontrada' });
+    }
+
+    const solicitacao = results[0];
+    if (solicitacao.anexo_nf) {
+      solicitacao.nomeArquivo = path.basename(solicitacao.anexo_nf);
+    }
+
+    res.json(solicitacao);
+  });
+};
+
+export const downloadArquivo = (req, res) => {
+  const { id_nf } = req.params;
+  const query = 'SELECT anexo_nf FROM nfs WHERE id_nf = ?';
+
+  db.query(query, [id_nf], (error, results) => {
+    if (error) {
+      console.error('Erro ao buscar arquivo:', error);
+      return res.status(500).json({ message: 'Erro interno do servidor' });
+    }
+
+    if (results.length === 0) {
+      return res.status(404).json({ message: 'Arquivo não encontrado' });
+    }
+
+    const filePath = path.join(__dirname, '..', results[0].anexo_nf);
+
+    if (fs.existsSync(filePath)) {
+      res.download(filePath);
+    } else {
+      res.status(404).json({ message: 'Arquivo não encontrado no servidor' });
+    }
   });
 };
