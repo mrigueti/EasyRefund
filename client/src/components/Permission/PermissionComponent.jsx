@@ -204,6 +204,9 @@ const Permission = () => {
         "O valor aprovado não pode ser maior que o valor solicitado ou negativo!"
       );
       return;
+    } else if (valorAprovado === "0" || valorAprovado === "" ) {
+      setErrorMessage("O valor aprovado não pode ser igual a 0!");
+      return;
     } else {
       setErrorMessage(""); // Clear the error message if the condition is not met
     }

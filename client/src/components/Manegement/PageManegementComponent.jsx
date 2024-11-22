@@ -89,7 +89,7 @@ const PageManagement = () => {
                 key={status}
                 className={Styles.BtnFilter}
                 aria-label={`Filtrar por ${status}`}
-                onClick={() => setFilter(status)}
+                onClick={() => setFilter(status) || setCurrentPage(1)}
               >
                 {status}
               </button>
