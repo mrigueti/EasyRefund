@@ -279,7 +279,7 @@ const Permission = () => {
             <Calendar style={styles.icon} />
             <div>
               <p style={styles.label}>Data da Solicitação</p>
-              <p style={styles.value}>{formatDate(solicitacao.date) || "Não informado"}</p>
+              <p style={styles.value}>{solicitacao.date || "Não informado"}</p>
             </div>
           </div>
           <div style={styles.infoItem}>
