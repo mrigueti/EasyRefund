@@ -79,6 +79,14 @@ const styles = {
   approveButton: { backgroundColor: "#28a745" },
   denyButton: { backgroundColor: "#dc3545" },
   link: { color: "#007bff", textDecoration: "none", fontWeight: "bold" },
+  errorMessage: {
+    color: "#721c24",
+    backgroundColor: "#f8d7da",
+    padding: "5px",
+    borderRadius: "5px",
+    marginBottom: "10px",
+    textAlign: "center",
+  },
 };
 
 const Permission = () => {
