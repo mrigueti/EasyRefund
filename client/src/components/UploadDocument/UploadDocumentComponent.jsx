@@ -20,6 +20,8 @@ export default function UploadDocument() {
   const [userId, setUserId] = useState(null);
   const url_solicitacao = 'http://localhost:3001/api/solicitacoes/create';
 
+  const allowedFileTypes = ['.pdf', '.doc', '.docx', '.jpeg', '.png', '.jpg', '.jfif'];
+
   useEffect(() => {
     const token = sessionStorage.getItem('token');
     if (token) {
@@ -35,7 +37,14 @@ export default function UploadDocument() {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      setFiles([file]);
+      const fileExtension = '.' + file.name.split('.').pop().toLowerCase();
+      if (allowedFileTypes.includes(fileExtension)) {
+        setFiles([file]);
+        setErrorMessages(errorMessages.filter(msg => msg !== "Tipo de arquivo não permitido."));
+      } else {
+        setErrorMessages([...errorMessages, "Tipo de arquivo não permitido."]);
+        event.target.value = ''; // Limpa o input de arquivo
+      }
     }
   };
   
@@ -145,9 +154,13 @@ export default function UploadDocument() {
                   type="file"
                   onChange={handleFileChange}
                   ref={fileInputRef}
+                  accept={allowedFileTypes.join(',')}
                 />
                 {errorMessages.includes("Por favor, anexe um arquivo.") && (
                   <div className="text-danger">Por favor, anexe um arquivo.</div>
+                )}
+                {errorMessages.includes("Tipo de arquivo não permitido.") && (
+                  <div className="text-danger">Tipo de arquivo não permitido.</div>
                 )}
               </Form.Group>
               <Form.Group className="mb-3">
