@@ -160,7 +160,7 @@ const HistoryUser = () => {
             <button
               key={status}
               className={Styles.BtnFilter}
-              onClick={() => setFilter(status)}
+              onClick={() => setFilter(status) || setCurrentPage(1)}
             >
               {status}
             </button>
@@ -171,58 +171,83 @@ const HistoryUser = () => {
           <img src={exports} alt="Exportar" /> Exportar Todos
         </button>
 
-        <table className={Styles.RefundTable}>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Data</th>
-              <th>Última Modificação</th>
-              <th>Categoria</th>
-              <th>Valor</th>
-              <th>Valor Aprovado</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {paginate(filteredRequests, currentPage, itemsPerPage).map((request) => (
-              <tr key={request.id_solicitacao} onClick={() => handleRowClick(request)}>
-                <td>{request.id_solicitacao}</td>
-                <td>{formatDate(request.dt_criacao_solic)}</td>
-                <td>{formatDate(request.dt_aprovacao)}</td>
-                <td>{request.categoria}</td>
-                <td>{request.valor_pedido_solic}</td>
-                <td>{request.valor_aprovado_solic}</td>
-                <td>
-                  <span
-                    className={`${Styles.StatusBadge} ${getStatusClass(
-                      request.status_solicitacao
-                    )}`}
-                  >
-                    {request.status_solicitacao}
-                  </span>
+        {filteredRequests.length > 0 ? (
+          <table className={Styles.RefundTable}>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Data</th>
+                <th>Última Modificação</th>
+                <th>Categoria</th>
+                <th>Valor</th>
+                <th>Valor Aprovado</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {paginate(filteredRequests, currentPage, itemsPerPage).map((request) => (
+                <tr key={request.id_solicitacao} onClick={() => handleRowClick(request)}>
+                  <td>{request.id_solicitacao}</td>
+                  <td>{formatDate(request.dt_criacao_solic)}</td>
+                  <td>{formatDate(request.dt_aprovacao)}</td>
+                  <td>{request.categoria}</td>
+                  <td>{request.valor_pedido_solic}</td>
+                  <td>{request.valor_aprovado_solic}</td>
+                  <td>
+                    <span
+                      className={`${Styles.StatusBadge} ${getStatusClass(
+                        request.status_solicitacao
+                      )}`}
+                    >
+                      {request.status_solicitacao}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <table className={Styles.RefundTable}>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Data</th>
+                <th>Última Modificação</th>
+                <th>Categoria</th>
+                <th>Valor</th>
+                <th>Valor Aprovado</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td colSpan="7" style={{ textAlign: "center" }}>
+                  Nenhuma solicitação encontrada.
                 </td>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </tbody>
+          </table>
+        )}
 
-        <div className={Styles.Pagination}>
-          <button
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-          >
-            Anterior
-          </button>
-          <span>
-            Página {currentPage} de {totalPages}
-          </span>
-          <button
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
-          >
-            Próxima
-          </button>
-        </div>
+        {totalPages > 0 && (
+          <div className={Styles.Pagination}>
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+            >
+              Anterior
+            </button>
+            <span>
+              Página {currentPage} de {totalPages}
+            </span>
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+            >
+              Próxima
+            </button>
+          </div>
+        )}
 
         {modalVisible && (
           <div className={Styles.ModalOverlay}>
@@ -261,5 +286,5 @@ const getStatusClass = (status) => {
   }
 };
 
-
 export default HistoryUser;
+
