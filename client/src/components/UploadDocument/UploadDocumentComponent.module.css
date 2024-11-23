@@ -1,0 +1,145 @@
+.component {
+  background-color: #f8f8ff;
+  height: 100%;
+  width: 95%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+/* Botão de envio */
+.BtnSendDiv {
+  display: flex;
+  justify-content: center;
+}
+
+.BtnSend {
+  background-color: transparent;
+  border: 1px solid #007777;
+  border-radius: 5px;
+  height: 50px;
+  width: 200px;
+}
+
+.BtnSend:hover {
+  background-color: #007777;
+  color: #f8f8ff;
+}
+
+/* Botão de reembolso */
+.button_refund {
+  width: 250px;
+  height: 50px;
+  background-color: #f8f8ff;
+  color: black;
+  border: solid 1px #007777;
+  margin: 10px;
+}
+
+.infoButtonBack {
+  background: none;
+  border: none;
+  color: #008080;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.infoButtonBack:hover {
+  text-decoration: underline;
+}
+
+.button_back_position {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+
+/* Opções de botões */
+.BtnOption {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.BtnHotel, .BtnFood, .BtnTransport {
+  background-color: transparent;
+  border: 1px solid #007777;
+  border-radius: 5px;
+  height: 40px;
+  width: 150px;
+}
+
+.BtnHotel:hover, .BtnFood:hover, .BtnTransport:hover {
+  background-color: #007777;
+  color: white;
+}
+
+/* Área de texto */
+.textAreaDescription {
+  border: 1px solid #007777;
+  border-radius: 5px;
+  height: 200px;
+  width: 100%;
+  max-width: 650px;
+  margin-top: 20px;
+}
+
+.selected {
+  background-color: #007777;
+  color: white;
+}
+
+.successMessage {
+  text-align: center; 
+  margin-top: 20px; 
+  font-size: 1.2em; 
+  color: green;
+}
+
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .BtnSend, .button_refund {
+    width: 180px;
+    height: 45px;
+  }
+
+  .textAreaDescription {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .BtnOption {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .BtnHotel, .BtnFood, .BtnTransport {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .infoButtonBack {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 576px) {
+  .BtnSend, .button_refund {
+    width: 150px;
+    height: 40px;
+  }
+
+  .textAreaDescription {
+    height: 150px;
+  }
+
+  .infoButtonBack {
+    font-size: 14px;
+  }
+}

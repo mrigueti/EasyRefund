@@ -1,0 +1,38 @@
+.component {
+  background-color: #f8f8ff;
+  height: 100%;
+  width: 95%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.RequestNewReimbursement{
+  background-color: transparent;
+  border: 1px solid #077777;
+  border-radius: 8px;
+  height: 70px;
+  width: 500px;
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+.RequestNewReimbursement:hover{
+  background-color: #077777;
+  color: #f8f8f8;
+}
+
+.ReimbursementHistory{
+  background-color: transparent;
+  border: 1px solid #077777;
+  border-radius: 8px;
+  height: 70px;
+  width: 500px;
+  font-size: 20px;
+}
+
+.ReimbursementHistory:hover{
+  background-color: #077777;
+  color: #f8f8f8;
+}

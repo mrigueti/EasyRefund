@@ -1,0 +1,60 @@
+.component {
+  background-color: #f8f8ff;
+  height: 100%;
+  width: 95%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative; /* Adicionado para o posicionamento do botão */
+}
+
+.BtnDeductible{
+  background-color: transparent;
+  border: 1px solid #077777;
+  border-radius: 8px;
+  height: 70px;
+  width: 500px;
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+.BtnDeductible:hover {
+  background-color: #077777;
+  color: #f8f8f8;
+}
+
+.BtnNonDeductible {
+  background-color: transparent;
+  border: 1px solid #077777;
+  border-radius: 8px;
+  height: 70px;
+  width: 500px;
+  font-size: 20px;
+}
+
+.BtnNonDeductible:hover {
+  background-color: #077777;
+  color: #f8f8f8;
+}
+
+
+.infoButtonBack {
+  background: none;
+  border: none;
+  color: #008080;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.infoButtonBack:hover {
+  text-decoration: underline;
+}
+
+.button_back_position {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
