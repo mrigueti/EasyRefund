@@ -6,7 +6,7 @@ Diante disso, o EasyRefund foi desenvolvido para centralizar e automatizar a ges
 
 ## 🚀 Funcionalidades  
 
-- Submissão de pedidos de reembolso com comprovantes em PDF.  
+- Submissão de pedidos de reembolso com comprovantes em PDF, DOC, DOCX, JPEG, PNG, JPG, JFIF.  
 - Acompanhamento do status das solicitações pelos funcionários.  
 - Interface administrativa para análise e aprovação ou recusa dos pedidos.  
 - Cadastro de novos usuários e monitoramento dos processos pelos gerentes.  
