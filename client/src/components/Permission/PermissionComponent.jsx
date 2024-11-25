@@ -47,14 +47,27 @@ const styles = {
     gap: "20px",
   },
   infoItem: {
-    flex: "1 1 calc(50% - 20px)",
+    flex: "1 1 calc(30% - 20px)",
     display: "flex",
     alignItems: "flex-start",
   },
-  icon: { marginRight: "10px", color: "#6c757d" },
-  label: { fontSize: "14px", color: "#6c757d", margin: 0 },
-  value: { fontSize: "16px", fontWeight: "bold", color: "#333" },
-  inputContainer: { marginTop: "10px" },
+  icon: {
+    marginRight: "10px",
+    color: "#6c757d",
+  },
+  label: {
+    fontSize: "14px",
+    color: "#6c757d",
+    margin: 0,
+  },
+  value: {
+    fontSize: "16px",
+    fontWeight: "bold",
+    color: "#333",
+  },
+  inputContainer: {
+    marginTop: "10px",
+  },
   input: {
     width: "100%",
     padding: "10px",
@@ -69,22 +82,28 @@ const styles = {
     marginTop: "20px",
   },
   approveButton: {
-    backgroundColor: "#28a745", padding: "10px 20px",
+    backgroundColor: "#28a745",
+    padding: "10px 20px",
     border: "none",
     borderRadius: "4px",
     fontSize: "16px",
     cursor: "pointer",
-    color: "#fff"
+    color: "#fff",
   },
   denyButton: {
-    backgroundColor: "#dc3545", padding: "10px 20px",
+    backgroundColor: "#dc3545",
+    padding: "10px 20px",
     border: "none",
     borderRadius: "4px",
     fontSize: "16px",
     cursor: "pointer",
-    color: "#fff"
+    color: "#fff",
   },
-  link: { color: "#007bff", textDecoration: "none", fontWeight: "bold" },
+  link: {
+    color: "#007bff",
+    textDecoration: "none",
+    fontWeight: "bold",
+  },
   errorMessage: {
     color: "#721c24",
     backgroundColor: "#f8d7da",
@@ -92,6 +111,25 @@ const styles = {
     borderRadius: "5px",
     marginBottom: "10px",
     textAlign: "center",
+  },
+  descriptionTitle: {
+    fontSize: "18px",
+    fontWeight: "bold",
+    marginBottom: "10px",
+    // Adicionando truncamento para o título, se necessário
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+  },
+  description: {
+    fontSize: "15px",
+    lineHeight: "1.5",
+    // Estilos para limitar a descrição a três linhas
+    display: "-webkit-box",
+    WebkitLineClamp: 4,
+    WebkitBoxOrient: "vertical",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
   },
 };
 
@@ -324,8 +362,8 @@ const Permission = () => {
       </div>
 
       <div style={styles.card}>
-        <h2 style={{ marginBottom: "10px" }}>Descrição</h2>
-        <p>{solicitacao.descricao || "Nenhuma descrição fornecida."}</p>
+        <h2 style={styles.descriptionTitle}>Descrição</h2>
+        <p style={styles.description}>{solicitacao.descricao || "Nenhuma descrição fornecida."}</p>
       </div>
 
       <div style={styles.card}>
