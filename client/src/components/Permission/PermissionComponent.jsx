@@ -68,18 +68,22 @@ const styles = {
     gap: "10px",
     marginTop: "20px",
   },
-  approveButton: { backgroundColor: "#28a745", padding: "10px 20px",
+  approveButton: {
+    backgroundColor: "#28a745", padding: "10px 20px",
     border: "none",
     borderRadius: "4px",
     fontSize: "16px",
     cursor: "pointer",
-    color: "#fff" },
-  denyButton: { backgroundColor: "#dc3545", padding: "10px 20px",
+    color: "#fff"
+  },
+  denyButton: {
+    backgroundColor: "#dc3545", padding: "10px 20px",
     border: "none",
     borderRadius: "4px",
     fontSize: "16px",
     cursor: "pointer",
-    color: "#fff" },
+    color: "#fff"
+  },
   link: { color: "#007bff", textDecoration: "none", fontWeight: "bold" },
   errorMessage: {
     color: "#721c24",
@@ -198,13 +202,13 @@ const Permission = () => {
     } else if (
       newStatus === "Aprovada" &&
       (parseFloat(valorAprovado) > parseFloat(solicitacao?.valor_pedido) ||
-        parseFloat(valorAprovado) < 0)
+        parseFloat(valorAprovado) < 0 || parseFloat(valorAprovado) == 0 || valorAprovado == "")
     ) {
       setErrorMessage(
         "O valor aprovado não pode ser maior que o valor solicitado ou negativo!"
       );
       return;
-    } else if (newStatus === "Aprovada" && valorAprovado === "0" || valorAprovado === "" ) {
+    } else if (newStatus === "Aprovada" && valorAprovado === "0" && valorAprovado === "") {
       setErrorMessage("O valor aprovado não pode ser igual a 0!");
       return;
     } else {
@@ -334,10 +338,8 @@ const Permission = () => {
         ) : (
           <p>Nenhum arquivo anexado.</p>
         )}
-      </div>
+        {status === "Pendente" && (
 
-      {status === "Pendente" && (
-        <div style={styles.card}>
           <div style={styles.inputContainer}>
             <label htmlFor="valorAprovado">Valor Aprovado</label>
             <input
@@ -348,8 +350,10 @@ const Permission = () => {
               onChange={(e) => setValorAprovado(e.target.value)}
             />
           </div>
-        </div>
-      )}
+        )}
+      </div>
+
+
 
       {errorMessage && (
         <div style={styles.errorMessage}>
