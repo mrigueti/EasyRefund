@@ -379,6 +379,7 @@ const Permission = () => {
         {status === "Pendente" && (
 
           <div style={styles.inputContainer}>
+            <hr></hr>
             <label htmlFor="valorAprovado">Valor Aprovado</label>
             <input
               id="valorAprovado"
