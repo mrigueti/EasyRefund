@@ -94,8 +94,8 @@ h2{
   color: #f8f8ff;
   display: flex;
   flex-direction: row;
-  justify-content: center;
   align-items: center;
+  justify-content: flex-start; /* Add this line */
   margin: 15px;
   padding: 10px;
   transition: opacity 0.3s ease;
@@ -106,24 +106,39 @@ h2{
   cursor: pointer;
 }
 
+.profile_image {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
 .perfil_div_text {
   display: flex;
   flex-direction: column;
   margin-left: 15px;
+  flex-grow: 1;
+  min-width: 0;
+  align-items: flex-start; /* Add this line */
+  text-align: left; /* Add this line */
+}
+
+.perfil_div_text h1 {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0;
+  color: white;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  width: 100%;
-  display: block;
 }
 
-.perfil_div p {
-  margin: 0;
+.perfil_div_text p {
   font-size: 14px;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.perfil_div h1 {
-  font-size: 20px;
-  margin: 0;
-  color:snow;
-}

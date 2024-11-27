@@ -176,7 +176,7 @@ const HistoryUser = () => {
             <thead>
               <tr>
                 <th>ID</th>
-                <th>Data</th>
+                <th>Enviada</th>
                 <th>Última Modificação</th>
                 <th>Categoria</th>
                 <th>Valor</th>

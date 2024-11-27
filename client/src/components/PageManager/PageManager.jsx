@@ -280,7 +280,7 @@ export default function PageManager() {
                 <tr>
                   <th>ID</th>
                   <th>Usuário</th>
-                  <th>Data</th>
+                  <th>Recebida</th>
                   <th>Última Modificação</th>
                   <th>Status</th>
                   <th>Categoria</th>
