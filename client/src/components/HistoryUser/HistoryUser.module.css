@@ -267,6 +267,7 @@ body {
     .RefundTable td {
         padding: 8px; /* Menor padding para caber melhor em telas pequenas */
         font-size: 12px; /* Ajusta o tamanho da fonte para telas pequenas */
+        max-width: 50px;
     }
 
     .RefundTotalRequested h2 {
