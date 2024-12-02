@@ -58,3 +58,12 @@
   top: 10px;
   left: 10px;
 }
+
+@media(width < 640px){
+  .BtnDeductible{
+    width: 70%;
+  }
+  .BtnNonDeductible{
+    width: 70%;
+  }
+}

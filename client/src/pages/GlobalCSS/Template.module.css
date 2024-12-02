@@ -7,6 +7,7 @@
   width: 100%;
   height: 10%;
   display: flex;
+  overflow: none;
 }
 
 .navbar_left {
@@ -142,3 +143,14 @@ h2{
   text-overflow: ellipsis;
 }
 
+@media (width < 640px){
+  .navbar_right{
+    width: 100%;
+  }
+  .content_left{
+    display: none;
+  }
+  .navbar_left{
+    display: none;
+  }
+}

@@ -36,3 +36,12 @@
   background-color: #077777;
   color: #f8f8f8;
 }
+
+@media (width < 640px){
+  .RequestNewReimbursement{
+    width: 70%;
+  }
+  .ReimbursementHistory{
+    width: 70%;
+  }
+}
