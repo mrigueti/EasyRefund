@@ -144,6 +144,7 @@ const Permission = () => {
   const [showDenyModal, setShowDenyModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [descAprovador, setDescAprovador] = useState("")
 
   useEffect(() => {
     const fetchSolicitacao = async () => {
@@ -198,6 +199,7 @@ const Permission = () => {
       status_solicitacao: newStatus,
       valor_aprovado_solic: valorAprovado || "0",
       id_usuario: id_usuario,
+      desc_aprovador: descAprovador
     };
 
     try {
@@ -362,8 +364,18 @@ const Permission = () => {
       </div>
 
       <div style={styles.card}>
-        <h2 style={styles.descriptionTitle}>Descrição</h2>
+        <label style={styles.descriptionTitle}>Descrição do funcionário</label>
         <p style={styles.description}>{solicitacao.descricao || "Nenhuma descrição fornecida."}</p>
+        <div style={styles.inputContainer}>
+          <label>Descrição do aprovador</label>
+          <input
+            id="valorAprovado"
+            style={styles.input}
+            type="text"
+            value={descAprovador}
+            onChange={(e) => setDescAprovador(e.target.value)}
+          />
+        </div>
       </div>
 
       <div style={styles.card}>

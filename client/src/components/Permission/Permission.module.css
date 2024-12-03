@@ -14,6 +14,19 @@
   margin-bottom: 20px;
 }
 
+.textArea {
+  width: 100%;
+}
+
+.textAreaDescription {
+  border: 1px solid #007777;
+  border-radius: 5px;
+  height: 200px;
+  width: 100%;
+  max-width: 650px;
+  margin-top: 20px;
+}
+
 .backButton {
   display: flex;
   align-items: center;

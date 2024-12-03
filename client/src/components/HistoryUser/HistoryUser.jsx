@@ -176,7 +176,7 @@ const HistoryUser = () => {
           <table className={Styles.RefundTable}>
             <thead>
               <tr>
-                <th>IDoi</th>
+                <th>ID</th>
                 <th>Enviada</th>
                 <th>Última Modificação</th>
                 <th>Categoria</th>
