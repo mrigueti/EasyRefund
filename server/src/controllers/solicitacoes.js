@@ -48,8 +48,10 @@ export const getAllSolicitacoes = (req, res) => {
       sol.valor_pedido_solic,
       sol.dt_criacao_solic,
       sol.valor_aprovado_solic,
+      sol.tipo_dedutivel_solic,
       sol.descricao,
       sol.categoria,
+      sol.desc_aprovador,
       sol.dt_aprovacao,
       n.anexo_nf
     FROM 
@@ -76,7 +78,7 @@ export const getAllSolicitacoes = (req, res) => {
 };
 
 export const updateSolicitacao = async (req, res) => {
-  const { id_usuario, id_solicitacao, status_solicitacao, valor_aprovado_solic } = req.body;
+  const { id_usuario, id_solicitacao, status_solicitacao, valor_aprovado_solic, desc_aprovador } = req.body;
 
   try {
     const id_aprovador = await getAprovador(id_usuario);
@@ -97,11 +99,12 @@ export const updateSolicitacao = async (req, res) => {
       SET
         status_solicitacao = ?,
         valor_aprovado_solic = ?,
-        id_aprovador = ?
+        id_aprovador = ?,
+        desc_aprovador = ?
       WHERE id_solicitacao = ?
     `;
 
-    db.query(query, [status_solicitacao, valorFinal, id_aprovador.id_aprovador, id_solicitacao], (err, result) => {
+    db.query(query, [status_solicitacao, valorFinal, id_aprovador.id_aprovador, desc_aprovador, id_solicitacao], (err, result) => {
       if (err) {
         console.error("(back)Erro ao executar a query:", err);
         return res.status(500).json({ error: '(back)Erro ao atualizar a solicitação.', details: err });

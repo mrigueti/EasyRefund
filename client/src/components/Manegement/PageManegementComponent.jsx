@@ -27,7 +27,9 @@ const PageManagement = () => {
             descricao: item.descricao,
             categoria: item.categoria,
             valor_pedido: item.valor_pedido_solic,
-            valor_aprovado: item.valor_aprovado_solic
+            valor_aprovado: item.valor_aprovado_solic,
+            desc_aprovador: item.desc_aprovador,
+            tipo_dedutivel: item.tipo_dedutivel_solic
           }))
         );
       } else {
@@ -109,6 +111,7 @@ const PageManagement = () => {
                 <th>Categoria</th>
                 <th>Valor</th>
                 <th>Valor Aprovado</th>
+                <th>Dedutível</th>
               </tr>
             </thead>
             <tbody>
@@ -127,6 +130,7 @@ const PageManagement = () => {
                     <td>{solicitacao.categoria}</td>
                     <td>R$ {solicitacao.valor_pedido}</td>
                     <td>R$ {solicitacao.valor_aprovado}</td>
+                    <td>{solicitacao.tipo_dedutivel === 1 ? 'Sim' : 'Não'}</td>
                   </tr>
                 ))
               ) : (

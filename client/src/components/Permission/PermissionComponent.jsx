@@ -150,9 +150,9 @@ const Permission = () => {
     const fetchSolicitacao = async () => {
       try {
         if (location.state && location.state.solicitacao) {
-          console.log("Solicitacao from state:", location.state.solicitacao);
           setSolicitacao(location.state.solicitacao);
           setStatus(location.state.solicitacao.status);
+          setDescAprovador(location.state.solicitacao.desc_aprovador)
           setIsLoading(false);
         } else if (id) {
           const response = await fetch(`http://localhost:3001/api/solicitacoes/get/${id}`);
@@ -367,12 +367,14 @@ const Permission = () => {
         <label style={styles.descriptionTitle}>Descrição do funcionário</label>
         <p style={styles.description}>{solicitacao.descricao || "Nenhuma descrição fornecida."}</p>
         <div style={styles.inputContainer}>
+          <hr />
           <label>Descrição do aprovador</label>
           <input
             id="valorAprovado"
             style={styles.input}
             type="text"
             value={descAprovador}
+            disabled={status === "Aprovada"}
             onChange={(e) => setDescAprovador(e.target.value)}
           />
         </div>
