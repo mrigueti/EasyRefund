@@ -13,6 +13,7 @@ import PageManager from './pages/PageManager/PageManager.jsx'
 import HistoryUser from './pages/HistoryUser/HistoryUser.jsx';
 import ProtectedPage from './components/ProtectedPage/ProtectedPage.jsx';
 import AccessDenied from './pages/AcessoNegado/AcessoNegado.jsx';
+import Administrator from './pages/Administrator/Administrator.jsx';
 
 
 function App() {
@@ -38,6 +39,9 @@ function App() {
           {/* Fluxo do Liberador */}
           <Route path='/manegement' element={<ProtectedPage requiredRole="Aprovador"><Manegement /></ProtectedPage>} />
           <Route path='/manegement/permission' element={<ProtectedPage requiredRole="Aprovador"><Permission /></ProtectedPage>} />
+          
+          {/* Fluxo do Administrador */}
+          <Route path='/Administrator' element={<Administrator />}/>
 
           {/*Fluxo de informações do usuário*/}
           <Route path='/informationUser' element={<InformationUser />} />
