@@ -171,11 +171,12 @@ const HistoryUser = () => {
           <img src={exports} alt="Exportar" /> Exportar Todos
         </button>
 
+        <div className={Styles.TableContainerGerentes}>
         {filteredRequests.length > 0 ? (
           <table className={Styles.RefundTable}>
             <thead>
               <tr>
-                <th>ID</th>
+                <th>IDoi</th>
                 <th>Enviada</th>
                 <th>Última Modificação</th>
                 <th>Categoria</th>
@@ -206,6 +207,7 @@ const HistoryUser = () => {
               ))}
             </tbody>
           </table>
+         
         ) : (
           <table className={Styles.RefundTable}>
             <thead>
@@ -228,6 +230,7 @@ const HistoryUser = () => {
             </tbody>
           </table>
         )}
+         </div>
 
         {totalPages > 0 && (
           <div className={Styles.Pagination}>

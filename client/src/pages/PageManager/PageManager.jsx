@@ -39,7 +39,7 @@ const Home = () => {
   const handleShowLogoutModal = () => setShowLogoutModal(true);
   // Função para fechar o modal de logout
   const handleCloseLogoutModal = () => setShowLogoutModal(false);
-  
+
   const handleBtnLogout = () => {
     setShowLogoutModal(true); // Abre o modal de logout
   };
@@ -60,7 +60,7 @@ const Home = () => {
   return (
     <div className={styles.main}>
       <div className={styles.navbar_main}>
-        <div className={styles.navbar_left}><img src={logo} style={{height: '60px', width: '60px'}}/></div>
+        <div className={styles.navbar_left}><img src={logo} style={{ height: '60px', width: '60px' }} /></div>
         <div className={styles.navbar_right}>
           <div className={styles.perfil_div}>
             <img src={perfil} alt="Perfil" />
@@ -71,6 +71,11 @@ const Home = () => {
           </div>
           <div className={styles.icon_navbar_div} onClick={handleShowModal}>
             <img src={notification} alt="Notificações" />
+          </div>
+          <div className={styles.sair}>
+            <div className={styles.icon_navbar_div} onClick={handleBtnLogout}>
+              <img src={logout} alt="Logout" onClick={handleBtnLogout} />
+            </div>
           </div>
         </div>
       </div>
@@ -110,7 +115,7 @@ const Home = () => {
           <Modal.Title>Deseja sair?</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Você realmente deseja sair do sistema? 
+          Você realmente deseja sair do sistema?
         </Modal.Body>
         <Modal.Footer>
           <Button variant="danger" onClick={handleConfirmLogout}>

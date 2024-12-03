@@ -38,6 +38,9 @@
   align-items: center;
   padding: 20px;
   background-color: #f8fafc;
+  @media(max-width: 600px){
+    flex-direction: column;
+  }
 }
 
 .BtnContainerGerente {

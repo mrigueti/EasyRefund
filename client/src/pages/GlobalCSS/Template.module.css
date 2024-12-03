@@ -1,10 +1,11 @@
 .main {
   width: 100vw;
   height: 100vh;
+  min-width: 412px;
 }
 
 .navbar_main {
-  width: 100%;
+  width: 100vw;
   height: 10%;
   display: flex;
   overflow: none;
@@ -28,6 +29,16 @@
   justify-content: space-between;
   align-items: center;
   display: flex;
+  @media(max-width: 600px){
+    justify-content: space-around;
+  }
+}
+.sair{
+  display: none;
+  
+  @media(max-width: 600px){
+    display: block;
+  }  
 }
 
 .content_main {
@@ -60,6 +71,7 @@ img {
   align-items: center;
   margin: 15px;
   display: flex;
+  min-width: 60px;
 }
 
 .icon_navbar_div:hover{
@@ -88,7 +100,7 @@ h2{
 
 .perfil_div {
   width: 100%;
-  max-width: 250px;
+  max-width: 200px;
   height: auto;
   background-color: #1D70BA;
   border-radius: 30px;

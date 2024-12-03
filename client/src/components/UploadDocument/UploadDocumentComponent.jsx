@@ -47,7 +47,7 @@ export default function UploadDocument() {
       }
     }
   };
-  
+
   const removeFile = (fileToRemove) => {
     setFiles(files.filter((file) => file !== fileToRemove));
   };
@@ -144,129 +144,131 @@ export default function UploadDocument() {
       >
         <span className={styles.infoArrow}>&larr;</span> Voltar
       </button>
-      <h1 className="text-center mb-4">Anexar Comprovante</h1>
-      <Container>
-        <Row className="justify-content-center">
-          <Col md={6}>
-            <Form onSubmit={handleSubmit}>
-              <Form.Group className="mb-3">
-                <Form.Control
-                  type="file"
-                  onChange={handleFileChange}
-                  ref={fileInputRef}
-                  accept={allowedFileTypes.join(',')}
-                />
-                {errorMessages.includes("Por favor, anexe um arquivo.") && (
-                  <div className="text-danger">Por favor, anexe um arquivo.</div>
-                )}
-                {errorMessages.includes("Tipo de arquivo não permitido.") && (
-                  <div className="text-danger">Tipo de arquivo não permitido.</div>
-                )}
-              </Form.Group>
-              <Form.Group className="mb-3">
-                <Form.Label>Valor do Pedido</Form.Label>
-                <Form.Control
-                  type="number"
-                  placeholder="Digite o valor"
-                  value={valor_pedido}
-                  onChange={(e) => setValorPedido(e.target.value)} 
-                />
-                {errorMessages.includes("Por favor, insira o valor do pedido.") && (
-                  <div className="text-danger">Por favor, insira o valor do pedido.</div>
-                )}
-                {errorMessages.includes("O valor do pedido deve ser um número positivo.") && (
-                  <div className="text-danger">O valor do pedido deve ser um número positivo.</div>
-                )}
-              </Form.Group>
+      <div className={styles.box}>
+        <h1 className="text-center mb-4">Anexar Comprovante</h1>
+        <Container>
+          <Row className="justify-content-center">
+            <Col md={6}>
+              <Form onSubmit={handleSubmit}>
+                <Form.Group className="mb-3">
+                  <Form.Control
+                    type="file"
+                    onChange={handleFileChange}
+                    ref={fileInputRef}
+                    accept={allowedFileTypes.join(',')}
+                  />
+                  {errorMessages.includes("Por favor, anexe um arquivo.") && (
+                    <div className="text-danger">Por favor, anexe um arquivo.</div>
+                  )}
+                  {errorMessages.includes("Tipo de arquivo não permitido.") && (
+                    <div className="text-danger">Tipo de arquivo não permitido.</div>
+                  )}
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <Form.Label>Valor do Pedido</Form.Label>
+                  <Form.Control
+                    type="number"
+                    placeholder="Digite o valor"
+                    value={valor_pedido}
+                    onChange={(e) => setValorPedido(e.target.value)}
+                  />
+                  {errorMessages.includes("Por favor, insira o valor do pedido.") && (
+                    <div className="text-danger">Por favor, insira o valor do pedido.</div>
+                  )}
+                  {errorMessages.includes("O valor do pedido deve ser um número positivo.") && (
+                    <div className="text-danger">O valor do pedido deve ser um número positivo.</div>
+                  )}
+                </Form.Group>
 
-              <label>Selecione uma categoria:</label>
-              <div className={styles.BtnOption}>
-                <button
-                  className={`${styles.BtnHotel} ${selectedButton === "Hospedagem" ? styles.selected : ""}`}
-                  type="button"
-                  onClick={() => handleClickSelected("Hospedagem")}
-                >
-                  Hospedagem
-                </button>
-                <button
-                  className={`${styles.BtnFood} ${selectedButton === "Alimentação" ? styles.selected : ""}`}
-                  type="button"
-                  onClick={() => handleClickSelected("Alimentação")}
-                >
-                  Alimentação
-                </button>
-                <button
-                  className={`${styles.BtnTransport} ${selectedButton === "Transporte" ? styles.selected : ""}`}
-                  type="button"
-                  onClick={() => handleClickSelected("Transporte")}
-                >
-                  Transporte
-                </button>
-                <button
-                  className={`${styles.BtnTransport} ${selectedButton === "Outros" ? styles.selected : ""}`}
-                  type="button"
-                  onClick={() => handleClickSelected("Outros")}
-                >
-                  Outros
-                </button>
-              </div>
-              {errorMessages.includes("Por favor, selecione uma categoria.") && (
-                <div className="text-danger">Por favor, selecione uma categoria.</div>
-              )}
+                <label>Selecione uma categoria:</label>
+                <div className={styles.BtnOption}>
+                  <button
+                    className={`${styles.BtnHotel} ${selectedButton === "Hospedagem" ? styles.selected : ""}`}
+                    type="button"
+                    onClick={() => handleClickSelected("Hospedagem")}
+                  >
+                    Hospedagem
+                  </button>
+                  <button
+                    className={`${styles.BtnFood} ${selectedButton === "Alimentação" ? styles.selected : ""}`}
+                    type="button"
+                    onClick={() => handleClickSelected("Alimentação")}
+                  >
+                    Alimentação
+                  </button>
+                  <button
+                    className={`${styles.BtnTransport} ${selectedButton === "Transporte" ? styles.selected : ""}`}
+                    type="button"
+                    onClick={() => handleClickSelected("Transporte")}
+                  >
+                    Transporte
+                  </button>
+                  <button
+                    className={`${styles.BtnTransport} ${selectedButton === "Outros" ? styles.selected : ""}`}
+                    type="button"
+                    onClick={() => handleClickSelected("Outros")}
+                  >
+                    Outros
+                  </button>
+                </div>
+                {errorMessages.includes("Por favor, selecione uma categoria.") && (
+                  <div className="text-danger">Por favor, selecione uma categoria.</div>
+                )}
 
-              <div className={styles.TextArea}>
-                <textarea
-                  className={styles.textAreaDescription}
-                  name="textAreaDescription"
-                  id="textAreaDescription"
-                  placeholder="Descrição..."
-                  value={textArea}
-                  onChange={(e) => setTextArea(e.target.value)}
-                ></textarea>
-              </div>
-              {files.length > 0 && (
-                <ListGroup className="mb-3">
-                  {files.map((file, index) => (
-                    <ListGroup.Item
-                      key={index}
-                      className="d-flex justify-content-between align-items-center"
-                    >
-                      <span className="text-truncate">{file.name}</span>
-                      <Button
-                        variant="link"
-                        className="text-danger p-0"
-                        onClick={() => removeFile(file)}
+                <div className={styles.TextArea}>
+                  <textarea
+                    className={styles.textAreaDescription}
+                    name="textAreaDescription"
+                    id="textAreaDescription"
+                    placeholder="Descrição..."
+                    value={textArea}
+                    onChange={(e) => setTextArea(e.target.value)}
+                  ></textarea>
+                </div>
+                {files.length > 0 && (
+                  <ListGroup className="mb-3">
+                    {files.map((file, index) => (
+                      <ListGroup.Item
+                        key={index}
+                        className="d-flex justify-content-between align-items-center"
                       >
-                        <XCircleFill size={20} />
-                      </Button>
-                    </ListGroup.Item>
-                  ))}
-                </ListGroup>
-              )}
-              <div className={styles.BtnSendDiv}>
-                <button className={styles.BtnSend} type="submit">Enviar</button>
-              </div>
-            </Form>
+                        <span className="text-truncate">{file.name}</span>
+                        <Button
+                          variant="link"
+                          className="text-danger p-0"
+                          onClick={() => removeFile(file)}
+                        >
+                          <XCircleFill size={20} />
+                        </Button>
+                      </ListGroup.Item>
+                    ))}
+                  </ListGroup>
+                )}
+                <div className={styles.BtnSendDiv}>
+                  <button className={styles.BtnSend} type="submit">Enviar</button>
+                </div>
+              </Form>
 
-            <Modal show={showModal} onHide={() => setShowModal(false)}>
-              <Modal.Header closeButton>
-                <Modal.Title>Solicitação enviada com sucesso!</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                Deseja fazer outra solicitação?
-              </Modal.Body>
-              <Modal.Footer>
-                <Button variant="secondary" onClick={() => handleCloseModal(false)}>
-                  Não
-                </Button>
-                <Button variant="primary" onClick={() => handleCloseModal(true)}>
-                  Sim
-                </Button>
-              </Modal.Footer>
-            </Modal>
-          </Col>
-        </Row>
-      </Container>
+              <Modal show={showModal} onHide={() => setShowModal(false)}>
+                <Modal.Header closeButton>
+                  <Modal.Title>Solicitação enviada com sucesso!</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  Deseja fazer outra solicitação?
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={() => handleCloseModal(false)}>
+                    Não
+                  </Button>
+                  <Button variant="primary" onClick={() => handleCloseModal(true)}>
+                    Sim
+                  </Button>
+                </Modal.Footer>
+              </Modal>
+            </Col>
+          </Row>
+        </Container>
+      </div>
     </div>
   );
 }

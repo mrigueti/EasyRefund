@@ -57,6 +57,11 @@ const Home = () => {
           <div className={styles.icon_navbar_div}>
             <img src={notification} alt="Notificações" />
           </div>
+          <div className={styles.sair}>
+            <div className={styles.icon_navbar_div} onClick={handleBtnLogout}>
+              <img src={logout} alt="Logout" onClick={handleBtnLogout} />
+            </div>
+          </div>
         </div>
       </div>
 

@@ -5,7 +5,7 @@
   justify-content: center;
   align-items: center;
   height: 100%;
-  width: 95%;
+  width: 100%;
   background-color: #f8f8FF ;
   font-family: Arial, sans-serif;
   position: relative;
@@ -17,6 +17,7 @@
   font-size: 28px;
   margin-bottom: 30px;
   text-align: center;
+  width: 100%;
 }
 
 /* Formulário */
@@ -28,6 +29,9 @@
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(10px);
   border: 1px solid #007777;
+  @media(max-width: 600px){
+    width: 90%;
+  }
 }
 
 /* Estilos dos inputs */

@@ -78,6 +78,11 @@ export default function UploadDocument() {
           <div className={styles.icon_navbar_div} onClick={handleShowModal}>
             <img src={notification} alt="Notificações" />
           </div>
+          <div className={styles.sair}>
+            <div className={styles.icon_navbar_div} onClick={handleBtnLogout}>
+              <img src={logout} alt="Logout" onClick={handleBtnLogout} />
+            </div>
+          </div>
         </div>
       </div>
       <div className={styles.content_main}>

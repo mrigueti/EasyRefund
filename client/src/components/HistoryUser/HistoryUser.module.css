@@ -5,6 +5,13 @@ body {
     margin: 0;
 }
 
+.TableContainerGerentes {
+    width: 100%;
+    overflow-y: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
 .Pagination {
     display: flex;
     justify-content: center;
@@ -267,7 +274,6 @@ body {
     .RefundTable td {
         padding: 8px; /* Menor padding para caber melhor em telas pequenas */
         font-size: 12px; /* Ajusta o tamanho da fonte para telas pequenas */
-        max-width: 50px;
     }
 
     .RefundTotalRequested h2 {
