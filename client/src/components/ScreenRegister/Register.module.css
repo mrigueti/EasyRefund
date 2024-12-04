@@ -5,7 +5,7 @@
   justify-content: center;
   align-items: center;
   height: 100%;
-  width: 100%;
+  width: 90%;
   background-color: #f8f8FF ;
   font-family: Arial, sans-serif;
   position: relative;
@@ -159,6 +159,7 @@
 .CheckBox {
   display: flex;
   justify-content: space-between;
+  margin-bottom: 10px;
 }
 
 .alertMessage {

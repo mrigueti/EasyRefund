@@ -275,6 +275,16 @@ const Register = () => {
             />
             Gerente
           </div>
+          <div className={styles.CheckManagerUser}>
+            <input
+              type="radio"
+              name="userRole"
+              value="Administrador"
+              checked={role === "Administrador"}
+              onChange={(e) => setRole(e.target.value)}
+            />
+            Administrador
+          </div>
         </div>
         {errors.checkbox && (
           <div className={styles.errorAlert}>{errors.checkbox}</div>
