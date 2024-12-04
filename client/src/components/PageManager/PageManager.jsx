@@ -39,6 +39,7 @@ export default function PageManager() {
             categoria: item.categoria,
             valor_pedido: item.valor_pedido_solic,
             valor_aprovado: item.valor_aprovado_solic,
+            pago: item.pago
           }))
         );
       }
@@ -286,6 +287,7 @@ export default function PageManager() {
                   <th>Categoria</th>
                   <th>Valor</th>
                   <th>Valor Aprovado</th>
+                  <th>Pago</th>
                 </tr>
               </thead>
               <tbody>
@@ -300,6 +302,7 @@ export default function PageManager() {
                       <td>{solicitacao.categoria}</td>
                       <td>R$ {solicitacao.valor_pedido}</td>
                       <td>R$ {solicitacao.valor_aprovado}</td>
+                      <td>{solicitacao.pago === 1 ? '✅' : '❌'}</td>
                     </tr>
                   ))
                 ) : (

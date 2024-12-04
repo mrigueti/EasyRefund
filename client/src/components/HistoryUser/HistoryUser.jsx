@@ -204,7 +204,7 @@ const HistoryUser = () => {
                       {request.status_solicitacao}
                     </span>
                   </td>
-                  <td>X</td>
+                  <td>{request.pago === 1 ? '✅' : '❌'}</td>
                 </tr>
               ))}
             </tbody>

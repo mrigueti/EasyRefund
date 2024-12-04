@@ -54,6 +54,7 @@ export const getAllSolicitacoes = (req, res) => {
       sol.categoria,
       sol.desc_aprovador,
       sol.dt_aprovacao,
+      sol.pago,
       n.anexo_nf
     FROM 
       solicitacoes sol
