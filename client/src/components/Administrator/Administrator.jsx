@@ -80,7 +80,7 @@ const Administrator = () => {
   };
 
   const handleRowClick = (solicitacao) => {
-    navigate(`/manegement/permission`, { state: { solicitacao } });
+    navigate(`/Administrator/MenuAdministrator`, { state: { solicitacao } });
   };
 
   const handlePageChange = (pageNumber) => {
