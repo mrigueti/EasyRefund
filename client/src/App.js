@@ -14,6 +14,7 @@ import HistoryUser from './pages/HistoryUser/HistoryUser.jsx';
 import ProtectedPage from './components/ProtectedPage/ProtectedPage.jsx';
 import AccessDenied from './pages/AcessoNegado/AcessoNegado.jsx';
 import Administrator from './pages/Administrator/Administrator.jsx';
+import PageMenuAdministrator from './pages/PageMenuAdministrator/PageMenuAdministrator.jsx'
 
 
 function App() {
@@ -42,6 +43,8 @@ function App() {
           
           {/* Fluxo do Administrador */}
           <Route path='/Administrator' element={<Administrator />}/>
+          <Route path='/Administrator/MenuAdministrator' element={<PageMenuAdministrator />} />
+
 
           {/*Fluxo de informações do usuário*/}
           <Route path='/informationUser' element={<InformationUser />} />
