@@ -5,6 +5,7 @@ import bcrypt from 'bcryptjs';
 import { json } from 'express';
 import jwt from 'jsonwebtoken';
 import { registerAprovador } from './aprovadores.js';
+import { registerAdministrador } from './administradores.js';
 
 export const login = (req, res) => {
   const { email, senha } = req.body;
@@ -57,6 +58,13 @@ export const register = async (req, res) => {
           console.log("Usuário registrado como aprovador registrado com sucesso.");
         } catch (error) {
           console.error("Erro ao registrar o aprovador /usuarios:", error);
+        }
+      } else if (role_nome === "Administrador") {
+        try {
+          registerAdministrador(result.insertId);
+          console.log("Usuário registrado como administrador registrado com sucesso.");
+        } catch (error) {
+          console.error("Erro ao registrar o administrador /usuarios:", error);
         }
       }
       const token = jwt.sign({ id: result.insertId }, process.env.JWT_SECRET || 'easyrefund987', { expiresIn: '1h' });

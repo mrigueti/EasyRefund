@@ -25,7 +25,7 @@ function App() {
 
           {/* Fluxo de Login/Cadastro/AlterarSenha */}
           <Route path='/' element={< Login />} />
-          <Route path='/change-password' element={<ChangePassword/>} />
+          <Route path='/change-password' element={<ChangePassword />} />
 
           {/*Fluxo do gerente*/}
           <Route path='/manager' element={<ProtectedPage requiredRole="Gerente"><PageManager /></ProtectedPage>} />
@@ -40,10 +40,10 @@ function App() {
           {/* Fluxo do Liberador */}
           <Route path='/manegement' element={<ProtectedPage requiredRole="Aprovador"><Manegement /></ProtectedPage>} />
           <Route path='/manegement/permission' element={<ProtectedPage requiredRole="Aprovador"><Permission /></ProtectedPage>} />
-          
+
           {/* Fluxo do Administrador */}
-          <Route path='/Administrator' element={<Administrator />}/>
-          <Route path='/Administrator/MenuAdministrator' element={<PageMenuAdministrator />} />
+          <Route path='/Administrator' element={<ProtectedPage requiredRole="Administrador"><Administrator /> </ProtectedPage>} />
+          <Route path='/Administrator/MenuAdministrator' element={<ProtectedPage requiredRole="Administrador"><PageMenuAdministrator /></ProtectedPage>} />
 
 
           {/*Fluxo de informações do usuário*/}

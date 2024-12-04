@@ -13,7 +13,7 @@ const Administrator = () => {
   const fetchSolicitacoes = async () => {
     try {
       const response = await fetch(
-        "http://localhost:3001/api/solicitacoes/getAll"
+        "http://localhost:3001/api/solicitacoes/getAllAp"
       );
       if (response.ok) {
         const data = await response.json();
@@ -31,7 +31,7 @@ const Administrator = () => {
             categoria: item.categoria,
             valor_pedido: item.valor_pedido_solic,
             valor_aprovado: item.valor_aprovado_solic,
-            pago: "x", // Adicionando "x" como estado inicial na lista
+            pago: item.pago
           }))
         );
       } else {
@@ -50,12 +50,12 @@ const Administrator = () => {
     filter === "Pago"
       ? solicitacoes.filter(
           (solicitacao) =>
-            solicitacao.status === "Aprovada" && solicitacao.valor_aprovado > 0
+            solicitacao.pago === 1
         )
       : filter === "Não pago"
       ? solicitacoes.filter(
           (solicitacao) =>
-            solicitacao.status === "Aprovada" && solicitacao.valor_aprovado === 0
+            solicitacao.pago === 0
         )
       : solicitacoes; // "Todas"
 
@@ -95,14 +95,14 @@ const Administrator = () => {
       <div>
         <div>
           <div className={Styles.BtnContainer}>
-            {["Todas", "Pago", "Não pago"].map((status) => (
+            {["Todas", "Pago", "Não pago"].map((pago) => (
               <button
-                key={status}
+                key={pago}
                 className={Styles.BtnFilter}
-                aria-label={`Filtrar por ${status}`}
-                onClick={() => setFilter(status) || setCurrentPage(1)}
+                aria-label={`Filtrar por ${pago}`}
+                onClick={() => setFilter(pago) || setCurrentPage(1)}
               >
-                {status}
+                {pago}
               </button>
             ))}
           </div>
@@ -120,7 +120,7 @@ const Administrator = () => {
                 <th>Categoria</th>
                 <th>Valor</th>
                 <th>Valor Aprovado</th>
-                <th>Pago</th> {/* Nova coluna */}
+                <th>Pago</th>
               </tr>
             </thead>
             <tbody>
@@ -142,7 +142,7 @@ const Administrator = () => {
                     <td>{solicitacao.categoria}</td>
                     <td>R$ {solicitacao.valor_pedido}</td>
                     <td>R$ {solicitacao.valor_aprovado}</td>
-                    <td>{solicitacao.pago}</td> {/* Exibindo o valor de "Pago" */}
+                    <td>{solicitacao.pago === 1 ? '✅' : '❌'}</td>
                   </tr>
                 ))
               ) : (

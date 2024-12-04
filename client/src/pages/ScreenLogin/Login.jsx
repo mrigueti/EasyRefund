@@ -67,6 +67,9 @@ const Login = () => {
       } else if (responseJson.user.role_nome === "Gerente") {
         navigate("/manager");
         primeiroLogin(senha)
+      } else if (responseJson.user.role_nome === "Administrador"){
+        navigate("/administrator");
+        primeiroLogin(senha)
       }
 
       //console.log("Login bem-sucedido!");

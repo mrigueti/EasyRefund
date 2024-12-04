@@ -4,6 +4,7 @@ import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
 import { insertNF } from './nfs.js';
+import { getAdministrador } from './administradores.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -77,6 +78,51 @@ export const getAllSolicitacoes = (req, res) => {
   });
 };
 
+export const getAllSolicitacoesAp = (req, res) => {
+  const query = `
+    SELECT 
+      u.nome_usuario,
+      c.nome_cargo,
+      s.nome_setor,
+      u2.nome_unidade,
+      sol.id_solicitacao,
+      sol.status_solicitacao,
+      sol.valor_pedido_solic,
+      sol.dt_criacao_solic,
+      sol.valor_aprovado_solic,
+      sol.tipo_dedutivel_solic,
+      sol.descricao,
+      sol.categoria,
+      sol.desc_aprovador,
+      sol.dt_aprovacao,
+      sol.pago,
+      n.anexo_nf
+FROM 
+      solicitacoes sol
+JOIN 
+      usuarios u ON sol.id_usuario = u.id_usuario
+JOIN 
+      cargos c ON u.id_cargo = c.id_cargo
+JOIN 
+      setores s ON u.id_setor = s.id_setor
+JOIN 
+      unidades u2 ON u.id_unidade = u2.id_unidade
+LEFT JOIN 
+      nfs n ON sol.id_solicitacao = n.id_solicitacao
+WHERE 
+      sol.status_solicitacao = "Aprovada";
+
+  `;
+
+  db.query(query, (error, results) => {
+    if (error) {
+      console.error("(back) Erro ao buscar solicitações:", error);
+      return res.status(500).json({ error: "Erro ao buscar solicitações" });
+    }
+    res.status(200).json(results);
+  });
+};
+
 export const updateSolicitacao = async (req, res) => {
   const { id_usuario, id_solicitacao, status_solicitacao, valor_aprovado_solic, desc_aprovador } = req.body;
 
@@ -105,6 +151,40 @@ export const updateSolicitacao = async (req, res) => {
     `;
 
     db.query(query, [status_solicitacao, valorFinal, id_aprovador.id_aprovador, desc_aprovador, id_solicitacao], (err, result) => {
+      if (err) {
+        console.error("(back)Erro ao executar a query:", err);
+        return res.status(500).json({ error: '(back)Erro ao atualizar a solicitação.', details: err });
+      }
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ error: '(back)Solicitação não encontrada.' });
+      }
+      return res.status(200).json({ message: '(back)Solicitação atualizada com sucesso.' });
+    });
+  } catch (err) {
+    console.error("Erro ao atualizar solicitação:", err);
+    return res.status(500).json({ error: '(back)Erro ao atualizar a solicitação.', details: err });
+  }
+};
+
+export const updateSolicitacaoAdm = async (req, res) => {
+  const { id_usuario, id_solicitacao, pago } = req.body;
+
+  try {
+    const id_administrador = await getAdministrador(id_usuario)
+
+    if (!id_solicitacao || !id_usuario || !id_administrador) {
+      return res.status(400).json({ error: "Dados insuficientes" });
+    }
+
+    const query = `
+      UPDATE solicitacoes
+      SET
+        id_administrador = ?,
+        pago = ?
+      WHERE id_solicitacao = ?
+    `;
+
+    db.query(query, [ id_administrador.id_administrador, pago, id_solicitacao], (err, result) => {
       if (err) {
         console.error("(back)Erro ao executar a query:", err);
         return res.status(500).json({ error: '(back)Erro ao atualizar a solicitação.', details: err });

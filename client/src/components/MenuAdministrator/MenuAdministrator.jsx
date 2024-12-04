@@ -188,9 +188,9 @@ const MenuAdministrator = () => {
     return null;
   };
 
-  const handleUpdate = async (newStatus) => {
+  const handleUpdate = async (pagoFunc) => {
     const id_usuario = getUserIdFromToken();
-
+    
     if (!id_usuario) {
       setErrorMessage("Usuário não autenticado!");
       return;
@@ -198,15 +198,14 @@ const MenuAdministrator = () => {
 
     const data = {
       id_solicitacao: solicitacao.id,
-      status_solicitacao: newStatus,
-      valor_aprovado_solic: valorAprovado || "0",
       id_usuario: id_usuario,
-      desc_aprovador: descAprovador
+      pago: pagoFunc
     };
-
+    console.log(data);
+    
     try {
       const response = await fetch(
-        "http://localhost:3001/api/solicitacoes/updateSolicitacao",
+        "http://localhost:3001/api/solicitacoes/updateSolicitacaoAdm",
         {
           method: "PUT",
           headers: {
@@ -219,10 +218,10 @@ const MenuAdministrator = () => {
       if (!response.ok) {
         throw new Error("Erro ao atualizar a solicitação");
       }
-
+      
       const result = await response.json();
-      setStatus(newStatus);
-      setSolicitacao(prevState => ({ ...prevState, status: newStatus }));
+      console.log(result);
+      
       setShowApproveModal(false);
       setShowDenyModal(false);
     } catch (err) {
@@ -231,33 +230,8 @@ const MenuAdministrator = () => {
     }
   };
 
-  const handleStatusChange = (newStatus) => {
-    if (
-      newStatus === "Recusada" &&
-      valorAprovado !== "0" &&
-      valorAprovado !== ""
-    ) {
-      setErrorMessage(
-        "Solicitações recusadas devem ter o valor aprovado igual a 0!"
-      );
-      return;
-    } else if (
-      newStatus === "Aprovada" &&
-      (parseFloat(valorAprovado) > parseFloat(solicitacao?.valor_pedido) ||
-        parseFloat(valorAprovado) < 0 || parseFloat(valorAprovado) == 0 || valorAprovado == "")
-    ) {
-      setErrorMessage(
-        "O valor aprovado não pode ser maior que o valor solicitado ou negativo!"
-      );
-      return;
-    } else if (newStatus === "Aprovada" && valorAprovado === "0" && valorAprovado === "") {
-      setErrorMessage("O valor aprovado não pode ser igual a 0!");
-      return;
-    } else {
-      setErrorMessage(""); // Clear the error message if the condition is not met
-    }
-
-    if (newStatus === "Aprovada") {
+  const handleStatusChange = (pagoFunc) => {
+    if (pagoFunc === 1) {
       setShowApproveModal(true);
     } else {
       setShowDenyModal(true);
@@ -313,6 +287,7 @@ const MenuAdministrator = () => {
         </button>
         <span style={{ ...styles.status, ...getStatusStyle(status) }}>
           {status}
+          {solicitacao.pago === 1 ? '✅' : '❌'}
         </span>
       </div>
 
@@ -416,18 +391,18 @@ const MenuAdministrator = () => {
         </div>
       )}
 
-      {status === "Pendente" && (
+      {solicitacao.pago === 0 && (
         <div style={styles.actions}>
           <Button
             variant="default"
-            onClick={() => handleStatusChange("Aprovada")}
+            onClick={() => handleStatusChange(1)}
             style={styles.approveButton}
           >
             Pagar
           </Button>
           <Button
             variant="destructive"
-            onClick={() => handleStatusChange("Recusada")}
+            onClick={() => handleStatusChange(0)}
             style={styles.denyButton}
           >
             Não Pagar
@@ -438,10 +413,10 @@ const MenuAdministrator = () => {
       {/* Modal de Aprovação */}
       <Modal show={showApproveModal} onHide={() => setShowApproveModal(false)}>
         <Modal.Header closeButton>
-          <Modal.Title>Confirmar Aprovação</Modal.Title>
+          <Modal.Title>Confirmar Pagamento</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Tem certeza de que deseja aprovar esta solicitação?
+          Tem certeza de que deseja marcar como pago esta solicitação?
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowApproveModal(false)}>
@@ -450,7 +425,7 @@ const MenuAdministrator = () => {
           <Button
             variant="primary"
             onClick={() => {
-              handleUpdate("Aprovada");
+              handleUpdate(1);
               setShowApproveModal(false);
             }}
           >
@@ -465,7 +440,7 @@ const MenuAdministrator = () => {
           <Modal.Title>Confirmar Negação</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Tem certeza de que deseja negar esta solicitação?
+          Tem certeza de que deseja negar o pagamento desta solicitação?
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowDenyModal(false)}>
@@ -474,8 +449,9 @@ const MenuAdministrator = () => {
           <Button
             variant="danger"
             onClick={() => {
-              handleUpdate("Recusada");
+              handleUpdate(0);
               setShowDenyModal(false);
+              navigate(-1)
             }}
           >
             Confirmar

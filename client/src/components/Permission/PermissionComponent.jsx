@@ -374,7 +374,7 @@ const Permission = () => {
             style={styles.input}
             type="text"
             value={descAprovador}
-            disabled={status === "Aprovada"}
+            disabled={status === "Aprovada" || status === "Recusada"}
             onChange={(e) => setDescAprovador(e.target.value)}
           />
         </div>
