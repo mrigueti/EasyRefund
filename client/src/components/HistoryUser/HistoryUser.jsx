@@ -183,6 +183,7 @@ const HistoryUser = () => {
                 <th>Valor</th>
                 <th>Valor Aprovado</th>
                 <th>Status</th>
+                <th>Pago</th>
               </tr>
             </thead>
             <tbody>
@@ -203,6 +204,7 @@ const HistoryUser = () => {
                       {request.status_solicitacao}
                     </span>
                   </td>
+                  <td>X</td>
                 </tr>
               ))}
             </tbody>
@@ -261,6 +263,7 @@ const HistoryUser = () => {
               <p>Data de Criação: {formatDate(modalData.dt_criacao_solic)}</p>
               <p>Valor Solicitado: {modalData.valor_pedido_solic}</p>
               <p>Status: {modalData.status_solicitacao}</p>
+              <p>Mensagem do aprovador: {modalData.desc_aprovador}</p>
               <button onClick={handleExportToPDF}>Exportar para PDF</button>
               <button
                 className={Styles.closeButton}
