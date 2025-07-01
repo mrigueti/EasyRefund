@@ -4,6 +4,11 @@ A empresa contratante, **Fortes Engenharia**, atua em um mercado dinâmico de co
 
 Diante disso, o EasyRefund foi desenvolvido para centralizar e automatizar a gestão desses reembolsos.  
 
+## 📚 Documentação
+
+- [Documentação Oficial](https://1drv.ms/w/c/4ed1ea9f0f948f60/Eb4oIZI0jVlKgbZJKh6vSCMBTPHRljczK-0YZzuzz9Bzaw?e=pizQ0u)
+- [Documento capa laranja](https://1drv.ms/w/c/4ed1ea9f0f948f60/EVqzs2ryQv9BlHuTHN6Wq5cB0_LsU3GFHFPkgx_yHUeAeA?e=fK72Wo)
+
 ## 🚀 Funcionalidades  
 
 - Submissão de pedidos de reembolso com comprovantes em PDF, DOC, DOCX, JPEG, PNG, JPG, JFIF.  
